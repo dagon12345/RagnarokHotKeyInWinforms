@@ -32,16 +32,16 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
-  </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
     <StartupObject>RagnarokHotKeyInWinforms.Program</StartupObject>
   </PropertyGroup>
+  <PropertyGroup />
   <ItemGroup>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.13.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -53,6 +53,7 @@
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppConfig.cs" />
@@ -61,26 +62,58 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>ETCResource.resx</DependentUpon>
     </Compile>
+    <Compile Include="Forms\AutopotForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AutopotForm.Designer.cs">
+      <DependentUpon>AutopotForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\frm_Main.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\frm_Main.Designer.cs">
       <DependentUpon>frm_Main.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ToggleApplicationStateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ToggleApplicationStateForm.Designer.cs">
+      <DependentUpon>ToggleApplicationStateForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Model\Action.cs" />
+    <Compile Include="Model\AHK.cs" />
+    <Compile Include="Model\ATKDefMode.cs" />
+    <Compile Include="Model\AutoBuff.cs" />
+    <Compile Include="Model\Autopot.cs" />
+    <Compile Include="Model\AutoRefreshSpammer.cs" />
     <Compile Include="Model\Client.cs" />
     <Compile Include="Model\LocalServerManager.cs" />
+    <Compile Include="Model\Macro.cs" />
+    <Compile Include="Model\Profile.cs" />
+    <Compile Include="Model\StatusRecovery.cs" />
+    <Compile Include="Model\UserPreferences.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Utilities\Constants.cs" />
+    <Compile Include="Utilities\EffectStatusIDs.cs" />
+    <Compile Include="Utilities\FormUtils.cs" />
+    <Compile Include="Utilities\Interop.cs" />
     <Compile Include="Utilities\KeyboardHook.cs" />
     <Compile Include="Utilities\ProcessMemoryReader.cs" />
     <Compile Include="Utilities\RObserver.cs" />
+    <Compile Include="Utilities\_4RThread.cs" />
     <EmbeddedResource Include="ETCResource.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>ETCResource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AutopotForm.resx">
+      <DependentUpon>AutopotForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frm_Main.resx">
       <DependentUpon>frm_Main.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ToggleApplicationStateForm.resx">
+      <DependentUpon>ToggleApplicationStateForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

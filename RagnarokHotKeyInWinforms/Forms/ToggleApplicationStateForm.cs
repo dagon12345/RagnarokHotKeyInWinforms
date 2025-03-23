@@ -39,12 +39,12 @@ namespace RagnarokHotKeyInWinforms.Forms
         {
             if ((subject as Subject).Message.code == MessageCode.PROFILE_CHANGED)
             {
-                //Keys currentToggleKey = (Keys)Enum.Parse(typeof(Keys), ProfileSingleton.GetCurrent().UserPreferences.toggleStateKey);
-                //KeyboardHook.Remove(lastKey); //Remove last key hook to prevent toggle with last profile key used.
+                Keys currentToggleKey = (Keys)Enum.Parse(typeof(Keys), ProfileSingleton.GetCurrent().UserPreferences.toggleStateKey);
+                KeyboardHook.Remove(lastKey); //Remove last key hook to prevent toggle with last profile key used.
 
-                //this.txtStatusToggleKey.Text = currentToggleKey.ToString();
-                //KeyboardHook.Add(currentToggleKey, new KeyboardHook.KeyPressed(this.toggleStatus));
-                //lastKey = currentToggleKey;
+                this.txtStatusToggleKey.Text = currentToggleKey.ToString();
+                KeyboardHook.Add(currentToggleKey, new KeyboardHook.KeyPressed(this.toggleStatus));
+                lastKey = currentToggleKey;
             }
         }
 

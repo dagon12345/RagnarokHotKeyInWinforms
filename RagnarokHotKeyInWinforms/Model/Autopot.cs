@@ -44,7 +44,8 @@ namespace RagnarokHotKeyInWinforms.Model
 
         public void Start()
         {
-            Stop();
+            //NOTE: use this stop if there are exisiting thread running. We commented becuase it will cause an error.
+            //Stop();
             Client roClient = ClientSingleton.GetClient();
             if(roClient != null)
             {

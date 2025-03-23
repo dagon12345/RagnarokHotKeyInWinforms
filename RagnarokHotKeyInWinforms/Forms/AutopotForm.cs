@@ -30,8 +30,7 @@ namespace RagnarokHotKeyInWinforms.Forms
             switch((subject as Subject).Message.code)
             {
                 case MessageCode.PROFILE_CHANGED:
-                    //TODO: profile singleton which is the user default settings.
-                    //this.autopot = this.isYgg ? ProfileSingleton.GetCurrent().AutopotYgg : ProfileSingleton.GetCurrent().Autopot;
+                    this.autopot = this.isYgg ? ProfileSingleton.GetCurrent().AutopotYgg : ProfileSingleton.GetCurrent().Autopot;
                     InitializeApplicationForm();
                     break;
                 case MessageCode.TURN_OFF:
@@ -67,15 +66,13 @@ namespace RagnarokHotKeyInWinforms.Forms
         {
             Key key = (Key)Enum.Parse(typeof(Key), txtHpKey.Text.ToString());
             this.autopot.hpKey = key;
-            //TODO: user settings
-            //ProfileSingleton.SetConfiguration(this.autopot);
+            ProfileSingleton.SetConfiguration(this.autopot);
         }
         private void onSpTextChange(object sender, EventArgs e)
         {
             Key key = (Key)Enum.Parse(typeof(Key), txtSpKey.Text.ToString());
             this.autopot.spKey = key;
-            //TODO: user settings
-            //ProfileSingleton.SetConfiguration(this.autopot);
+            ProfileSingleton.SetConfiguration(this.autopot);
         }
 
         private void txtAutopotDelayTextChanged(object sender, EventArgs e)
@@ -83,8 +80,7 @@ namespace RagnarokHotKeyInWinforms.Forms
             try
             {
                 this.autopot.delay = Int16.Parse(this.txtAutopotDelay.Text);
-                //TODO: user settings
-                //ProfileSingleton.SetConfiguration(this.autopot);
+                ProfileSingleton.SetConfiguration(this.autopot);
             }
             catch (Exception) { }
         }
@@ -94,8 +90,7 @@ namespace RagnarokHotKeyInWinforms.Forms
             try
             {
                 this.autopot.hpPercent = Int16.Parse(this.txtHPpct.Text);
-                //TODO: user settings
-                //ProfileSingleton.SetConfiguration(this.autopot);
+                ProfileSingleton.SetConfiguration(this.autopot);
             }
             catch (Exception) { }
 
@@ -106,8 +101,7 @@ namespace RagnarokHotKeyInWinforms.Forms
             try
             {
                 this.autopot.spPercent = Int16.Parse(this.txtSPpct.Text);
-                //TODO: user settings
-                //ProfileSingleton.SetConfiguration(this.autopot);
+                ProfileSingleton.SetConfiguration(this.autopot);
             }
             catch (Exception) { }
         }

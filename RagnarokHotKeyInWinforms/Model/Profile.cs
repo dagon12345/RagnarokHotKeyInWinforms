@@ -1,4 +1,6 @@
 ﻿using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace RagnarokHotKeyInWinforms.Model
@@ -15,17 +17,74 @@ namespace RagnarokHotKeyInWinforms.Model
                 string json = File.ReadAllText(AppConfig.ProfileFolder + profileName + ".json");
                 dynamic rawObject = JsonConvert.DeserializeObject(json);
 
-                if((rawObject != null))
+                if ((rawObject != null))
                 {
                     profile.Name = profileName;
-                    profile.UserPreferences = JsonConvert.DeserializeObject<UserPreferences>(Profile.GetByAction(rawObject, profile.UserPreferences));
+                    //profile.UserPreferences = JsonConvert.DeserializeObject<UserPreferences>(Profile.GetByAction(rawObject, profile.UserPreferences));
+                    //profile.AHK = JsonConvert.DeserializeObject<AHK>(Profile.GetByAction(rawObject, profile.AHK));
+                    profile.AutopotYgg = JsonConvert.DeserializeObject<Autopot>(Profile.GetByAction(rawObject, profile.AutopotYgg));
+                    //profile.StatusRecovery = JsonConvert.DeserializeObject<StatusRecovery>(Profile.GetByAction(rawObject, profile.StatusRecovery));
+                    //profile.AutoRefreshSpammer = JsonConvert.DeserializeObject<AutoRefreshSpammer>(Profile.GetByAction(rawObject, profile.AutoRefreshSpammer));
+                    //profile.AutoBuff = JsonConvert.DeserializeObject<AutoBuff>(Profile.GetByAction(rawObject, profile.AutoBuff));
+                    //profile.SongMacro = JsonConvert.DeserializeObject<Macro>(Profile.GetByAction(rawObject, profile.SongMacro));
+                    //profile.AtkDefMode = JsonConvert.DeserializeObject<ATKDefMode>(Profile.GetByAction(rawObject, profile.AtkDefMode));
+                    //profile.MacroSwitch = JsonConvert.DeserializeObject<Macro>(Profile.GetByAction(rawObject, profile.MacroSwitch));
+
                 }
             }
-            catch (System.Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
+        public static void Create(string profileName)
+        {
+            //Stored in //bin/debug/profile
+            string jsonFileName = AppConfig.ProfileFolder + profileName + ".json";
+            if (!File.Exists(jsonFileName))
+            {
+                //If the directory is not existed or the file then create a new one.
+                if (!Directory.Exists(AppConfig.ProfileFolder)) { Directory.CreateDirectory(AppConfig.ProfileFolder); }
+                FileStream fs = File.Create(jsonFileName);
+                fs.Close();
+                Profile profile = new Profile(profileName);
+                string output = JsonConvert.SerializeObject(profile, Formatting.Indented);
+                File.WriteAllText(jsonFileName, output);
+            }
+            //Load if existed
+            ProfileSingleton.Load(profileName);
+        }
+        public static void Delete(string profileName)
+        {
+            try
+            {
+                if(profileName != "Default")
+                {
+                    File.Delete(AppConfig.ProfileFolder + profileName + ".json");
+                }
+            }
+            catch
+            {
+            }
+        }
+
+        public static void SetConfiguration(Action action)
+        {
+            if (profile != null)
+            {
+                string jsonData = File.ReadAllText(AppConfig.ProfileFolder + profile.Name + ".json");
+                dynamic jsonObj = JsonConvert.DeserializeObject(jsonData);
+                jsonObj[action.GetActionName()] = action.GetConfiguration();
+                string output = JsonConvert.SerializeObject(jsonObj, Formatting.Indented);
+                File.WriteAllText(AppConfig.ProfileFolder + profile.Name + ".json", output);
+            }
+        }
+
+        public static Profile GetCurrent()
+        {
+            return profile;
+        }
+
         //Constructor for Profile
         public class Profile
         {
@@ -40,15 +99,49 @@ namespace RagnarokHotKeyInWinforms.Model
             public Macro SongMacro { get; set; }
             public Macro MacroSwitch { get; set; }
 
-            public int MyProperty { get; set; }
+            public ATKDefMode AtkDefMode { get; set; }
 
+            public Profile(string name)
+            {
+                this.Name = name;
+
+                this.UserPreferences = new UserPreferences();
+                this.AHK = new AHK();
+                this.Autopot = new Autopot(Autopot.ACTION_NAME_AUTOPOT);
+                this.AutopotYgg = new Autopot(Autopot.ACTION_NAME_AUTOPOT_YGG);
+                this.AutoRefreshSpammer = new AutoRefreshSpammer();
+                this.AutoBuff = new AutoBuff();
+                this.StatusRecovery = new StatusRecovery();
+                //this.SongMacro = new Macro(Macro.ACTION_NAME_SONG_MACRO, MacroSongForm.TOTAL_MACRO_LANES_FOR_SONGS);
+                //this.MacroSwitch = new Macro(Macro.ACTION_NAME_MACRO_SWITCH, MacroSwitchForm.TOTAL_MACRO_LANES);
+                this.AtkDefMode = new ATKDefMode();
+            }
             public static object GetByAction(dynamic obj, Action action)
             {
-                if(obj != null & obj[action.GetActionName()] != null)
+                if (obj != null & obj[action.GetActionName()] != null)
                 {
                     return obj[action.GetActionName()].ToString();
                 }
                 return action.GetConfiguration();
+            }
+
+            public static List<string> ListAll()
+            {
+                List<string> profiles = new List<string>();
+                try
+                {
+                    //Bin/debug/profile - We store the user settings in this folder.
+                    string[] files = Directory.GetFiles(AppConfig.ProfileFolder);
+                    foreach (string fileName in files)
+                    {
+                        string[] len = fileName.Split('\\');
+                        string profileName = len[len.Length - 1].Split('.')[0];
+                        profiles.Add(profileName);
+                    }
+                }
+                catch { }
+                return profiles;
+
             }
 
         }

@@ -8,12 +8,14 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using static RagnarokHotKeyInWinforms.Model.ProfileSingleton;
 
 namespace RagnarokHotKeyInWinforms
 {
     public partial class frm_Main : Form, IObserver
     {
         private Subject subject = new Subject();
+        private string currentProfile;
         private Timer progressTimer;
         private int progressIncrement; // Increment value for each tick
         private int targetProgress; // Target progress value
@@ -68,9 +70,29 @@ namespace RagnarokHotKeyInWinforms
         #endregion
         private void Form1_Load(object sender, EventArgs e)
         {
+            ProfileSingleton.Create("Default");
             StartUpdate();//Start the update to get the game address
             this.refreshProcessList(); // refresh the combobox and get the game
+            this.refreshProfileList(); // Get the profile list
+            this.profileCb.SelectedItem = "Default";
         }
+        //load the local profile
+        public void refreshProfileList()
+        {
+
+            this.Invoke((MethodInvoker)delegate ()
+            {
+                this.profileCb.Items.Clear();
+            });
+            //retrieve the profile stored in  //bin/debug/profile
+            foreach(string p in Profile.ListAll())
+            {
+                this.profileCb.Items.Add(p);
+            }
+            
+        }
+     
+        
         #region Public methods
         public void Update(ISubject subject)
         {
@@ -211,6 +233,24 @@ namespace RagnarokHotKeyInWinforms
             characterName.Text = client.ReadCharacterName();
             //If message code was changed then get the character name
             subject.Notify(new Utilities.Message(Utilities.MessageCode.PROCESS_CHANGED, null));
+        }
+        //Load the profile
+        private void profileCb_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if(this.profileCb.Text != currentProfile)
+            {
+                try
+                {
+                    ProfileSingleton.Load(this.profileCb.Text); //Load the profile
+                    subject.Notify(new Utilities.Message(MessageCode.PROFILE_CHANGED, null));
+                    currentProfile = this.profileCb.Text.ToString();
+                }
+                catch (Exception ex)
+                {
+
+                    MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
     }
 }

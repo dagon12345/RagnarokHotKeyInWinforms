@@ -38,6 +38,8 @@
             this.tabControlAutopot = new System.Windows.Forms.TabControl();
             this.tabPageAutopot = new System.Windows.Forms.TabPage();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.profileCb = new System.Windows.Forms.ComboBox();
+            this.label3 = new System.Windows.Forms.Label();
             this.tabControlAutopot.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -133,11 +135,31 @@
             this.tabPage2.Text = "tabPage2";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // profileCb
+            // 
+            this.profileCb.FormattingEnabled = true;
+            this.profileCb.Location = new System.Drawing.Point(593, 29);
+            this.profileCb.Name = "profileCb";
+            this.profileCb.Size = new System.Drawing.Size(121, 21);
+            this.profileCb.TabIndex = 8;
+            this.profileCb.SelectedIndexChanged += new System.EventHandler(this.profileCb_SelectedIndexChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(590, 9);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(36, 13);
+            this.label3.TabIndex = 9;
+            this.label3.Text = "Profile";
+            // 
             // frm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.profileCb);
             this.Controls.Add(this.tabControlAutopot);
             this.Controls.Add(this.brnRefresh);
             this.Controls.Add(this.lblSupportedServer);
@@ -167,6 +189,8 @@
         private System.Windows.Forms.TabControl tabControlAutopot;
         private System.Windows.Forms.TabPage tabPageAutopot;
         private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.ComboBox profileCb;
+        private System.Windows.Forms.Label label3;
     }
 }
 

@@ -33,8 +33,10 @@ namespace RagnarokHotKeyInWinforms
             //Paint Children forms
             SetToggleApplicationStateWindow();
             SetAutopotWindow();
-
-
+            SetAutopotYggWindow();
+            SetSkillTimerWindow();
+            SetAutoStatusEffectWindow();
+            SetAHKWindow();//Tab spammer
 
         }
         //addform used for each forms
@@ -54,7 +56,10 @@ namespace RagnarokHotKeyInWinforms
         {
             ToggleApplicationStateForm frm = new ToggleApplicationStateForm(subject);
             frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Location = new Point(350, 70);
+            int x = 0; // if 0 then it will dock in left side. The higher the number the more it docks in right
+            //the higher the number the more it is going into downward position
+            int y = 0; // You can set this to any desired value
+            frm.Location = new Point(x, y);
             frm.MdiParent = this;
             frm.Show();
         }
@@ -67,6 +72,46 @@ namespace RagnarokHotKeyInWinforms
             frm.Show();
             addForm(this.tabPageAutopot, frm);
         }
+        public void SetAutopotYggWindow()
+        {
+            AutopotForm frm = new AutopotForm(subject, true);
+            frm.FormBorderStyle = FormBorderStyle.None;
+            frm.MdiParent = this;
+            frm.Show();
+            addForm(this.tabPageYggAutopot, frm);
+        }
+        public void SetSkillTimerWindow()
+        {
+            SkillTimerForm frm = new SkillTimerForm(subject);
+            frm.FormBorderStyle = FormBorderStyle.None;
+            frm.MdiParent = this;
+            frm.Show();
+            addForm(this.tabPageSkillTimer, frm);
+        }
+        public void SetAutoStatusEffectWindow()
+        {
+            StatusEffectForm form = new StatusEffectForm(subject);
+            form.FormBorderStyle = FormBorderStyle.None;
+
+            // Calculate the position for the right edge
+            int x = 0; // if 0 then it will dock in left side. The higher the number the more it docks in right
+            //the higher the number the more it is going into downward position
+            int y = 135; // You can set this to any desired value
+
+            form.Location = new Point(x, y);
+            form.MdiParent = this;
+            form.Show();
+        }
+        public void SetAHKWindow()
+        {
+            AHKForm frm = new AHKForm(subject);
+            frm.FormBorderStyle = FormBorderStyle.None;
+            frm.Location = new Point(0, 65);
+            frm.MdiParent = this;
+            frm.Show();
+            addForm(this.tabPageSpammer, frm);
+        }
+
         #endregion
         private void Form1_Load(object sender, EventArgs e)
         {

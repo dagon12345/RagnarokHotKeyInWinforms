@@ -37,7 +37,7 @@
             // 
             // txtStatusToggleKey
             // 
-            this.txtStatusToggleKey.Location = new System.Drawing.Point(102, 55);
+            this.txtStatusToggleKey.Location = new System.Drawing.Point(86, 53);
             this.txtStatusToggleKey.Multiline = true;
             this.txtStatusToggleKey.Name = "txtStatusToggleKey";
             this.txtStatusToggleKey.Size = new System.Drawing.Size(100, 40);
@@ -45,7 +45,7 @@
             // 
             // btnStatusToggle
             // 
-            this.btnStatusToggle.Location = new System.Drawing.Point(102, 26);
+            this.btnStatusToggle.Location = new System.Drawing.Point(86, 24);
             this.btnStatusToggle.Name = "btnStatusToggle";
             this.btnStatusToggle.Size = new System.Drawing.Size(100, 23);
             this.btnStatusToggle.TabIndex = 1;
@@ -56,7 +56,7 @@
             // lblStatusToggle
             // 
             this.lblStatusToggle.AutoSize = true;
-            this.lblStatusToggle.Location = new System.Drawing.Point(91, 101);
+            this.lblStatusToggle.Location = new System.Drawing.Point(75, 99);
             this.lblStatusToggle.Name = "lblStatusToggle";
             this.lblStatusToggle.Size = new System.Drawing.Size(122, 13);
             this.lblStatusToggle.TabIndex = 2;
@@ -71,11 +71,13 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(307, 134);
+            this.ClientSize = new System.Drawing.Size(267, 134);
             this.Controls.Add(this.lblStatusToggle);
             this.Controls.Add(this.btnStatusToggle);
             this.Controls.Add(this.txtStatusToggleKey);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "ToggleApplicationStateForm";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "ToggleApplicationStateForm";
             this.ResumeLayout(false);
             this.PerformLayout();

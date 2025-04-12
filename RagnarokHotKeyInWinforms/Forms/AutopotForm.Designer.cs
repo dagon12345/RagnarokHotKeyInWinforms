@@ -150,6 +150,7 @@
             this.Controls.Add(this.txtHpKey);
             this.Name = "AutopotForm";
             this.Text = "AutopotForm";
+            this.Load += new System.EventHandler(this.AutopotForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.txtHPpct)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.txtSPpct)).EndInit();
             this.ResumeLayout(false);

@@ -37,16 +37,24 @@
             this.brnRefresh = new System.Windows.Forms.Button();
             this.tabControlAutopot = new System.Windows.Forms.TabControl();
             this.tabPageAutopot = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabPageYggAutopot = new System.Windows.Forms.TabPage();
+            this.tabPageSkillTimer = new System.Windows.Forms.TabPage();
             this.profileCb = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.tabMain = new System.Windows.Forms.TabControl();
+            this.tabPageSpammer = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.tabControlAutopot.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.tabMain.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(344, 65);
+            this.label1.Location = new System.Drawing.Point(271, 62);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(84, 13);
             this.label1.TabIndex = 0;
@@ -55,7 +63,7 @@
             // characterName
             // 
             this.characterName.AutoSize = true;
-            this.characterName.Location = new System.Drawing.Point(344, 87);
+            this.characterName.Location = new System.Drawing.Point(271, 84);
             this.characterName.Name = "characterName";
             this.characterName.Size = new System.Drawing.Size(37, 13);
             this.characterName.TabIndex = 1;
@@ -64,7 +72,7 @@
             // processCombobox
             // 
             this.processCombobox.FormattingEnabled = true;
-            this.processCombobox.Location = new System.Drawing.Point(344, 29);
+            this.processCombobox.Location = new System.Drawing.Point(271, 26);
             this.processCombobox.Name = "processCombobox";
             this.processCombobox.Size = new System.Drawing.Size(121, 21);
             this.processCombobox.TabIndex = 2;
@@ -73,7 +81,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(344, 13);
+            this.label2.Location = new System.Drawing.Point(271, 10);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(83, 13);
             this.label2.TabIndex = 3;
@@ -82,7 +90,7 @@
             // lblSupportedServer
             // 
             this.lblSupportedServer.AutoSize = true;
-            this.lblSupportedServer.Location = new System.Drawing.Point(2, 411);
+            this.lblSupportedServer.Location = new System.Drawing.Point(2, 610);
             this.lblSupportedServer.Name = "lblSupportedServer";
             this.lblSupportedServer.Size = new System.Drawing.Size(150, 13);
             this.lblSupportedServer.TabIndex = 5;
@@ -90,14 +98,14 @@
             // 
             // pbSupportedServer
             // 
-            this.pbSupportedServer.Location = new System.Drawing.Point(5, 427);
+            this.pbSupportedServer.Location = new System.Drawing.Point(5, 626);
             this.pbSupportedServer.Name = "pbSupportedServer";
-            this.pbSupportedServer.Size = new System.Drawing.Size(795, 23);
+            this.pbSupportedServer.Size = new System.Drawing.Size(795, 10);
             this.pbSupportedServer.TabIndex = 4;
             // 
             // brnRefresh
             // 
-            this.brnRefresh.Location = new System.Drawing.Point(471, 29);
+            this.brnRefresh.Location = new System.Drawing.Point(398, 26);
             this.brnRefresh.Name = "brnRefresh";
             this.brnRefresh.Size = new System.Drawing.Size(75, 21);
             this.brnRefresh.TabIndex = 6;
@@ -108,11 +116,12 @@
             // tabControlAutopot
             // 
             this.tabControlAutopot.Controls.Add(this.tabPageAutopot);
-            this.tabControlAutopot.Controls.Add(this.tabPage2);
-            this.tabControlAutopot.Location = new System.Drawing.Point(12, 160);
+            this.tabControlAutopot.Controls.Add(this.tabPageYggAutopot);
+            this.tabControlAutopot.Controls.Add(this.tabPageSkillTimer);
+            this.tabControlAutopot.Location = new System.Drawing.Point(2, 189);
             this.tabControlAutopot.Name = "tabControlAutopot";
             this.tabControlAutopot.SelectedIndex = 0;
-            this.tabControlAutopot.Size = new System.Drawing.Size(233, 152);
+            this.tabControlAutopot.Size = new System.Drawing.Size(267, 154);
             this.tabControlAutopot.TabIndex = 7;
             // 
             // tabPageAutopot
@@ -120,25 +129,35 @@
             this.tabPageAutopot.Location = new System.Drawing.Point(4, 22);
             this.tabPageAutopot.Name = "tabPageAutopot";
             this.tabPageAutopot.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAutopot.Size = new System.Drawing.Size(225, 126);
+            this.tabPageAutopot.Size = new System.Drawing.Size(259, 128);
             this.tabPageAutopot.TabIndex = 0;
             this.tabPageAutopot.Text = "Autopot";
             this.tabPageAutopot.UseVisualStyleBackColor = true;
             // 
-            // tabPage2
+            // tabPageYggAutopot
             // 
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(225, 126);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "tabPage2";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.tabPageYggAutopot.Location = new System.Drawing.Point(4, 22);
+            this.tabPageYggAutopot.Name = "tabPageYggAutopot";
+            this.tabPageYggAutopot.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageYggAutopot.Size = new System.Drawing.Size(225, 126);
+            this.tabPageYggAutopot.TabIndex = 1;
+            this.tabPageYggAutopot.Text = "Ygg";
+            this.tabPageYggAutopot.UseVisualStyleBackColor = true;
+            // 
+            // tabPageSkillTimer
+            // 
+            this.tabPageSkillTimer.Location = new System.Drawing.Point(4, 22);
+            this.tabPageSkillTimer.Name = "tabPageSkillTimer";
+            this.tabPageSkillTimer.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageSkillTimer.Size = new System.Drawing.Size(225, 126);
+            this.tabPageSkillTimer.TabIndex = 2;
+            this.tabPageSkillTimer.Text = "Skill Timer";
+            this.tabPageSkillTimer.UseVisualStyleBackColor = true;
             // 
             // profileCb
             // 
             this.profileCb.FormattingEnabled = true;
-            this.profileCb.Location = new System.Drawing.Point(593, 29);
+            this.profileCb.Location = new System.Drawing.Point(520, 26);
             this.profileCb.Name = "profileCb";
             this.profileCb.Size = new System.Drawing.Size(121, 21);
             this.profileCb.TabIndex = 8;
@@ -147,17 +166,71 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(590, 9);
+            this.label3.Location = new System.Drawing.Point(517, 6);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(36, 13);
             this.label3.TabIndex = 9;
             this.label3.Text = "Profile";
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Location = new System.Drawing.Point(2, 0);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(263, 183);
+            this.groupBox1.TabIndex = 10;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Visible = false;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(53, 65);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(159, 40);
+            this.label4.TabIndex = 11;
+            this.label4.Text = "Toggle Application\r\nStatus Effect Area";
+            // 
+            // tabMain
+            // 
+            this.tabMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabMain.Controls.Add(this.tabPageSpammer);
+            this.tabMain.Controls.Add(this.tabPage2);
+            this.tabMain.Location = new System.Drawing.Point(6, 345);
+            this.tabMain.Name = "tabMain";
+            this.tabMain.SelectedIndex = 0;
+            this.tabMain.Size = new System.Drawing.Size(794, 262);
+            this.tabMain.TabIndex = 11;
+            // 
+            // tabPageSpammer
+            // 
+            this.tabPageSpammer.Location = new System.Drawing.Point(4, 22);
+            this.tabPageSpammer.Name = "tabPageSpammer";
+            this.tabPageSpammer.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageSpammer.Size = new System.Drawing.Size(786, 236);
+            this.tabPageSpammer.TabIndex = 0;
+            this.tabPageSpammer.Text = "Skill Spammer";
+            this.tabPageSpammer.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(192, 74);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "tabPage2";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
             // frm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 640);
+            this.Controls.Add(this.tabMain);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.profileCb);
             this.Controls.Add(this.tabControlAutopot);
@@ -172,6 +245,9 @@
             this.Text = "Main";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControlAutopot.ResumeLayout(false);
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.tabMain.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -188,9 +264,15 @@
         private System.Windows.Forms.Button brnRefresh;
         private System.Windows.Forms.TabControl tabControlAutopot;
         private System.Windows.Forms.TabPage tabPageAutopot;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabPageYggAutopot;
         private System.Windows.Forms.ComboBox profileCb;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TabPage tabPageSkillTimer;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.TabControl tabMain;
+        private System.Windows.Forms.TabPage tabPageSpammer;
+        private System.Windows.Forms.TabPage tabPage2;
     }
 }
 

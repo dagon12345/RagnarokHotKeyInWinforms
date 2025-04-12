@@ -49,7 +49,11 @@ namespace RagnarokHotKeyInWinforms.Model
 
         public void Start()
         {
-            Stop();
+            if(thread != null)
+            {
+               Stop();// Commented this and uncomment if thread later is needed.
+            }
+
             Client roClient = ClientSingleton.GetClient();
             if(roClient != null)
             {

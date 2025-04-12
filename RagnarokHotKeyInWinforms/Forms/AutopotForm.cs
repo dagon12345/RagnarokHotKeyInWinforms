@@ -107,5 +107,9 @@ namespace RagnarokHotKeyInWinforms.Forms
         }
         #endregion
 
+        private void AutopotForm_Load(object sender, EventArgs e)
+        {
+
+        }
     }
 }

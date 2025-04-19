@@ -37,6 +37,7 @@ namespace RagnarokHotKeyInWinforms.Model
                 throw new Exception(ex.Message);
             }
         }
+        //Create new configuration
         public static void Create(string profileName)
         {
             //Stored in //bin/debug/profile
@@ -54,6 +55,7 @@ namespace RagnarokHotKeyInWinforms.Model
             //Load if existed
             ProfileSingleton.Load(profileName);
         }
+        //Delete the current configuration
         public static void Delete(string profileName)
         {
             try
@@ -67,7 +69,7 @@ namespace RagnarokHotKeyInWinforms.Model
             {
             }
         }
-
+        // set the default configuration set by the user.
         public static void SetConfiguration(Action action)
         {
             if (profile != null)
@@ -79,7 +81,7 @@ namespace RagnarokHotKeyInWinforms.Model
                 File.WriteAllText(AppConfig.ProfileFolder + profile.Name + ".json", output);
             }
         }
-
+        //get the current set by the user locally
         public static Profile GetCurrent()
         {
             return profile;

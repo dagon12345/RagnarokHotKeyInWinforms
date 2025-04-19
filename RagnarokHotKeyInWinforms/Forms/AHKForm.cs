@@ -101,11 +101,13 @@ namespace RagnarokHotKeyInWinforms.Forms
             Key key = (Key)new KeyConverter().ConvertFromString(checkbox.Text);
             bool haveMouseClick = checkbox.CheckState == CheckState.Checked ? true : false;
 
+            //If there is a checked key in checkbox then register this to the profile that was selected.
             if (checkbox.CheckState == CheckState.Checked || checkbox.CheckState == CheckState.Indeterminate)
                 ProfileSingleton.GetCurrent().AHK.AddAHKEntry(checkbox.Name, new KeyConfig(key, haveMouseClick));
             else
+                //Uncheck remove the current checked
                 ProfileSingleton.GetCurrent().AHK.RemoveAHKEntry(checkbox.Name);
-
+            //get current once the profile was loaded
             ProfileSingleton.SetConfiguration(ProfileSingleton.GetCurrent().AHK);
         }
         private void InitializeCheckAsThreeState()

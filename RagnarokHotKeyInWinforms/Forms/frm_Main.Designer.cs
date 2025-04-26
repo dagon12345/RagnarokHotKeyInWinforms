@@ -42,13 +42,17 @@
             this.profileCb = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.tabMain = new System.Windows.Forms.TabControl();
             this.tabPageSpammer = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.tabPageProfiles = new System.Windows.Forms.TabPage();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.tabControlAutopot.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabMain.SuspendLayout();
+            this.tabPageSpammer.SuspendLayout();
+            this.tabPageProfiles.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -139,7 +143,7 @@
             this.tabPageYggAutopot.Location = new System.Drawing.Point(4, 22);
             this.tabPageYggAutopot.Name = "tabPageYggAutopot";
             this.tabPageYggAutopot.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageYggAutopot.Size = new System.Drawing.Size(225, 126);
+            this.tabPageYggAutopot.Size = new System.Drawing.Size(259, 128);
             this.tabPageYggAutopot.TabIndex = 1;
             this.tabPageYggAutopot.Text = "Ygg";
             this.tabPageYggAutopot.UseVisualStyleBackColor = true;
@@ -149,7 +153,7 @@
             this.tabPageSkillTimer.Location = new System.Drawing.Point(4, 22);
             this.tabPageSkillTimer.Name = "tabPageSkillTimer";
             this.tabPageSkillTimer.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageSkillTimer.Size = new System.Drawing.Size(225, 126);
+            this.tabPageSkillTimer.Size = new System.Drawing.Size(259, 128);
             this.tabPageSkillTimer.TabIndex = 2;
             this.tabPageSkillTimer.Text = "Skill Timer";
             this.tabPageSkillTimer.UseVisualStyleBackColor = true;
@@ -182,6 +186,40 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Visible = false;
             // 
+            // tabMain
+            // 
+            this.tabMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.tabMain.Controls.Add(this.tabPageSpammer);
+            this.tabMain.Controls.Add(this.tabPageProfiles);
+            this.tabMain.Location = new System.Drawing.Point(6, 345);
+            this.tabMain.Name = "tabMain";
+            this.tabMain.SelectedIndex = 0;
+            this.tabMain.Size = new System.Drawing.Size(794, 262);
+            this.tabMain.TabIndex = 11;
+            // 
+            // tabPageSpammer
+            // 
+            this.tabPageSpammer.Controls.Add(this.label5);
+            this.tabPageSpammer.Location = new System.Drawing.Point(4, 22);
+            this.tabPageSpammer.Name = "tabPageSpammer";
+            this.tabPageSpammer.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageSpammer.Size = new System.Drawing.Size(786, 236);
+            this.tabPageSpammer.TabIndex = 0;
+            this.tabPageSpammer.Text = "Skill Spammer";
+            this.tabPageSpammer.UseVisualStyleBackColor = true;
+            // 
+            // tabPageProfiles
+            // 
+            this.tabPageProfiles.Controls.Add(this.label6);
+            this.tabPageProfiles.Location = new System.Drawing.Point(4, 22);
+            this.tabPageProfiles.Name = "tabPageProfiles";
+            this.tabPageProfiles.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageProfiles.Size = new System.Drawing.Size(786, 236);
+            this.tabPageProfiles.TabIndex = 1;
+            this.tabPageProfiles.Text = "Profile Creation";
+            this.tabPageProfiles.UseVisualStyleBackColor = true;
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
@@ -192,37 +230,28 @@
             this.label4.TabIndex = 11;
             this.label4.Text = "Toggle Application\r\nStatus Effect Area";
             // 
-            // tabMain
+            // label5
             // 
-            this.tabMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabMain.Controls.Add(this.tabPageSpammer);
-            this.tabMain.Controls.Add(this.tabPage2);
-            this.tabMain.Location = new System.Drawing.Point(6, 345);
-            this.tabMain.Name = "tabMain";
-            this.tabMain.SelectedIndex = 0;
-            this.tabMain.Size = new System.Drawing.Size(794, 262);
-            this.tabMain.TabIndex = 11;
+            this.label5.AutoSize = true;
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(233, 88);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(356, 40);
+            this.label5.TabIndex = 12;
+            this.label5.Text = "This is where the AHK form will take effect\r\nWhere we config the attacker and def" +
+    "ender";
+            this.label5.Visible = false;
             // 
-            // tabPageSpammer
+            // label6
             // 
-            this.tabPageSpammer.Location = new System.Drawing.Point(4, 22);
-            this.tabPageSpammer.Name = "tabPageSpammer";
-            this.tabPageSpammer.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageSpammer.Size = new System.Drawing.Size(786, 236);
-            this.tabPageSpammer.TabIndex = 0;
-            this.tabPageSpammer.Text = "Skill Spammer";
-            this.tabPageSpammer.UseVisualStyleBackColor = true;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(192, 74);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "tabPage2";
-            this.tabPage2.UseVisualStyleBackColor = true;
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(175, 96);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(474, 40);
+            this.label6.TabIndex = 13;
+            this.label6.Text = "This is where the creation of profile. Mission is to sync this\r\nonline";
+            this.label6.Visible = false;
             // 
             // frm_Main
             // 
@@ -248,6 +277,10 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             this.tabMain.ResumeLayout(false);
+            this.tabPageSpammer.ResumeLayout(false);
+            this.tabPageSpammer.PerformLayout();
+            this.tabPageProfiles.ResumeLayout(false);
+            this.tabPageProfiles.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -269,10 +302,12 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TabPage tabPageSkillTimer;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TabControl tabMain;
         private System.Windows.Forms.TabPage tabPageSpammer;
-        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.TabPage tabPageProfiles;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
     }
 }
 

@@ -37,6 +37,8 @@ namespace RagnarokHotKeyInWinforms
             SetSkillTimerWindow();
             SetAutoStatusEffectWindow();
             SetAHKWindow();//Tab spammer
+            SetProfileWindow();//Profile
+
 
         }
         //addform used for each forms
@@ -52,6 +54,15 @@ namespace RagnarokHotKeyInWinforms
             Refresh();
         }
         #region Frames
+        public void SetProfileWindow()
+        {
+            ProfileForm frm = new ProfileForm(this);
+            frm.FormBorderStyle = FormBorderStyle.None;
+            frm.Location = new Point(0, 65);
+            frm.MdiParent = this;
+            frm.Show();
+            addForm(this.tabPageProfiles, frm);
+        }
         public void SetToggleApplicationStateWindow()
         {
             ToggleApplicationStateForm frm = new ToggleApplicationStateForm(subject);
@@ -122,6 +133,7 @@ namespace RagnarokHotKeyInWinforms
             this.profileCb.SelectedItem = "Default";
         }
         //load the local profile
+        //NOTE: This method/function was used in the form "ProfileForm"
         public void refreshProfileList()
         {
 

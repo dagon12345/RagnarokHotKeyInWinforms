@@ -29,7 +29,11 @@ namespace RagnarokHotKeyInWinforms.Model
 
         public void Start()
         {
-            Stop();
+            //If thread is running in the background, then trigger Stop function.
+            if(thread != null)
+            {
+                Stop();
+            }
             Client roClient = ClientSingleton.GetClient();
             if (roClient != null)
             {

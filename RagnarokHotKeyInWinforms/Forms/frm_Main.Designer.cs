@@ -42,17 +42,20 @@
             this.profileCb = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.tabMain = new System.Windows.Forms.TabControl();
             this.tabPageSpammer = new System.Windows.Forms.TabPage();
-            this.tabPageProfiles = new System.Windows.Forms.TabPage();
-            this.label4 = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
+            this.tabPageProfiles = new System.Windows.Forms.TabPage();
             this.label6 = new System.Windows.Forms.Label();
+            this.tabAutoBuffStuff = new System.Windows.Forms.TabPage();
+            this.label7 = new System.Windows.Forms.Label();
             this.tabControlAutopot.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabMain.SuspendLayout();
             this.tabPageSpammer.SuspendLayout();
             this.tabPageProfiles.SuspendLayout();
+            this.tabAutoBuffStuff.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -93,8 +96,9 @@
             // 
             // lblSupportedServer
             // 
+            this.lblSupportedServer.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.lblSupportedServer.AutoSize = true;
-            this.lblSupportedServer.Location = new System.Drawing.Point(2, 610);
+            this.lblSupportedServer.Location = new System.Drawing.Point(4, 658);
             this.lblSupportedServer.Name = "lblSupportedServer";
             this.lblSupportedServer.Size = new System.Drawing.Size(150, 13);
             this.lblSupportedServer.TabIndex = 5;
@@ -102,9 +106,10 @@
             // 
             // pbSupportedServer
             // 
-            this.pbSupportedServer.Location = new System.Drawing.Point(5, 626);
+            this.pbSupportedServer.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.pbSupportedServer.Location = new System.Drawing.Point(7, 674);
             this.pbSupportedServer.Name = "pbSupportedServer";
-            this.pbSupportedServer.Size = new System.Drawing.Size(795, 10);
+            this.pbSupportedServer.Size = new System.Drawing.Size(789, 10);
             this.pbSupportedServer.TabIndex = 4;
             // 
             // brnRefresh
@@ -186,16 +191,27 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Visible = false;
             // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(53, 65);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(159, 40);
+            this.label4.TabIndex = 11;
+            this.label4.Text = "Toggle Application\r\nStatus Effect Area";
+            // 
             // tabMain
             // 
             this.tabMain.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tabMain.Controls.Add(this.tabPageSpammer);
             this.tabMain.Controls.Add(this.tabPageProfiles);
+            this.tabMain.Controls.Add(this.tabAutoBuffStuff);
             this.tabMain.Location = new System.Drawing.Point(6, 345);
             this.tabMain.Name = "tabMain";
             this.tabMain.SelectedIndex = 0;
-            this.tabMain.Size = new System.Drawing.Size(794, 262);
+            this.tabMain.Size = new System.Drawing.Size(794, 306);
             this.tabMain.TabIndex = 11;
             // 
             // tabPageSpammer
@@ -209,27 +225,6 @@
             this.tabPageSpammer.Text = "Skill Spammer";
             this.tabPageSpammer.UseVisualStyleBackColor = true;
             // 
-            // tabPageProfiles
-            // 
-            this.tabPageProfiles.Controls.Add(this.label6);
-            this.tabPageProfiles.Location = new System.Drawing.Point(4, 22);
-            this.tabPageProfiles.Name = "tabPageProfiles";
-            this.tabPageProfiles.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageProfiles.Size = new System.Drawing.Size(786, 236);
-            this.tabPageProfiles.TabIndex = 1;
-            this.tabPageProfiles.Text = "Profile Creation";
-            this.tabPageProfiles.UseVisualStyleBackColor = true;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(53, 65);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(159, 40);
-            this.label4.TabIndex = 11;
-            this.label4.Text = "Toggle Application\r\nStatus Effect Area";
-            // 
             // label5
             // 
             this.label5.AutoSize = true;
@@ -242,6 +237,17 @@
     "ender";
             this.label5.Visible = false;
             // 
+            // tabPageProfiles
+            // 
+            this.tabPageProfiles.Controls.Add(this.label6);
+            this.tabPageProfiles.Location = new System.Drawing.Point(4, 22);
+            this.tabPageProfiles.Name = "tabPageProfiles";
+            this.tabPageProfiles.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageProfiles.Size = new System.Drawing.Size(786, 236);
+            this.tabPageProfiles.TabIndex = 1;
+            this.tabPageProfiles.Text = "Profile Creation";
+            this.tabPageProfiles.UseVisualStyleBackColor = true;
+            // 
             // label6
             // 
             this.label6.AutoSize = true;
@@ -253,11 +259,32 @@
             this.label6.Text = "This is where the creation of profile. Mission is to sync this\r\nonline";
             this.label6.Visible = false;
             // 
+            // tabAutoBuffStuff
+            // 
+            this.tabAutoBuffStuff.Controls.Add(this.label7);
+            this.tabAutoBuffStuff.Location = new System.Drawing.Point(4, 22);
+            this.tabAutoBuffStuff.Name = "tabAutoBuffStuff";
+            this.tabAutoBuffStuff.Size = new System.Drawing.Size(786, 280);
+            this.tabAutoBuffStuff.TabIndex = 2;
+            this.tabAutoBuffStuff.Text = "AutoBuff - Stuffs";
+            this.tabAutoBuffStuff.UseVisualStyleBackColor = true;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(337, 108);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(126, 20);
+            this.label7.TabIndex = 14;
+            this.label7.Text = "Auto buff stuff";
+            this.label7.Visible = false;
+            // 
             // frm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 640);
+            this.ClientSize = new System.Drawing.Size(800, 689);
             this.Controls.Add(this.tabMain);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label3);
@@ -281,6 +308,8 @@
             this.tabPageSpammer.PerformLayout();
             this.tabPageProfiles.ResumeLayout(false);
             this.tabPageProfiles.PerformLayout();
+            this.tabAutoBuffStuff.ResumeLayout(false);
+            this.tabAutoBuffStuff.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -308,6 +337,8 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TabPage tabAutoBuffStuff;
+        private System.Windows.Forms.Label label7;
     }
 }
 

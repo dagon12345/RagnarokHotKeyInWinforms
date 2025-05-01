@@ -31,8 +31,8 @@
             this.components = new System.ComponentModel.Container();
             this.txtStatusToggleKey = new System.Windows.Forms.TextBox();
             this.btnStatusToggle = new System.Windows.Forms.Button();
-            this.lblStatusToggle = new System.Windows.Forms.Label();
             this.notifyIconTray = new System.Windows.Forms.NotifyIcon(this.components);
+            this.lblStatusToggle = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // txtStatusToggleKey
@@ -53,19 +53,23 @@
             this.btnStatusToggle.UseVisualStyleBackColor = true;
             this.btnStatusToggle.Click += new System.EventHandler(this.btnStatusToggle_Click);
             // 
-            // lblStatusToggle
-            // 
-            this.lblStatusToggle.AutoSize = true;
-            this.lblStatusToggle.Location = new System.Drawing.Point(75, 99);
-            this.lblStatusToggle.Name = "lblStatusToggle";
-            this.lblStatusToggle.Size = new System.Drawing.Size(122, 13);
-            this.lblStatusToggle.TabIndex = 2;
-            this.lblStatusToggle.Text = "Press the button to start!";
-            // 
             // notifyIconTray
             // 
             this.notifyIconTray.Text = "notifyIconTray";
             this.notifyIconTray.Visible = true;
+            // 
+            // lblStatusToggle
+            // 
+            this.lblStatusToggle.BackColor = System.Drawing.SystemColors.Control;
+            this.lblStatusToggle.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lblStatusToggle.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatusToggle.Location = new System.Drawing.Point(12, 99);
+            this.lblStatusToggle.Name = "lblStatusToggle";
+            this.lblStatusToggle.ReadOnly = true;
+            this.lblStatusToggle.Size = new System.Drawing.Size(243, 16);
+            this.lblStatusToggle.TabIndex = 2;
+            this.lblStatusToggle.Text = "Press the button to start!";
+            this.lblStatusToggle.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // ToggleApplicationStateForm
             // 
@@ -88,7 +92,7 @@
 
         private System.Windows.Forms.TextBox txtStatusToggleKey;
         private System.Windows.Forms.Button btnStatusToggle;
-        private System.Windows.Forms.Label lblStatusToggle;
         private System.Windows.Forms.NotifyIcon notifyIconTray;
+        private System.Windows.Forms.TextBox lblStatusToggle;
     }
 }

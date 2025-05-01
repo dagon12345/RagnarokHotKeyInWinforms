@@ -44,8 +44,11 @@ namespace RagnarokHotKeyInWinforms.Model
 
         public void Start()
         {
-            //NOTE: use this stop if there are exisiting thread running. We commented becuase it will cause an error.
-            //Stop();
+            //If thread is running then stop and trigger the function after this.
+            if (thread != null)
+            {
+                Stop();// Commented this and uncomment if thread later is needed.
+            }
             Client roClient = ClientSingleton.GetClient();
             if(roClient != null)
             {

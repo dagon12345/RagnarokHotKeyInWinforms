@@ -38,6 +38,9 @@ namespace RagnarokHotKeyInWinforms
             SetAutoStatusEffectWindow();
             SetAHKWindow();//Tab spammer
             SetProfileWindow();//Profile
+            SetAutobuffStuffWindow();//AutoBuff Stuff
+
+
 
 
         }
@@ -54,6 +57,15 @@ namespace RagnarokHotKeyInWinforms
             Refresh();
         }
         #region Frames
+        public void SetAutobuffStuffWindow()
+        {
+            StuffAutoBuffForm frm = new StuffAutoBuffForm(subject);
+            frm.FormBorderStyle = FormBorderStyle.None;
+            frm.Location = new Point(0, 65);
+            frm.MdiParent = this;
+            frm.Show();
+            addForm(this.tabAutoBuffStuff, frm);
+        }
         public void SetProfileWindow()
         {
             ProfileForm frm = new ProfileForm(this);

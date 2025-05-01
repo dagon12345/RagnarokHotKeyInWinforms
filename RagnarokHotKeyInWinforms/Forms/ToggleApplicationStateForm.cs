@@ -26,15 +26,13 @@ namespace RagnarokHotKeyInWinforms.Forms
             subject.Attach(this);
             this.subject = subject;
             KeyboardHook.Enable();
-            //TODO: Retrieve the profile settings of the user
-            //this.txtStatusToggleKey.Text = ProfileSingleton.GetCurrent().UserPreferences.toggleStateKey;
+            this.txtStatusToggleKey.Text = ProfileSingleton.GetCurrent().UserPreferences.toggleStateKey;
             txtStatusToggleKey.KeyDown += new KeyEventHandler(FormUtils.OnKeyDown);
             this.txtStatusToggleKey.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
             this.txtStatusToggleKey.TextChanged += new EventHandler(this.onStatusToggleKeyChange);
             InitializeContextualMenu();
         }
 
-        //Not used yet
         public void Update(ISubject subject)
         {
             if ((subject as Subject).Message.code == MessageCode.PROFILE_CHANGED)
@@ -70,8 +68,8 @@ namespace RagnarokHotKeyInWinforms.Forms
             Keys currentToggleKey = (Keys)Enum.Parse(typeof(Keys), this.txtStatusToggleKey.Text);
             KeyboardHook.Remove(lastKey);
             KeyboardHook.Add(currentToggleKey, new KeyboardHook.KeyPressed(this.toggleStatus));
-           // ProfileSingleton.GetCurrent().UserPreferences.toggleStateKey = currentToggleKey.ToString(); //Update profile key
-            //ProfileSingleton.SetConfiguration(ProfileSingleton.GetCurrent().UserPreferences);
+            ProfileSingleton.GetCurrent().UserPreferences.toggleStateKey = currentToggleKey.ToString(); //Update profile key
+            ProfileSingleton.SetConfiguration(ProfileSingleton.GetCurrent().UserPreferences);
 
             lastKey = currentToggleKey; //Refresh lastKey to update 
         }
@@ -110,16 +108,16 @@ namespace RagnarokHotKeyInWinforms.Forms
             return true;
         }
 
-        //private void notifyIconDoubleClick(object sender, MouseEventArgs e)
-        //{
-        //    this.subject.Notify(new Utils.Message(MessageCode.CLICK_ICON_TRAY, null));
-        //}
+        private void notifyIconDoubleClick(object sender, MouseEventArgs e)
+        {
+            this.subject.Notify(new Utilities.Message(MessageCode.CLICK_ICON_TRAY, null));
+        }
 
-        //private void notifyShutdownApplication(object Sender, EventArgs e)
-        //{
-        //    // Close the form, which closes the application.
-        //    this.subject.Notify(new Utils.Message(MessageCode.SHUTDOWN_APPLICATION, null));
-        //}
+        private void notifyShutdownApplication(object Sender, EventArgs e)
+        {
+            // Close the form, which closes the application.
+            this.subject.Notify(new Utilities.Message(MessageCode.SHUTDOWN_APPLICATION, null));
+        }
         #endregion
 
         private void btnStatusToggle_Click(object sender, EventArgs e)

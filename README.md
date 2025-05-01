@@ -10,3 +10,7 @@ AHK form - Where we can work with the checkboxes trigger for the hotkey and mous
 ProfileForm - Is to create a new profile: This is where we integrate our database for syncing.
 
 NOTE: Class ATKDefMode.cs is for attacking configuration
+
+Updates:
+May 01, 2025
+Progress: Creation of AutoBuffForm intended for Stuff;

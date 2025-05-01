@@ -12,5 +12,6 @@ ProfileForm - Is to create a new profile: This is where we integrate our databas
 NOTE: Class ATKDefMode.cs is for attacking configuration
 
 Updates:
-May 01, 2025
+May 01, 2025 (Done)
 Progress: Creation of AutoBuffForm intended for Stuff;
+Next: SkillAutoBuffForm intended for skills automation;

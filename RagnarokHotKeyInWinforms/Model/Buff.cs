@@ -69,7 +69,128 @@ namespace RagnarokHotKeyInWinforms.Model
             return skills;
         }
         #endregion
+        #region Mage
+        public static List<Buff> GetMageSkills()
+        {
+            List<Buff> skills = new List<Buff>
+            {
+                new Buff("Energy Coat", EffectStatusIDs.ENERGYCOAT, Resources.mg_energycoat),
+                new Buff("Sight Blaster", EffectStatusIDs.SIGHTBLASTER, Resources.wz_sightblaster),
+                new Buff("Autospell", EffectStatusIDs.AUTOSPELL, Resources.sa_autospell),
+                new Buff("Double Casting", EffectStatusIDs.DOUBLECASTING, Resources.pf_doublecasting),
+                new Buff("Memorize", EffectStatusIDs.MEMORIZE, Resources.pf_memorize),
+                new Buff("Telekinesis Intense", EffectStatusIDs.TELEKINESIS_INTENSE, Resources.telecinese),
+                new Buff("Amplification", EffectStatusIDs.MYST_AMPLIFY, Resources.amplify),
+                new Buff("Recognized Spell", EffectStatusIDs.RECOGNIZEDSPELL, Resources.recognized_spell)
+            };
 
+            return skills;
+        }
+        #endregion
+        #region Merchant
+        public static List<Buff> GetMerchantSkills()
+        {
+            List<Buff> skills = new List<Buff>
+            {
+                new Buff("Crazy Uproar", EffectStatusIDs.CRAZY_UPROAR, Resources.mc_loud),
+                new Buff("Power-Thrust", EffectStatusIDs.OVERTHRUST, Resources.bs_overthrust),
+                new Buff("Adrenaline Rush", EffectStatusIDs.ADRENALINE, Resources.bs_adrenaline),
+                new Buff("Advanced Adrenaline Rush", EffectStatusIDs.ADRENALINE2, Resources.bs_adrenaline2),
+                new Buff("Maximum Power-Thrust", EffectStatusIDs.OVERTHRUSTMAX, Resources.ws_overthrustmax),
+                new Buff("Weapon Perfection", EffectStatusIDs.WEAPONPERFECT, Resources.bs_weaponperfect),
+                new Buff("Power Maximize", EffectStatusIDs.MAXIMIZE, Resources.bs_maximize),
+                new Buff("Cart Boost", EffectStatusIDs.CARTBOOST, Resources.ws_cartboost),
+                new Buff("Meltdown", EffectStatusIDs.MELTDOWN, Resources.ws_meltdown),
+                new Buff("Acceleration", EffectStatusIDs.ACCELERATION, Resources.mec_acceleration),
+                new Buff("Cart Boost", EffectStatusIDs.GN_CARTBOOST, Resources.cart_boost),
+                new Buff("Research Report", EffectStatusIDs.RESEARCHREPORT, Resources.researchreport)
+            };
+
+            return skills;
+        }
+        #endregion
+        #region Thief
+        public static List<Buff> GetThiefSkills()
+        {
+            List<Buff> skills = new List<Buff>
+            {
+                new Buff("Poison React", EffectStatusIDs.POISONREACT, Resources.as_poisonreact),
+                new Buff("Reject Sword", EffectStatusIDs.SWORDREJECT, Resources.st_rejectsword),
+                new Buff("Preserve", EffectStatusIDs.PRESERVE, Resources.st_preserve),
+                new Buff("Enchant Deadly Poison", EffectStatusIDs.EDP, Resources.asc_edp),
+                new Buff("Weapon Blocking", EffectStatusIDs.WEAPONBLOCKING, Resources.weapon_blocking)
+            };
+
+            return skills;
+        }
+        #endregion
+        #region Acolyte
+        public static List<Buff> GetAcolyteSkills()
+        {
+            List<Buff> skills = new List<Buff>
+            {
+                new Buff("Gloria", EffectStatusIDs.GLORIA, Resources.pr_gloria),
+                new Buff("Magnificat", EffectStatusIDs.MAGNIFICAT, Resources.pr_magnificat),
+                new Buff("Angelus", EffectStatusIDs.ANGELUS, Resources.al_angelus),
+                new Buff("Rising Dragon", EffectStatusIDs.RAISINGDRAGON, Resources.rising_dragon),
+                new Buff("Firm Faith", EffectStatusIDs.FIRM_FAITH, Resources.firm_faith),
+                new Buff("Powerful Faith", EffectStatusIDs.POWERFUL_FAITH, Resources.powerful_faith),
+                new Buff("Gentle Touch-Revitalize", EffectStatusIDs.GENTLETOUCH_REVITALIZE, Resources.gentle_touch_revitalize),
+                new Buff("Gentle Touch-Convert", EffectStatusIDs.GENTLETOUCH_CHANGE, Resources.gentle_touch_convert),
+                new Buff("Fury ", EffectStatusIDs.FURY, Resources.fury),
+                new Buff("Impositio Manus",  EffectStatusIDs.IMPOSITIO, Resources.impositio_manus),
+            };
+
+            return skills;
+        }
+        #endregion
+
+        #region Ninja
+        public static List<Buff> GetNinjaSkills()
+        {
+            List<Buff> skills = new List<Buff>
+            {
+                new Buff("Cicada Skin Shed", EffectStatusIDs.PEEL_CHANGE, Resources.nj_utsusemi),
+                new Buff("Ninja Aura", EffectStatusIDs.AURA_NINJA, Resources.nj_nen),
+                new Buff("Izayoi", EffectStatusIDs.IZAYOI, Resources.izayoi)
+            };
+
+            return skills;
+        }
+        #endregion
+        #region Takewondo
+        public static List<Buff> GetTaekwonSkills()
+        {
+            List<Buff> skills = new List<Buff>
+            {
+                new Buff("Mild Wind (Earth)", EffectStatusIDs.PROPERTYGROUND, Resources.tk_mild_earth),
+                new Buff("Mild Wind (Fire)", EffectStatusIDs.PROPERTYFIRE, Resources.tk_mild_fire),
+                new Buff("Mild Wind (Water)", EffectStatusIDs.PROPERTYWATER, Resources.tk_mild_water),
+                new Buff("Mild Wind (Wind)", EffectStatusIDs.PROPERTYWIND, Resources.tk_mild_wind),
+                new Buff("Mild Wind (Ghost)", EffectStatusIDs.PROPERTYTELEKINESIS, Resources.tk_mild_ghost),
+                new Buff("Mild Wind (Holy)", EffectStatusIDs.ASPERSIO, Resources.tk_mild_holy),
+                new Buff("Mild Wind (Shadow)", EffectStatusIDs.PROPERTYDARK, Resources.tk_mild_shadow),
+                new Buff("Tumbling", EffectStatusIDs.DODGE_ON, Resources.tumbling)
+            };
+
+            return skills;
+        }
+        #endregion
+        #region Gun
+        public static List<Buff> GetGunsSkills()
+        {
+            List<Buff> skills = new List<Buff>();
+
+            skills.Add(new Buff("Gatling Fever", EffectStatusIDs.GATLINGFEVER, Resources.gatling_fever));
+            skills.Add(new Buff("Madness Canceller", EffectStatusIDs.MADNESSCANCEL, Resources.madnesscancel));
+            skills.Add(new Buff("Adjustment", EffectStatusIDs.ADJUSTMENT, Resources.adjustment));
+            skills.Add(new Buff("Increase Accuracy", EffectStatusIDs.ACCURACY, Resources.increase_accuracy));
+
+            return skills;
+        }
+        #endregion
+
+        //Stuffs form below
         #endregion
         #region Stuffs
         //For form name StuffAutoBuffForm

@@ -50,6 +50,7 @@
             this.label6 = new System.Windows.Forms.Label();
             this.tabAutoBuffStuff = new System.Windows.Forms.TabPage();
             this.label7 = new System.Windows.Forms.Label();
+            this.tabAutoBuffSkill = new System.Windows.Forms.TabPage();
             this.tabControlAutopot.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabMain.SuspendLayout();
@@ -208,6 +209,7 @@
             this.tabMain.Controls.Add(this.tabPageSpammer);
             this.tabMain.Controls.Add(this.tabPageProfiles);
             this.tabMain.Controls.Add(this.tabAutoBuffStuff);
+            this.tabMain.Controls.Add(this.tabAutoBuffSkill);
             this.tabMain.Location = new System.Drawing.Point(6, 345);
             this.tabMain.Name = "tabMain";
             this.tabMain.SelectedIndex = 0;
@@ -220,7 +222,7 @@
             this.tabPageSpammer.Location = new System.Drawing.Point(4, 22);
             this.tabPageSpammer.Name = "tabPageSpammer";
             this.tabPageSpammer.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageSpammer.Size = new System.Drawing.Size(786, 236);
+            this.tabPageSpammer.Size = new System.Drawing.Size(786, 280);
             this.tabPageSpammer.TabIndex = 0;
             this.tabPageSpammer.Text = "Skill Spammer";
             this.tabPageSpammer.UseVisualStyleBackColor = true;
@@ -243,7 +245,7 @@
             this.tabPageProfiles.Location = new System.Drawing.Point(4, 22);
             this.tabPageProfiles.Name = "tabPageProfiles";
             this.tabPageProfiles.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageProfiles.Size = new System.Drawing.Size(786, 236);
+            this.tabPageProfiles.Size = new System.Drawing.Size(786, 280);
             this.tabPageProfiles.TabIndex = 1;
             this.tabPageProfiles.Text = "Profile Creation";
             this.tabPageProfiles.UseVisualStyleBackColor = true;
@@ -279,6 +281,16 @@
             this.label7.TabIndex = 14;
             this.label7.Text = "Auto buff stuff";
             this.label7.Visible = false;
+            // 
+            // tabAutoBuffSkill
+            // 
+            this.tabAutoBuffSkill.Location = new System.Drawing.Point(4, 22);
+            this.tabAutoBuffSkill.Name = "tabAutoBuffSkill";
+            this.tabAutoBuffSkill.Padding = new System.Windows.Forms.Padding(3);
+            this.tabAutoBuffSkill.Size = new System.Drawing.Size(786, 280);
+            this.tabAutoBuffSkill.TabIndex = 3;
+            this.tabAutoBuffSkill.Text = "AutoBuff - Skills";
+            this.tabAutoBuffSkill.UseVisualStyleBackColor = true;
             // 
             // frm_Main
             // 
@@ -339,6 +351,7 @@
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TabPage tabAutoBuffStuff;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TabPage tabAutoBuffSkill;
     }
 }
 

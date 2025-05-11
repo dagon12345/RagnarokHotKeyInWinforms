@@ -51,6 +51,7 @@
             this.tabAutoBuffStuff = new System.Windows.Forms.TabPage();
             this.label7 = new System.Windows.Forms.Label();
             this.tabAutoBuffSkill = new System.Windows.Forms.TabPage();
+            this.tabPageMacroSongs = new System.Windows.Forms.TabPage();
             this.tabControlAutopot.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabMain.SuspendLayout();
@@ -210,6 +211,7 @@
             this.tabMain.Controls.Add(this.tabPageProfiles);
             this.tabMain.Controls.Add(this.tabAutoBuffStuff);
             this.tabMain.Controls.Add(this.tabAutoBuffSkill);
+            this.tabMain.Controls.Add(this.tabPageMacroSongs);
             this.tabMain.Location = new System.Drawing.Point(6, 345);
             this.tabMain.Name = "tabMain";
             this.tabMain.SelectedIndex = 0;
@@ -292,6 +294,16 @@
             this.tabAutoBuffSkill.Text = "AutoBuff - Skills";
             this.tabAutoBuffSkill.UseVisualStyleBackColor = true;
             // 
+            // tabPageMacroSongs
+            // 
+            this.tabPageMacroSongs.Location = new System.Drawing.Point(4, 22);
+            this.tabPageMacroSongs.Name = "tabPageMacroSongs";
+            this.tabPageMacroSongs.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageMacroSongs.Size = new System.Drawing.Size(786, 280);
+            this.tabPageMacroSongs.TabIndex = 4;
+            this.tabPageMacroSongs.Text = "Macro Songs";
+            this.tabPageMacroSongs.UseVisualStyleBackColor = true;
+            // 
             // frm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -352,6 +364,7 @@
         private System.Windows.Forms.TabPage tabAutoBuffStuff;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TabPage tabAutoBuffSkill;
+        private System.Windows.Forms.TabPage tabPageMacroSongs;
     }
 }
 

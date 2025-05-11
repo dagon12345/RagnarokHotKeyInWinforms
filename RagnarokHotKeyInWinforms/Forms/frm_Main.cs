@@ -40,6 +40,7 @@ namespace RagnarokHotKeyInWinforms
             SetProfileWindow();//Profile
             SetAutobuffStuffWindow();//AutoBuff Stuff
             SetAutobuffSkillWindow();//AutoBuff Skill
+            SetSongMacroWindow(); // Macro Song Form
 
 
 
@@ -57,6 +58,15 @@ namespace RagnarokHotKeyInWinforms
             Refresh();
         }
         #region Frames
+        public void SetSongMacroWindow()
+        {
+            MacroSongForm frm = new MacroSongForm(subject);
+            frm.FormBorderStyle = FormBorderStyle.None;
+            frm.Location = new Point(0, 65);
+            frm.MdiParent = this;
+            addForm(this.tabPageMacroSongs, frm);
+            frm.Show();
+        }
         public void SetAutobuffSkillWindow()
         {
             SkillAutoBuffForm frm = new SkillAutoBuffForm(subject);

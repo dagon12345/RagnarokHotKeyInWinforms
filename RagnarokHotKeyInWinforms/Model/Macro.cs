@@ -125,7 +125,11 @@ namespace RagnarokHotKeyInWinforms.Model
 
         public void Start()
         {
-            Stop();
+            //This checking the MacroSongForm thread. Stop only if the thread is not null else proceed with the function below.
+            if(thread != null)
+            {
+                Stop();
+            }
             Client roClient = ClientSingleton.GetClient();
             if(roClient != null)
             {

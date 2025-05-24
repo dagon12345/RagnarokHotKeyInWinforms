@@ -1,10 +1,7 @@
 ﻿using RagnarokHotKeyInWinforms.Model;
-using RagnarokHotKeyInWinforms.Properties;
 using RagnarokHotKeyInWinforms.Utilities;
 using System;
 using System.Drawing;
-using System.Media;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 
 namespace RagnarokHotKeyInWinforms.Forms

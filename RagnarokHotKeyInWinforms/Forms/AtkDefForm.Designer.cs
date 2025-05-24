@@ -137,7 +137,7 @@
             this.panelSwitch.Controls.Add(this.pictureBox2);
             this.panelSwitch.Controls.Add(this.pictureBox1);
             this.panelSwitch.Controls.Add(this.groupBoxATKxDEFConfig);
-            this.panelSwitch.Location = new System.Drawing.Point(12, 30);
+            this.panelSwitch.Location = new System.Drawing.Point(12, 12);
             this.panelSwitch.Name = "panelSwitch";
             this.panelSwitch.Size = new System.Drawing.Size(517, 253);
             this.panelSwitch.TabIndex = 28;
@@ -409,7 +409,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(548, 306);
+            this.ClientSize = new System.Drawing.Size(548, 279);
             this.Controls.Add(this.panelSwitch);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "AtkDefForm";

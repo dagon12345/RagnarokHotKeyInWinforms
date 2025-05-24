@@ -42,7 +42,7 @@ namespace RagnarokHotKeyInWinforms
             SetAutobuffSkillWindow();//AutoBuff Skill
             SetSongMacroWindow(); // Macro Song Form
             SetAtkDefWindow();//AtkDef tab page
-
+            SetMacroSwitchWindow();
 
         }
         //addform used for each forms
@@ -58,6 +58,15 @@ namespace RagnarokHotKeyInWinforms
             Refresh();
         }
         #region Frames
+        public void SetMacroSwitchWindow()
+        {
+            MacroSwitchForm frm = new MacroSwitchForm(subject);
+            frm.FormBorderStyle = FormBorderStyle.None;
+            frm.Location = new Point(0, 65);
+            frm.MdiParent = this;
+            addForm(this.tabPageMacroSwitch, frm);
+            frm.Show();
+        }
         public void SetAtkDefWindow()
         {
             AtkDefForm frm = new AtkDefForm(subject);

@@ -20,6 +20,7 @@ namespace RagnarokHotKeyInWinforms.Model
 
                 if ((rawObject != null))
                 {
+                    //All of this is from our profilesingleton settings set its default value.
                     profile.Name = profileName;
                     profile.UserPreferences = JsonConvert.DeserializeObject<UserPreferences>(Profile.GetByAction(rawObject, profile.UserPreferences));
                     profile.AHK = JsonConvert.DeserializeObject<AHK>(Profile.GetByAction(rawObject, profile.AHK));
@@ -29,7 +30,7 @@ namespace RagnarokHotKeyInWinforms.Model
                     profile.AutoBuff = JsonConvert.DeserializeObject<AutoBuff>(Profile.GetByAction(rawObject, profile.AutoBuff));
                     profile.SongMacro = JsonConvert.DeserializeObject<Macro>(Profile.GetByAction(rawObject, profile.SongMacro));
                     profile.AtkDefMode = JsonConvert.DeserializeObject<ATKDefMode>(Profile.GetByAction(rawObject, profile.AtkDefMode));
-                    //profile.MacroSwitch = JsonConvert.DeserializeObject<Macro>(Profile.GetByAction(rawObject, profile.MacroSwitch));
+                    profile.MacroSwitch = JsonConvert.DeserializeObject<Macro>(Profile.GetByAction(rawObject, profile.MacroSwitch));
 
                 }
             }
@@ -104,6 +105,7 @@ namespace RagnarokHotKeyInWinforms.Model
 
             public ATKDefMode AtkDefMode { get; set; }
 
+            //Profile means user profile stored settings/configuration of the users.
             public Profile(string name)
             {
                 this.Name = name;
@@ -116,7 +118,7 @@ namespace RagnarokHotKeyInWinforms.Model
                 this.AutoBuff = new AutoBuff();
                 this.StatusRecovery = new StatusRecovery();
                 this.SongMacro = new Macro(Macro.ACTION_NAME_SONG_MACRO, MacroSongForm.TOTAL_MACRO_LANES_FOR_SONGS);
-                //this.MacroSwitch = new Macro(Macro.ACTION_NAME_MACRO_SWITCH, MacroSwitchForm.TOTAL_MACRO_LANES);
+                this.MacroSwitch = new Macro(Macro.ACTION_NAME_MACRO_SWITCH, MacroSwitchForm.TOTAL_MACRO_LANES);
                 this.AtkDefMode = new ATKDefMode();
             }
             public static object GetByAction(dynamic obj, Action action)

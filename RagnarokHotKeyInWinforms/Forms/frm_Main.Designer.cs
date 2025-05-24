@@ -53,12 +53,21 @@
             this.tabAutoBuffSkill = new System.Windows.Forms.TabPage();
             this.tabPageMacroSongs = new System.Windows.Forms.TabPage();
             this.tabPageAtkDef = new System.Windows.Forms.TabPage();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.label10 = new System.Windows.Forms.Label();
+            this.tabPageMacroSwitch = new System.Windows.Forms.TabPage();
+            this.label11 = new System.Windows.Forms.Label();
             this.tabControlAutopot.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabMain.SuspendLayout();
             this.tabPageSpammer.SuspendLayout();
             this.tabPageProfiles.SuspendLayout();
             this.tabAutoBuffStuff.SuspendLayout();
+            this.tabAutoBuffSkill.SuspendLayout();
+            this.tabPageMacroSongs.SuspendLayout();
+            this.tabPageAtkDef.SuspendLayout();
+            this.tabPageMacroSwitch.SuspendLayout();
             this.SuspendLayout();
             // 
             // label1
@@ -214,6 +223,7 @@
             this.tabMain.Controls.Add(this.tabAutoBuffSkill);
             this.tabMain.Controls.Add(this.tabPageMacroSongs);
             this.tabMain.Controls.Add(this.tabPageAtkDef);
+            this.tabMain.Controls.Add(this.tabPageMacroSwitch);
             this.tabMain.Location = new System.Drawing.Point(6, 345);
             this.tabMain.Name = "tabMain";
             this.tabMain.SelectedIndex = 0;
@@ -288,6 +298,7 @@
             // 
             // tabAutoBuffSkill
             // 
+            this.tabAutoBuffSkill.Controls.Add(this.label8);
             this.tabAutoBuffSkill.Location = new System.Drawing.Point(4, 22);
             this.tabAutoBuffSkill.Name = "tabAutoBuffSkill";
             this.tabAutoBuffSkill.Padding = new System.Windows.Forms.Padding(3);
@@ -298,6 +309,7 @@
             // 
             // tabPageMacroSongs
             // 
+            this.tabPageMacroSongs.Controls.Add(this.label9);
             this.tabPageMacroSongs.Location = new System.Drawing.Point(4, 22);
             this.tabPageMacroSongs.Name = "tabPageMacroSongs";
             this.tabPageMacroSongs.Padding = new System.Windows.Forms.Padding(3);
@@ -308,6 +320,7 @@
             // 
             // tabPageAtkDef
             // 
+            this.tabPageAtkDef.Controls.Add(this.label10);
             this.tabPageAtkDef.Location = new System.Drawing.Point(4, 22);
             this.tabPageAtkDef.Name = "tabPageAtkDef";
             this.tabPageAtkDef.Padding = new System.Windows.Forms.Padding(3);
@@ -315,6 +328,61 @@
             this.tabPageAtkDef.TabIndex = 5;
             this.tabPageAtkDef.Text = "Attack & Def Mode";
             this.tabPageAtkDef.UseVisualStyleBackColor = true;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(330, 130);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(119, 20);
+            this.label8.TabIndex = 15;
+            this.label8.Text = "Auto buff skill";
+            this.label8.Visible = false;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label9.Location = new System.Drawing.Point(330, 130);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(145, 20);
+            this.label9.TabIndex = 15;
+            this.label9.Text = "Macro Songs tab";
+            this.label9.Visible = false;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label10.Location = new System.Drawing.Point(321, 130);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(209, 20);
+            this.label10.TabIndex = 16;
+            this.label10.Text = "Attack and Defend Mode";
+            this.label10.Visible = false;
+            // 
+            // tabPageMacroSwitch
+            // 
+            this.tabPageMacroSwitch.Controls.Add(this.label11);
+            this.tabPageMacroSwitch.Location = new System.Drawing.Point(4, 22);
+            this.tabPageMacroSwitch.Name = "tabPageMacroSwitch";
+            this.tabPageMacroSwitch.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageMacroSwitch.Size = new System.Drawing.Size(786, 280);
+            this.tabPageMacroSwitch.TabIndex = 6;
+            this.tabPageMacroSwitch.Text = "Macro Switch";
+            this.tabPageMacroSwitch.UseVisualStyleBackColor = true;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label11.Location = new System.Drawing.Point(331, 131);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(151, 20);
+            this.label11.TabIndex = 17;
+            this.label11.Text = "Macro Switch Tab";
+            this.label11.Visible = false;
             // 
             // frm_Main
             // 
@@ -346,6 +414,14 @@
             this.tabPageProfiles.PerformLayout();
             this.tabAutoBuffStuff.ResumeLayout(false);
             this.tabAutoBuffStuff.PerformLayout();
+            this.tabAutoBuffSkill.ResumeLayout(false);
+            this.tabAutoBuffSkill.PerformLayout();
+            this.tabPageMacroSongs.ResumeLayout(false);
+            this.tabPageMacroSongs.PerformLayout();
+            this.tabPageAtkDef.ResumeLayout(false);
+            this.tabPageAtkDef.PerformLayout();
+            this.tabPageMacroSwitch.ResumeLayout(false);
+            this.tabPageMacroSwitch.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -378,6 +454,11 @@
         private System.Windows.Forms.TabPage tabAutoBuffSkill;
         private System.Windows.Forms.TabPage tabPageMacroSongs;
         private System.Windows.Forms.TabPage tabPageAtkDef;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.TabPage tabPageMacroSwitch;
+        private System.Windows.Forms.Label label11;
     }
 }
 

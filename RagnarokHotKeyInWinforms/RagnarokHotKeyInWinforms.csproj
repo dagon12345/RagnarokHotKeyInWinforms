@@ -72,6 +72,12 @@
     <Compile Include="Forms\AHKForm.Designer.cs">
       <DependentUpon>AHKForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\AtkDefForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\AtkDefForm.Designer.cs">
+      <DependentUpon>AtkDefForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\AutopotForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -157,6 +163,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AHKForm.resx">
       <DependentUpon>AHKForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\AtkDefForm.resx">
+      <DependentUpon>AtkDefForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\AutopotForm.resx">
       <DependentUpon>AutopotForm.cs</DependentUpon>

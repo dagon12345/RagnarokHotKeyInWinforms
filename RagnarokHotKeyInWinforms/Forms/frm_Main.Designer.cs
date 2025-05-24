@@ -52,6 +52,7 @@
             this.label7 = new System.Windows.Forms.Label();
             this.tabAutoBuffSkill = new System.Windows.Forms.TabPage();
             this.tabPageMacroSongs = new System.Windows.Forms.TabPage();
+            this.tabPageAtkDef = new System.Windows.Forms.TabPage();
             this.tabControlAutopot.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabMain.SuspendLayout();
@@ -212,6 +213,7 @@
             this.tabMain.Controls.Add(this.tabAutoBuffStuff);
             this.tabMain.Controls.Add(this.tabAutoBuffSkill);
             this.tabMain.Controls.Add(this.tabPageMacroSongs);
+            this.tabMain.Controls.Add(this.tabPageAtkDef);
             this.tabMain.Location = new System.Drawing.Point(6, 345);
             this.tabMain.Name = "tabMain";
             this.tabMain.SelectedIndex = 0;
@@ -304,6 +306,16 @@
             this.tabPageMacroSongs.Text = "Macro Songs";
             this.tabPageMacroSongs.UseVisualStyleBackColor = true;
             // 
+            // tabPageAtkDef
+            // 
+            this.tabPageAtkDef.Location = new System.Drawing.Point(4, 22);
+            this.tabPageAtkDef.Name = "tabPageAtkDef";
+            this.tabPageAtkDef.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageAtkDef.Size = new System.Drawing.Size(786, 280);
+            this.tabPageAtkDef.TabIndex = 5;
+            this.tabPageAtkDef.Text = "Attack & Def Mode";
+            this.tabPageAtkDef.UseVisualStyleBackColor = true;
+            // 
             // frm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -365,6 +377,7 @@
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TabPage tabAutoBuffSkill;
         private System.Windows.Forms.TabPage tabPageMacroSongs;
+        private System.Windows.Forms.TabPage tabPageAtkDef;
     }
 }
 

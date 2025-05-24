@@ -51,10 +51,10 @@
             this.tabAutoBuffStuff = new System.Windows.Forms.TabPage();
             this.label7 = new System.Windows.Forms.Label();
             this.tabAutoBuffSkill = new System.Windows.Forms.TabPage();
-            this.tabPageMacroSongs = new System.Windows.Forms.TabPage();
-            this.tabPageAtkDef = new System.Windows.Forms.TabPage();
             this.label8 = new System.Windows.Forms.Label();
+            this.tabPageMacroSongs = new System.Windows.Forms.TabPage();
             this.label9 = new System.Windows.Forms.Label();
+            this.tabPageAtkDef = new System.Windows.Forms.TabPage();
             this.label10 = new System.Windows.Forms.Label();
             this.tabPageMacroSwitch = new System.Windows.Forms.TabPage();
             this.label11 = new System.Windows.Forms.Label();
@@ -307,28 +307,6 @@
             this.tabAutoBuffSkill.Text = "AutoBuff - Skills";
             this.tabAutoBuffSkill.UseVisualStyleBackColor = true;
             // 
-            // tabPageMacroSongs
-            // 
-            this.tabPageMacroSongs.Controls.Add(this.label9);
-            this.tabPageMacroSongs.Location = new System.Drawing.Point(4, 22);
-            this.tabPageMacroSongs.Name = "tabPageMacroSongs";
-            this.tabPageMacroSongs.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageMacroSongs.Size = new System.Drawing.Size(786, 280);
-            this.tabPageMacroSongs.TabIndex = 4;
-            this.tabPageMacroSongs.Text = "Macro Songs";
-            this.tabPageMacroSongs.UseVisualStyleBackColor = true;
-            // 
-            // tabPageAtkDef
-            // 
-            this.tabPageAtkDef.Controls.Add(this.label10);
-            this.tabPageAtkDef.Location = new System.Drawing.Point(4, 22);
-            this.tabPageAtkDef.Name = "tabPageAtkDef";
-            this.tabPageAtkDef.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAtkDef.Size = new System.Drawing.Size(786, 280);
-            this.tabPageAtkDef.TabIndex = 5;
-            this.tabPageAtkDef.Text = "Attack & Def Mode";
-            this.tabPageAtkDef.UseVisualStyleBackColor = true;
-            // 
             // label8
             // 
             this.label8.AutoSize = true;
@@ -340,6 +318,17 @@
             this.label8.Text = "Auto buff skill";
             this.label8.Visible = false;
             // 
+            // tabPageMacroSongs
+            // 
+            this.tabPageMacroSongs.Controls.Add(this.label9);
+            this.tabPageMacroSongs.Location = new System.Drawing.Point(4, 22);
+            this.tabPageMacroSongs.Name = "tabPageMacroSongs";
+            this.tabPageMacroSongs.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageMacroSongs.Size = new System.Drawing.Size(786, 280);
+            this.tabPageMacroSongs.TabIndex = 4;
+            this.tabPageMacroSongs.Text = "Macro Songs";
+            this.tabPageMacroSongs.UseVisualStyleBackColor = true;
+            // 
             // label9
             // 
             this.label9.AutoSize = true;
@@ -350,6 +339,17 @@
             this.label9.TabIndex = 15;
             this.label9.Text = "Macro Songs tab";
             this.label9.Visible = false;
+            // 
+            // tabPageAtkDef
+            // 
+            this.tabPageAtkDef.Controls.Add(this.label10);
+            this.tabPageAtkDef.Location = new System.Drawing.Point(4, 22);
+            this.tabPageAtkDef.Name = "tabPageAtkDef";
+            this.tabPageAtkDef.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageAtkDef.Size = new System.Drawing.Size(786, 280);
+            this.tabPageAtkDef.TabIndex = 5;
+            this.tabPageAtkDef.Text = "Attack & Def Mode";
+            this.tabPageAtkDef.UseVisualStyleBackColor = true;
             // 
             // label10
             // 
@@ -402,6 +402,7 @@
             this.Controls.Add(this.characterName);
             this.Controls.Add(this.label1);
             this.Name = "frm_Main";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Main";
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControlAutopot.ResumeLayout(false);

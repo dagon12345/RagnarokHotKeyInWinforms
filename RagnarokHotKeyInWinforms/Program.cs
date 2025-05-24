@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RagnarokHotKeyInWinforms.Forms;
+using System;
 using System.Windows.Forms;
 
 namespace RagnarokHotKeyInWinforms
@@ -13,7 +14,7 @@ namespace RagnarokHotKeyInWinforms
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frm_Main());
+            Application.Run(new SampleGoogleLoginForm());
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿using Newtonsoft.Json;
+﻿using ApplicationLayer.Forms;
+using ApplicationLayer.Interface;
+using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using RagnarokHotKeyInWinforms.Forms;
 using RagnarokHotKeyInWinforms.Model;
 using RagnarokHotKeyInWinforms.Utilities;
@@ -357,6 +360,13 @@ namespace RagnarokHotKeyInWinforms
                     MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
+        }
+
+        private void frm_Main_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            var getUserInfoInterface = Program.ServiceProvider.GetRequiredService<IGetUserInfo>(); //We called the DI lifecycle inside our Program.cs
+            SignInForm sf = new SignInForm(getUserInfoInterface);
+            sf.Show();
         }
     }
 }

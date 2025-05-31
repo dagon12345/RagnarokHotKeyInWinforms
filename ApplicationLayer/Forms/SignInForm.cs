@@ -70,17 +70,15 @@ namespace ApplicationLayer.Forms
             var lastLoginTime = Properties.Settings.Default.LastLoginTime;
             var storedAccessToken = Properties.Settings.Default.AccessToken;
 
-            //If 
+            //If the logged in time is less than 2 minutes then restore session else delete the existing login creds and sign in again.
             if (!string.IsNullOrEmpty(storedAccessToken) && (DateTime.Now - lastLoginTime).TotalMinutes <= 2)  // Check if within 2 minutes
             {
                 // Token is still valid, proceed to MainMenuForm
 
                 OpenMainMenuForm();
             }
-            // Else, stay on the login form to allow user to log in
-
             // Delete the token response file if it exists
-            if (File.Exists(tokenFilePath))
+            else if (File.Exists(tokenFilePath))
             {
                 try
                 {

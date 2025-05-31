@@ -58,6 +58,8 @@
             this.label10 = new System.Windows.Forms.Label();
             this.tabPageMacroSwitch = new System.Windows.Forms.TabPage();
             this.label11 = new System.Windows.Forms.Label();
+            this.btnLogout = new System.Windows.Forms.Button();
+            this.lblUserName = new System.Windows.Forms.Label();
             this.tabControlAutopot.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabMain.SuspendLayout();
@@ -73,7 +75,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(271, 62);
+            this.label1.Location = new System.Drawing.Point(271, 101);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(84, 13);
             this.label1.TabIndex = 0;
@@ -82,7 +84,7 @@
             // characterName
             // 
             this.characterName.AutoSize = true;
-            this.characterName.Location = new System.Drawing.Point(271, 84);
+            this.characterName.Location = new System.Drawing.Point(271, 123);
             this.characterName.Name = "characterName";
             this.characterName.Size = new System.Drawing.Size(37, 13);
             this.characterName.TabIndex = 1;
@@ -91,7 +93,7 @@
             // processCombobox
             // 
             this.processCombobox.FormattingEnabled = true;
-            this.processCombobox.Location = new System.Drawing.Point(271, 26);
+            this.processCombobox.Location = new System.Drawing.Point(271, 65);
             this.processCombobox.Name = "processCombobox";
             this.processCombobox.Size = new System.Drawing.Size(121, 21);
             this.processCombobox.TabIndex = 2;
@@ -100,7 +102,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(271, 10);
+            this.label2.Location = new System.Drawing.Point(271, 49);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(83, 13);
             this.label2.TabIndex = 3;
@@ -126,7 +128,7 @@
             // 
             // brnRefresh
             // 
-            this.brnRefresh.Location = new System.Drawing.Point(398, 26);
+            this.brnRefresh.Location = new System.Drawing.Point(398, 65);
             this.brnRefresh.Name = "brnRefresh";
             this.brnRefresh.Size = new System.Drawing.Size(75, 21);
             this.brnRefresh.TabIndex = 6;
@@ -178,7 +180,7 @@
             // profileCb
             // 
             this.profileCb.FormattingEnabled = true;
-            this.profileCb.Location = new System.Drawing.Point(520, 26);
+            this.profileCb.Location = new System.Drawing.Point(520, 65);
             this.profileCb.Name = "profileCb";
             this.profileCb.Size = new System.Drawing.Size(121, 21);
             this.profileCb.TabIndex = 8;
@@ -187,7 +189,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(517, 6);
+            this.label3.Location = new System.Drawing.Point(517, 45);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(36, 13);
             this.label3.TabIndex = 9;
@@ -384,11 +386,33 @@
             this.label11.Text = "Macro Switch Tab";
             this.label11.Visible = false;
             // 
+            // btnLogout
+            // 
+            this.btnLogout.Location = new System.Drawing.Point(721, 5);
+            this.btnLogout.Name = "btnLogout";
+            this.btnLogout.Size = new System.Drawing.Size(75, 23);
+            this.btnLogout.TabIndex = 12;
+            this.btnLogout.Text = "Logout";
+            this.btnLogout.UseVisualStyleBackColor = true;
+            this.btnLogout.Click += new System.EventHandler(this.btnLogout_Click);
+            // 
+            // lblUserName
+            // 
+            this.lblUserName.AutoSize = true;
+            this.lblUserName.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUserName.Location = new System.Drawing.Point(271, 10);
+            this.lblUserName.Name = "lblUserName";
+            this.lblUserName.Size = new System.Drawing.Size(193, 19);
+            this.lblUserName.TabIndex = 12;
+            this.lblUserName.Text = "Welcome back, {name}";
+            // 
             // frm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 689);
+            this.Controls.Add(this.lblUserName);
+            this.Controls.Add(this.btnLogout);
             this.Controls.Add(this.tabMain);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label3);
@@ -461,6 +485,8 @@
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.TabPage tabPageMacroSwitch;
         private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.Button btnLogout;
+        private System.Windows.Forms.Label lblUserName;
     }
 }
 

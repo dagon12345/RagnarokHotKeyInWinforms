@@ -25,9 +25,12 @@ namespace RagnarokHotKeyInWinforms
         List<ClientDTO> clients = new List<ClientDTO>(); // list of clients with address initiated
         public frm_Main()
         {
-      
             this.subject.Attach(this);
             InitializeComponent();
+
+            //Get the username then display it to label
+            var name = ApplicationLayer.Properties.Settings.Default.Name;
+            lblUserName.Text = $"Welcome back, {name}!";
 
             this.Text = AppConfig.Name + " - " + AppConfig.Version; // Window title
             //Container Configuration
@@ -51,7 +54,7 @@ namespace RagnarokHotKeyInWinforms
         //addform used for each forms
         public void addForm(TabPage tp, Form f)
         {
-            if(!tp.Controls.Contains(f))
+            if (!tp.Controls.Contains(f))
             {
                 tp.Controls.Add(f);
                 f.Dock = DockStyle.Fill;
@@ -181,8 +184,8 @@ namespace RagnarokHotKeyInWinforms
             ProfileSingleton.Create("Default");
             StartUpdate();//Start the update to get the game address
             this.refreshProcessList(); // refresh the combobox and get the game
-            this.refreshProfileList(); // Get the profile list
             this.profileCb.SelectedItem = "Default";
+
         }
         //load the local profile
         //NOTE: This method/function was used in the form "ProfileForm"
@@ -194,14 +197,14 @@ namespace RagnarokHotKeyInWinforms
                 this.profileCb.Items.Clear();
             });
             //retrieve the profile stored in  //bin/debug/profile
-            foreach(string p in Profile.ListAll())
+            foreach (string p in Profile.ListAll())
             {
                 this.profileCb.Items.Add(p);
             }
-            
+
         }
-     
-        
+
+
         #region Public methods
         public void Update(ISubject subject)
         {
@@ -231,7 +234,7 @@ namespace RagnarokHotKeyInWinforms
         #region Private Methods
         private void StartUpdate()
         {
-           
+
             pbSupportedServer.Value = 0; // Initialize progress bar
             pbSupportedServer.Maximum = 100; // Set maximum value for progress bar
 
@@ -254,6 +257,7 @@ namespace RagnarokHotKeyInWinforms
             // Prepare for the progress bar
             if (clients.Count > 0)
             {
+                btnLogout.Enabled = false;
                 progressIncrement = 100 / clients.Count; // Calculate increment per client
                 targetProgress = 0; // Start from 0
                 progressTimer = new Timer();
@@ -278,6 +282,7 @@ namespace RagnarokHotKeyInWinforms
                 //Hide the progress bar and text
                 pbSupportedServer.Hide();
                 lblSupportedServer.Hide();
+                btnLogout.Enabled = true;
             }
         }
         private void LoadServers(List<ClientDTO> clients)
@@ -346,7 +351,7 @@ namespace RagnarokHotKeyInWinforms
         //Load the profile
         private void profileCb_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if(this.profileCb.Text != currentProfile)
+            if (this.profileCb.Text != currentProfile)
             {
                 try
                 {
@@ -364,9 +369,28 @@ namespace RagnarokHotKeyInWinforms
 
         private void frm_Main_FormClosing(object sender, FormClosingEventArgs e)
         {
+            // Check if there's a stored access token
+            var storedAccessToken = ApplicationLayer.Properties.Settings.Default.AccessToken;
+            if (!string.IsNullOrEmpty(storedAccessToken))//Not empty stored
+            {
+                // Token is still valid when closing, we dont want to open the sign in again we will close directly
+                Application.Exit();
+            }
+        }
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            // Clear the stored access token and user email
+            ApplicationLayer.Properties.Settings.Default.AccessToken = string.Empty; // Clear access token
+            ApplicationLayer.Properties.Settings.Default.LastLoginTime = DateTime.MinValue; // Clear login time
+            ApplicationLayer.Properties.Settings.Default.UserEmail = string.Empty; // Clear user email
+            ApplicationLayer.Properties.Settings.Default.Name = string.Empty; // Clear user email
+            ApplicationLayer.Properties.Settings.Default.Save(); // Save the changes
+
+            this.Hide();//Hide the form then show the signin form
             var getUserInfoInterface = Program.ServiceProvider.GetRequiredService<IGetUserInfo>(); //We called the DI lifecycle inside our Program.cs
             SignInForm sf = new SignInForm(getUserInfoInterface);
-            sf.Show();
+            sf.ShowDialog();
         }
     }
 }

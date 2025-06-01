@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Windows.Forms;
+//using Infrustructure;
 
 namespace RagnarokHotKeyInWinforms
 {
@@ -22,6 +23,16 @@ namespace RagnarokHotKeyInWinforms
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            // Ensure database is created
+            //using (var context = new ApplicationDbContext())
+            //{
+            //    // Delete and Create database below.
+            //    // await context.Database.EnsureDeletedAsync();
+            //    //await context.Database.EnsureCreatedAsync();
+            //    context.Database.EnsureCreated(); // or context.Database.Migrate();
+            //}
+
             // Create the host
             var host = CreateHostBuilder().Build();
             ServiceProvider = host.Services;

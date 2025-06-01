@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using System.Net.Http.Headers;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Domain.Constants;
 
 namespace ApplicationLayer.Service
 {
@@ -14,7 +15,7 @@ namespace ApplicationLayer.Service
             using (var httpClient = new HttpClient())
             {
                 httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
-                var response = await httpClient.GetStringAsync("https://www.googleapis.com/userinfo/v2/me");
+                var response = await httpClient.GetStringAsync(GoogleConstants.GoogleInfoUrl);
                 return JsonConvert.DeserializeObject<UserInfo>(response);
             }
         }

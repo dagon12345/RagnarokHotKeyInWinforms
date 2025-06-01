@@ -61,6 +61,7 @@
     <Compile Include="Model\BuffContainer.cs" />
     <Compile Include="Model\BuffRenderer.cs" />
     <Compile Include="Model\Client.cs" />
+    <Compile Include="Model\DataModels\BaseTable.cs" />
     <Compile Include="Model\LocalServerManager.cs" />
     <Compile Include="Model\Macro.cs" />
     <Compile Include="Model\Profile.cs" />

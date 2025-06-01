@@ -13,14 +13,16 @@ namespace ApplicationLayer.Forms
     public partial class SignInForm : Form
     {
         private readonly IGetUserInfo _getUserInfo;
-        private string tokenFileName = RagnarokConstants.TokenFileName;
+        private string tokenFileName = GoogleConstants.TokenFileName;
         private string tokenFilePath;
+        private string GoogleApisFolder = GoogleConstants.GoogleApis;
+
         public SignInForm(IGetUserInfo getUserInfo)
         {
             InitializeComponent();
             _getUserInfo = getUserInfo;
             // Set the token file path based on your application name
-            tokenFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Google.Apis.Auth", tokenFileName);
+            tokenFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), GoogleApisFolder, tokenFileName);
         }
 
         private async void btnSignIn_Click(object sender, EventArgs e)
@@ -28,13 +30,13 @@ namespace ApplicationLayer.Forms
             var credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
             new ClientSecrets
             {
-                ClientId = RagnarokConstants.ClientId,
-                ClientSecret = RagnarokConstants.ClientSecret
+                ClientId = GoogleConstants.ClientId,
+                ClientSecret = GoogleConstants.ClientSecret
             },
              new[] { "email", "profile" },
              "user",
              CancellationToken.None,
-             new FileDataStore("Google.Apis.Auth"));
+             new FileDataStore(GoogleApisFolder));
 
 
 

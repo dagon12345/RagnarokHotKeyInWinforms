@@ -388,8 +388,9 @@ namespace RagnarokHotKeyInWinforms
             ApplicationLayer.Properties.Settings.Default.Save(); // Save the changes
 
             this.Hide();//Hide the form then show the signin form
-            var getUserInfoInterface = Program.ServiceProvider.GetRequiredService<IGetUserInfo>(); //We called the DI lifecycle inside our Program.cs
-            SignInForm sf = new SignInForm(getUserInfoInterface);
+            var getUserInfoInterface = Program.ServiceProvider.GetRequiredService<IGetUserInfo>();
+            var userSignIn = Program.ServiceProvider.GetRequiredService<ISignIn>();//We called the DI lifecycle inside our Program.cs
+            SignInForm sf = new SignInForm(getUserInfoInterface, userSignIn);
             sf.ShowDialog();
         }
     }

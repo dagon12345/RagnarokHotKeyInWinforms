@@ -1,5 +1,6 @@
 ﻿using ApplicationLayer.Interface;
 using Domain.Constants;
+using Domain.Model.DataModels;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Util.Store;
 using RagnarokHotKeyInWinforms;
@@ -16,13 +17,17 @@ namespace ApplicationLayer.Forms
         private string tokenFileName = GoogleConstants.TokenFileName;
         private string tokenFilePath;
         private string GoogleApisFolder = GoogleConstants.GoogleApis;
+        private readonly ISignIn _signIn;
 
-        public SignInForm(IGetUserInfo getUserInfo)
+        public SignInForm(IGetUserInfo getUserInfo, ISignIn signIn)
         {
             InitializeComponent();
+
             _getUserInfo = getUserInfo;
+            _signIn = signIn;
             // Set the token file path based on your application name
             tokenFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), GoogleApisFolder, tokenFileName);
+         
         }
 
         private async void btnSignIn_Click(object sender, EventArgs e)
@@ -51,11 +56,16 @@ namespace ApplicationLayer.Forms
             Properties.Settings.Default.UserEmail = userInfo.Email;  // Store user email
             Properties.Settings.Default.Save();
 
-            // Open MainMenuForm after successful login
-            if (userInfo != null)
+            //Search existed user
+            var searchExisitingUser = await _signIn.SearchExistingUser(userInfo.Email);
+            if(searchExisitingUser == null)
             {
-                OpenMainMenuForm();
+                //if not existed then add to database Email/ReferenceCode.
+                BaseTable baseTable = new BaseTable();
+                await _signIn.CreateUser(baseTable, userInfo.Email);
             }
+            //Open Form
+            OpenMainMenuForm();
 
             //NOTE: If the user cannot sign in then delete the folder inside the directory C:\Users\(NameOfPc)\AppData\Roaming
         }
@@ -76,7 +86,6 @@ namespace ApplicationLayer.Forms
             if (!string.IsNullOrEmpty(storedAccessToken) && (DateTime.Now - lastLoginTime).TotalMinutes <= 2)  // Check if within 2 minutes
             {
                 // Token is still valid, proceed to MainMenuForm
-
                 OpenMainMenuForm();
             }
             // Delete the token response file if it exists

@@ -1,7 +1,11 @@
 ﻿using ApplicationLayer.Interface;
+using Domain.Constants;
 using Domain.Model.DataModels;
+using Google.Apis.Auth.OAuth2;
+using Google.Apis.Util.Store;
 using Infrastructure.Repositories.Interface;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ApplicationLayer.Service
@@ -19,13 +23,29 @@ namespace ApplicationLayer.Service
             baseTable.ReferenceCode = Guid.NewGuid();
             baseTable.Email = email;
 
-            await _baseTableRepository.SaveChanges(baseTable);
+            await _baseTableRepository.CaptureAndSaveTable(baseTable);
+        }
+
+        public async Task<UserCredential> GoogleAlgorithm(string googleApisFolder)
+        {
+            var credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+          new ClientSecrets
+          {
+              ClientId = GoogleConstants.ClientId,
+              ClientSecret = GoogleConstants.ClientSecret
+          },
+           new[] { "email", "profile" },
+           "user",
+           CancellationToken.None,
+           new FileDataStore(googleApisFolder));
+
+            return credential;
         }
 
         public async Task<string> SearchExistingUser(string email)
         {
             var searchedUser = await _baseTableRepository.SearchUsers(email);
-            if(searchedUser == null)
+            if (searchedUser == null)
             {
                 return null;
             }

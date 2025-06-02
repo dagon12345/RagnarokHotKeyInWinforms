@@ -1,5 +1,6 @@
 ﻿using ApplicationLayer.Forms;
 using ApplicationLayer.Interface;
+using Domain.Constants;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using RagnarokHotKeyInWinforms.Forms;
@@ -18,20 +19,21 @@ namespace RagnarokHotKeyInWinforms
     public partial class frm_Main : Form, IObserver
     {
         private Subject subject = new Subject();
+        private string tokenFilePath;
         private string currentProfile;
         private Timer progressTimer;
         private int progressIncrement; // Increment value for each tick
         private int targetProgress; // Target progress value
         List<ClientDTO> clients = new List<ClientDTO>(); // list of clients with address initiated
-        public frm_Main()
+        private readonly IStoredCredentialService _storedCredentialService;
+        private readonly ISignIn _signIn;
+        public frm_Main(IStoredCredentialService storedCredentialService, ISignIn signIn)
         {
+
             this.subject.Attach(this);
             InitializeComponent();
-
-            //Get the username then display it to label
-            var name = ApplicationLayer.Properties.Settings.Default.Name;
-            lblUserName.Text = $"Welcome back, {name}!";
-
+            _storedCredentialService = storedCredentialService;
+            _signIn = signIn;
             this.Text = AppConfig.Name + " - " + AppConfig.Version; // Window title
             //Container Configuration
             this.IsMdiContainer = true;
@@ -49,7 +51,6 @@ namespace RagnarokHotKeyInWinforms
             SetSongMacroWindow(); // Macro Song Form
             SetAtkDefWindow();//AtkDef tab page
             SetMacroSwitchWindow();
-
         }
         //addform used for each forms
         public void addForm(TabPage tp, Form f)
@@ -179,13 +180,16 @@ namespace RagnarokHotKeyInWinforms
         }
 
         #endregion
-        private void Form1_Load(object sender, EventArgs e)
+        private async void Form1_Load(object sender, EventArgs e)
         {
             ProfileSingleton.Create("Default");
             StartUpdate();//Start the update to get the game address
             this.refreshProcessList(); // refresh the combobox and get the game
             this.profileCb.SelectedItem = "Default";
 
+            var credential = await _signIn.GoogleAlgorithm(GoogleConstants.GoogleApis);
+            var name = await _storedCredentialService.FindCredential(credential.Token.AccessToken);
+            lblUserName.Text = $"Welcome back, {name.Name}";
         }
         //load the local profile
         //NOTE: This method/function was used in the form "ProfileForm"
@@ -369,28 +373,23 @@ namespace RagnarokHotKeyInWinforms
 
         private void frm_Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-            // Check if there's a stored access token
-            var storedAccessToken = ApplicationLayer.Properties.Settings.Default.AccessToken;
-            if (!string.IsNullOrEmpty(storedAccessToken))//Not empty stored
-            {
-                // Token is still valid when closing, we dont want to open the sign in again we will close directly
-                Application.Exit();
-            }
+            Application.Exit();
         }
 
-        private void btnLogout_Click(object sender, EventArgs e)
+        private async void btnLogout_Click(object sender, EventArgs e)
         {
-            // Clear the stored access token and user email
-            ApplicationLayer.Properties.Settings.Default.AccessToken = string.Empty; // Clear access token
-            ApplicationLayer.Properties.Settings.Default.LastLoginTime = DateTime.MinValue; // Clear login time
-            ApplicationLayer.Properties.Settings.Default.UserEmail = string.Empty; // Clear user email
-            ApplicationLayer.Properties.Settings.Default.Name = string.Empty; // Clear user email
-            ApplicationLayer.Properties.Settings.Default.Save(); // Save the changes
+            //Set the LastLoginTime to munis 10 mins so we can trigger the function deleting of google current sign in
+            var credential = await _signIn.GoogleAlgorithm(GoogleConstants.GoogleApis);
+            var name = await _storedCredentialService.FindCredential(credential.Token.AccessToken);
+            var searchUser = await _storedCredentialService.SearchUser(name.UserEmail);
+            searchUser.LastLoginTime = DateTime.Now.AddMinutes(-10);
+            await _storedCredentialService.SaveChanges();
 
             this.Hide();//Hide the form then show the signin form
             var getUserInfoInterface = Program.ServiceProvider.GetRequiredService<IGetUserInfo>();
-            var userSignIn = Program.ServiceProvider.GetRequiredService<ISignIn>();//We called the DI lifecycle inside our Program.cs
-            SignInForm sf = new SignInForm(getUserInfoInterface, userSignIn);
+            var userSignIn = Program.ServiceProvider.GetRequiredService<ISignIn>();
+            var storedCredential = Program.ServiceProvider.GetRequiredService<IStoredCredentialService>();
+            SignInForm sf = new SignInForm(getUserInfoInterface, userSignIn, storedCredential);
             sf.ShowDialog();
         }
     }

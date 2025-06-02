@@ -145,6 +145,7 @@
     </Compile>
     <Compile Include="Interface\IGetUserInfo.cs" />
     <Compile Include="Interface\ISignIn.cs" />
+    <Compile Include="Interface\IStoredCredentialService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -153,6 +154,7 @@
     </Compile>
     <Compile Include="Service\GetUserInfoService.cs" />
     <Compile Include="Service\SignInService.cs" />
+    <Compile Include="Service\StoredCredentialService.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\AHKForm.resx">

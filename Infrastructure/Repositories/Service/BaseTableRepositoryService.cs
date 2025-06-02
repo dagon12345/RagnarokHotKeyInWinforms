@@ -5,18 +5,10 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories.Service
 {
-    public class BaseTableRepositoryService : IBaseTableRepository
+    public class BaseTableRepositoryService : BaseRepository, IBaseTableRepository
     {
-        ApplicationDbContext _context;
-        public BaseTableRepositoryService(ApplicationDbContext context)
+        public BaseTableRepositoryService(ApplicationDbContext context) : base(context)
         {
-            _context = context;
-        }
-
-        public async Task SaveChanges(BaseTable table)
-        {
-            _context.BaseTables.Add(table);
-            await _context.SaveChangesAsync();
         }
 
         public async Task<BaseTable> SearchUsers(string email)

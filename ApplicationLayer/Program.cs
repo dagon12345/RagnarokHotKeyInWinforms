@@ -40,15 +40,15 @@ namespace RagnarokHotKeyInWinforms
             using (var scope = ServiceProvider.CreateScope())
             {
                 var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                context.Database.Migrate(); // Applies pending migrations
+                context.Database.EnsureCreated(); // Applies pending migrations
             }
 
             // Resolve the IGetUserInfo service
             var getUserInfo = ServiceProvider.GetRequiredService<IGetUserInfo>();
             var userSignIn = ServiceProvider.GetRequiredService<ISignIn>();
-
+            var userCredentials = ServiceProvider.GetRequiredService<IStoredCredentialService>();
             // Run the form
-            Application.Run(new SignInForm(getUserInfo, userSignIn));
+            Application.Run(new SignInForm(getUserInfo, userSignIn, userCredentials));
 
         }
         static IHostBuilder CreateHostBuilder()
@@ -73,10 +73,12 @@ namespace RagnarokHotKeyInWinforms
                     #region Application Layer Services
                     services.AddScoped<IGetUserInfo, GetUserInfoService>();
                     services.AddScoped<ISignIn, SignInService>();
+                    services.AddScoped<IStoredCredentialService, StoredCredentialService>();
                     #endregion
 
                     #region Infrastructure Layer Services
                     services.AddScoped<IBaseTableRepository, BaseTableRepositoryService>();
+                    services.AddScoped<IStoredCredentialRepository, StoredCredentialRepository>();
                     #endregion
 
                 });

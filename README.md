@@ -15,3 +15,8 @@ Updates:
 May 01, 2025 (Done)
 Progress: Creation of AutoBuffForm intended for Stuff;
 Next: SkillAutoBuffForm intended for skills automation;
+
+June 01, 2025
+- Integration of database;
+- Registering of user using google sign in;
+- Refactor the code and written constant values (google constants).

@@ -25,7 +25,8 @@ namespace ApplicationLayer.Service
             credential.AccessToken = accessToken;
             credential.LastLoginTime = lastTimeLogin;
             credential.UserEmail = Email;
-            await _storedCredentialRepository.CaptureAndSaveTable(credential);
+            _storedCredentialRepository.Add(credential);
+            await _storedCredentialRepository.SaveChangesAsync();
         }
 
         public async Task<StoredCredential> SearchUser(string userEmail)
@@ -34,9 +35,9 @@ namespace ApplicationLayer.Service
             return searchUserEmail;
         }
 
-        public async Task SaveChanges()
+        public async Task SaveChangesAsync()
         {
-            await _storedCredentialRepository.SaveChanges();
+            await _storedCredentialRepository.SaveChangesAsync();
         }
     }
 }

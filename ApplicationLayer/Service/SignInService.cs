@@ -23,7 +23,8 @@ namespace ApplicationLayer.Service
             baseTable.ReferenceCode = Guid.NewGuid();
             baseTable.Email = email;
 
-            await _baseTableRepository.CaptureAndSaveTable(baseTable);
+            _baseTableRepository.Add(baseTable);
+            await _baseTableRepository.SaveChangesAsync();
         }
 
         public async Task<UserCredential> GoogleAlgorithm(string googleApisFolder)

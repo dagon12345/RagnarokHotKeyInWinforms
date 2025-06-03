@@ -5,7 +5,8 @@ namespace Infrastructure.Repositories.Interface
 {
     public interface IBaseTableRepository
     {
-        Task CaptureAndSaveTable<T>(T table) where T : class;
+        void Add<T>(T table) where T : class;
         Task<BaseTable> SearchUsers(string email);
+        Task SaveChangesAsync();
     }
 }

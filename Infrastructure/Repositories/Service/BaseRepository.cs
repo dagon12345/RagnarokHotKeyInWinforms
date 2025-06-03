@@ -10,15 +10,14 @@ namespace Infrastructure.Repositories.Service
         {
             _context = context;
         }
-        public async Task SaveChanges()
+        public async Task SaveChangesAsync()
         {
             await _context.SaveChangesAsync();
         }
 
-        public async Task CaptureAndSaveTable<T>(T table) where T : class
+        public void Add<T>(T table) where T : class
         {
             _context.Set<T>().Add(table);
-            await _context.SaveChangesAsync();
         }
     }
 }

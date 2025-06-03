@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories.Service
 {
-    public class BaseTableRepositoryService : BaseRepository, IBaseTableRepository
+    public class BaseTableRepository: BaseRepository, IBaseTableRepository
     {
-        public BaseTableRepositoryService(ApplicationDbContext context) : base(context)
+        public BaseTableRepository(ApplicationDbContext context) : base(context)
         {
         }
 

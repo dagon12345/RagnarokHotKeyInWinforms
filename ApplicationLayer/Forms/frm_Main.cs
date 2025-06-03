@@ -382,8 +382,8 @@ namespace RagnarokHotKeyInWinforms
             var credential = await _signIn.GoogleAlgorithm(GoogleConstants.GoogleApis);
             var name = await _storedCredentialService.FindCredential(credential.Token.AccessToken);
             var searchUser = await _storedCredentialService.SearchUser(name.UserEmail);
-            searchUser.LastLoginTime = DateTime.Now.AddMinutes(-10);
-            await _storedCredentialService.SaveChanges();
+            searchUser.LastLoginTime = searchUser.LastLoginTime.AddMinutes(-10);
+            await _storedCredentialService.SaveChangesAsync();
 
             this.Hide();//Hide the form then show the signin form
             var getUserInfoInterface = Program.ServiceProvider.GetRequiredService<IGetUserInfo>();

@@ -208,7 +208,7 @@
     <Compile Include="Repositories\Interface\IBaseTableRepository.cs" />
     <Compile Include="Repositories\Interface\IStoredCredentialRepository.cs" />
     <Compile Include="Repositories\Service\BaseRepository.cs" />
-    <Compile Include="Repositories\Service\BaseTableRepositoryService.cs" />
+    <Compile Include="Repositories\Service\BaseTableRepository.cs" />
     <Compile Include="Repositories\Service\StoredCredentialRepository.cs" />
   </ItemGroup>
   <ItemGroup>

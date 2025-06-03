@@ -77,7 +77,7 @@ namespace RagnarokHotKeyInWinforms
                     #endregion
 
                     #region Infrastructure Layer Services
-                    services.AddScoped<IBaseTableRepository, BaseTableRepositoryService>();
+                    services.AddScoped<IBaseTableRepository, BaseTableRepository>();
                     services.AddScoped<IStoredCredentialRepository, StoredCredentialRepository>();
                     #endregion
 

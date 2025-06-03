@@ -5,9 +5,9 @@ namespace Infrastructure.Repositories.Interface
 {
     public interface IStoredCredentialRepository
     {
-        Task CaptureAndSaveTable<T>(T table) where T : class;
+        void Add<T>(T table) where T : class;
+        Task SaveChangesAsync();
         Task<StoredCredential> FindUserCredential(string accessToken);
         Task<StoredCredential> SearchUser(string userEmail);
-        Task SaveChanges();
     }
 }

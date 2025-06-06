@@ -74,11 +74,14 @@ namespace RagnarokHotKeyInWinforms
                     services.AddScoped<IGetUserInfo, GetUserInfoService>();
                     services.AddScoped<ISignIn, SignInService>();
                     services.AddScoped<IStoredCredentialService, StoredCredentialService>();
+                    services.AddScoped<IUserSettingService, UserSettingService>();
+                    services.AddScoped<IBaseTableService, BaseTableService>();
                     #endregion
 
                     #region Infrastructure Layer Services
                     services.AddScoped<IBaseTableRepository, BaseTableRepository>();
                     services.AddScoped<IStoredCredentialRepository, StoredCredentialRepository>();
+                    services.AddScoped<IUserSettingRepository, UserSettingRepository>();
                     #endregion
 
                 });

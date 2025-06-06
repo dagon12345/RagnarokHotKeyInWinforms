@@ -1,9 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RagnarokHotKeyInWinforms.Model
@@ -11,7 +6,7 @@ namespace RagnarokHotKeyInWinforms.Model
     public class UserPreferences : Action
     {
         public string ACTION_NAME = "UserPreferences";
-        public string toggleStateKey { get; set; } = Keys.End.ToString();
+        public string toggleStateKey { get; set; } //= Keys.End.ToString();
         public UserPreferences()
         {
 

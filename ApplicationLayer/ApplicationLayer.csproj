@@ -143,18 +143,22 @@
     <Compile Include="Forms\ToggleApplicationStateForm.Designer.cs">
       <DependentUpon>ToggleApplicationStateForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Interface\IBaseTableService.cs" />
     <Compile Include="Interface\IGetUserInfo.cs" />
     <Compile Include="Interface\ISignIn.cs" />
     <Compile Include="Interface\IStoredCredentialService.cs" />
+    <Compile Include="Interface\IUserSettingService.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\Settings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="Service\BaseTableService.cs" />
     <Compile Include="Service\GetUserInfoService.cs" />
     <Compile Include="Service\SignInService.cs" />
     <Compile Include="Service\StoredCredentialService.cs" />
+    <Compile Include="Service\UserSettingService.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\AHKForm.resx">

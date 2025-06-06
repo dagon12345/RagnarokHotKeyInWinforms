@@ -83,6 +83,7 @@
             this.Name = "ToggleApplicationStateForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "ToggleApplicationStateForm";
+            this.Load += new System.EventHandler(this.ToggleApplicationStateForm_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

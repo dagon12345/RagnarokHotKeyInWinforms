@@ -44,7 +44,7 @@ namespace ApplicationLayer.Forms
             var storedAccessToken = searchCredential.AccessToken;
 
             //If the logged in time is less than 2 minutes then restore session else delete the existing login creds and sign in again.
-            if (!string.IsNullOrEmpty(storedAccessToken) && (DateTime.Now - lastLoginTime).TotalMinutes <= 2)  // Check if within 2 minutes
+            if (!string.IsNullOrEmpty(storedAccessToken) && (DateTime.Now - lastLoginTime).TotalMinutes <= 10)  // Check if within 2 minutes
             {
                 // Token is still valid, proceed to MainMenuForm
                 OpenMainMenuForm();
@@ -112,7 +112,9 @@ namespace ApplicationLayer.Forms
             this.Hide(); // Hide the LoginForm
             var storedCredential = Program.ServiceProvider.GetRequiredService<IStoredCredentialService>();
             var userSignIn = Program.ServiceProvider.GetRequiredService<ISignIn>();
-            frm_Main mainMenuForm = new frm_Main(storedCredential, userSignIn);
+            var userSettings = Program.ServiceProvider.GetRequiredService<IUserSettingService>();
+            var baseTable = Program.ServiceProvider.GetRequiredService<IBaseTableService>();
+            frm_Main mainMenuForm = new frm_Main(storedCredential, userSignIn, userSettings, baseTable);
             mainMenuForm.ShowDialog();
         }
     }

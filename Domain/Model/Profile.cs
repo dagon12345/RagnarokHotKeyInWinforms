@@ -109,7 +109,6 @@ namespace RagnarokHotKeyInWinforms.Model
             public Profile(string name)
             {
                 this.Name = name;
-
                 this.UserPreferences = new UserPreferences();
                 this.AHK = new AHK();
                 this.Autopot = new Autopot(Autopot.ACTION_NAME_AUTOPOT);

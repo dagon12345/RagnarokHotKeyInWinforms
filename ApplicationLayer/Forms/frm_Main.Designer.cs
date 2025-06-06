@@ -60,6 +60,8 @@
             this.label11 = new System.Windows.Forms.Label();
             this.btnLogout = new System.Windows.Forms.Button();
             this.lblUserName = new System.Windows.Forms.Label();
+            this.btnRefreshProfile = new System.Windows.Forms.Button();
+            this.btnToggle = new System.Windows.Forms.Button();
             this.tabControlAutopot.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tabMain.SuspendLayout();
@@ -406,11 +408,33 @@
             this.lblUserName.TabIndex = 12;
             this.lblUserName.Text = "Welcome back, {name}";
             // 
+            // btnRefreshProfile
+            // 
+            this.btnRefreshProfile.Location = new System.Drawing.Point(647, 64);
+            this.btnRefreshProfile.Name = "btnRefreshProfile";
+            this.btnRefreshProfile.Size = new System.Drawing.Size(101, 21);
+            this.btnRefreshProfile.TabIndex = 13;
+            this.btnRefreshProfile.Text = "Refresh Profile";
+            this.btnRefreshProfile.UseVisualStyleBackColor = true;
+            this.btnRefreshProfile.Click += new System.EventHandler(this.btnRefreshProfile_Click);
+            // 
+            // btnToggle
+            // 
+            this.btnToggle.Location = new System.Drawing.Point(271, 139);
+            this.btnToggle.Name = "btnToggle";
+            this.btnToggle.Size = new System.Drawing.Size(117, 118);
+            this.btnToggle.TabIndex = 14;
+            this.btnToggle.Text = "Toggle";
+            this.btnToggle.UseVisualStyleBackColor = true;
+            this.btnToggle.Click += new System.EventHandler(this.btnToggle_Click);
+            // 
             // frm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 689);
+            this.Controls.Add(this.btnToggle);
+            this.Controls.Add(this.btnRefreshProfile);
             this.Controls.Add(this.lblUserName);
             this.Controls.Add(this.btnLogout);
             this.Controls.Add(this.tabMain);
@@ -487,6 +511,8 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Button btnLogout;
         private System.Windows.Forms.Label lblUserName;
+        private System.Windows.Forms.Button btnRefreshProfile;
+        private System.Windows.Forms.Button btnToggle;
     }
 }
 

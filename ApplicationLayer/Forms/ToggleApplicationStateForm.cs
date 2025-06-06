@@ -1,7 +1,13 @@
-﻿using RagnarokHotKeyInWinforms.Model;
+﻿using ApplicationLayer.Interface;
+using Domain.Constants;
+using Domain.Model.DataModels;
+using RagnarokHotKeyInWinforms.Model;
 using RagnarokHotKeyInWinforms.Utilities;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Text.Json;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace RagnarokHotKeyInWinforms.Forms
@@ -14,27 +20,30 @@ namespace RagnarokHotKeyInWinforms.Forms
         private MenuItem menuItem;
         //Store key used for the last profile - necessarily to clean when change profile
         private Keys lastKey;
-
-        public ToggleApplicationStateForm(Subject subject)
+        private readonly IUserSettingService _userSettingService;
+        private readonly IStoredCredentialService _storedCredentialService;
+        private readonly ISignIn _signIn;
+        private readonly IBaseTableService _baseTableService;
+        public ToggleApplicationStateForm(Subject subject, IUserSettingService userSettingService,
+            IStoredCredentialService storedCredentialService, ISignIn signIn, IBaseTableService baseTableService)
         {
             InitializeComponent();
-
+            _userSettingService = userSettingService;
+            _storedCredentialService = storedCredentialService; 
+            _signIn = signIn;   
+            _baseTableService = baseTableService;
 
             subject.Attach(this);
             this.subject = subject;
             KeyboardHook.Enable();
-            this.txtStatusToggleKey.Text = ProfileSingleton.GetCurrent().UserPreferences.toggleStateKey;
-            txtStatusToggleKey.KeyDown += new KeyEventHandler(FormUtils.OnKeyDown);
-            this.txtStatusToggleKey.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
-            this.txtStatusToggleKey.TextChanged += new EventHandler(this.onStatusToggleKeyChange);
             InitializeContextualMenu();
         }
-
         public void Update(ISubject subject)
         {
+
             if ((subject as Subject).Message.code == MessageCode.PROFILE_CHANGED)
             {
-                Keys currentToggleKey = (Keys)Enum.Parse(typeof(Keys), ProfileSingleton.GetCurrent().UserPreferences.toggleStateKey);
+                Keys currentToggleKey = (Keys)Enum.Parse(typeof(Keys), txtStatusToggleKey.Text);
                 KeyboardHook.Remove(lastKey); //Remove last key hook to prevent toggle with last profile key used.
 
                 this.txtStatusToggleKey.Text = currentToggleKey.ToString();
@@ -59,18 +68,6 @@ namespace RagnarokHotKeyInWinforms.Forms
             this.notifyIconTray.ContextMenu = this.contextMenu;
 
         }
-        private void onStatusToggleKeyChange(object sender, EventArgs e)
-        {
-            //Get last key from profile before update it in json
-            Keys currentToggleKey = (Keys)Enum.Parse(typeof(Keys), this.txtStatusToggleKey.Text);
-            KeyboardHook.Remove(lastKey);
-            KeyboardHook.Add(currentToggleKey, new KeyboardHook.KeyPressed(this.toggleStatus));
-            ProfileSingleton.GetCurrent().UserPreferences.toggleStateKey = currentToggleKey.ToString(); //Update profile key
-            ProfileSingleton.SetConfiguration(ProfileSingleton.GetCurrent().UserPreferences);
-
-            lastKey = currentToggleKey; //Refresh lastKey to update 
-        }
-
         private bool toggleStatus()
         {
             bool isOn = this.btnStatusToggle.Text == "On";
@@ -120,6 +117,53 @@ namespace RagnarokHotKeyInWinforms.Forms
         private void btnStatusToggle_Click(object sender, EventArgs e)
         {
             this.toggleStatus();
+        }
+
+
+        private async void ToggleApplicationStateForm_Load(object sender, EventArgs e)
+        {
+            await Retrieve();
+        }
+        //Get the reference code of the user
+        private async Task<UserSettings> ReturnToggleKey()
+        {
+            var credential = await _signIn.GoogleAlgorithm(GoogleConstants.GoogleApis);
+            var storedCreds = await _storedCredentialService.FindCredential(credential.Token.AccessToken);
+            var getBaseTable = await _baseTableService.SearchUser(storedCreds.UserEmail);
+            var toggleStateValue = await _userSettingService.SelectUserPreference(getBaseTable.ReferenceCode);
+            return toggleStateValue;
+        }
+        private async Task Retrieve()
+        {
+            var toggleStateValue = await ReturnToggleKey();
+            // Parse JSON and extract toggleStateKey
+            var jsonObject = JsonSerializer.Deserialize<Dictionary<string, string>>(toggleStateValue.UserPreferences);
+            this.txtStatusToggleKey.Text = jsonObject?["toggleStateKey"];
+            txtStatusToggleKey.KeyDown += new KeyEventHandler(FormUtils.OnKeyDown);
+            this.txtStatusToggleKey.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
+            this.txtStatusToggleKey.TextChanged += async (sender, e) => await onStatusToggleKeyChange(sender, e);
+        }
+
+        private async Task onStatusToggleKeyChange(object sender, EventArgs e)
+        {
+            var toggleStateValue = await ReturnToggleKey();
+            //Get last key from profile before update it in json
+            Keys currentToggleKey = (Keys)Enum.Parse(typeof(Keys), txtStatusToggleKey.Text);
+            KeyboardHook.Remove(lastKey);
+            KeyboardHook.Add(currentToggleKey, new KeyboardHook.KeyPressed(this.toggleStatus));
+
+
+            // Deserialize JSON to update value
+            var jsonObject = JsonSerializer.Deserialize<Dictionary<string, string>>(toggleStateValue.UserPreferences);
+            if (jsonObject != null)
+            {
+                jsonObject["toggleStateKey"] = currentToggleKey.ToString(); // Update key
+                var updatedJson = JsonSerializer.Serialize(jsonObject);
+                toggleStateValue.UserPreferences = updatedJson;
+                // Persist changes
+                await _userSettingService.SaveChangesAsync();
+            }
+            lastKey = currentToggleKey; //Refresh lastKey to update 
         }
     }
 }

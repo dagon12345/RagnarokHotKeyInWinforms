@@ -19,7 +19,6 @@ namespace RagnarokHotKeyInWinforms
     public partial class frm_Main : Form, IObserver
     {
         private Subject subject = new Subject();
-        private string tokenFilePath;
         private string currentProfile;
         private Timer progressTimer;
         private int progressIncrement; // Increment value for each tick
@@ -27,19 +26,23 @@ namespace RagnarokHotKeyInWinforms
         List<ClientDTO> clients = new List<ClientDTO>(); // list of clients with address initiated
         private readonly IStoredCredentialService _storedCredentialService;
         private readonly ISignIn _signIn;
-        public frm_Main(IStoredCredentialService storedCredentialService, ISignIn signIn)
+        private readonly IUserSettingService _userSettingService;
+        private readonly IBaseTableService _baseTableService;
+        public frm_Main(IStoredCredentialService storedCredentialService, ISignIn signIn, 
+            IUserSettingService userSettingService, IBaseTableService baseTableService)
         {
 
             this.subject.Attach(this);
             InitializeComponent();
             _storedCredentialService = storedCredentialService;
             _signIn = signIn;
+            _userSettingService = userSettingService;
+            _baseTableService = baseTableService;
             this.Text = AppConfig.Name + " - " + AppConfig.Version; // Window title
             //Container Configuration
             this.IsMdiContainer = true;
             SetBackGroundColorOfMDIForm();
             //Paint Children forms
-            SetToggleApplicationStateWindow();
             SetAutopotWindow();
             SetAutopotYggWindow();
             SetSkillTimerWindow();
@@ -51,6 +54,7 @@ namespace RagnarokHotKeyInWinforms
             SetSongMacroWindow(); // Macro Song Form
             SetAtkDefWindow();//AtkDef tab page
             SetMacroSwitchWindow();
+
         }
         //addform used for each forms
         public void addForm(TabPage tp, Form f)
@@ -121,7 +125,12 @@ namespace RagnarokHotKeyInWinforms
         }
         public void SetToggleApplicationStateWindow()
         {
-            ToggleApplicationStateForm frm = new ToggleApplicationStateForm(subject);
+            var getUserInfoInterface = Program.ServiceProvider.GetRequiredService<IGetUserInfo>();
+            var userSetting = Program.ServiceProvider.GetRequiredService<IUserSettingService>();
+            var userSignIn = Program.ServiceProvider.GetRequiredService<ISignIn>();
+            var storedCredential = Program.ServiceProvider.GetRequiredService<IStoredCredentialService>();
+            var baseTable = Program.ServiceProvider.GetRequiredService<IBaseTableService>();
+            ToggleApplicationStateForm frm = new ToggleApplicationStateForm(subject, userSetting, storedCredential, userSignIn, baseTable);
             frm.FormBorderStyle = FormBorderStyle.None;
             int x = 0; // if 0 then it will dock in left side. The higher the number the more it docks in right
             //the higher the number the more it is going into downward position
@@ -182,12 +191,22 @@ namespace RagnarokHotKeyInWinforms
         #endregion
         private async void Form1_Load(object sender, EventArgs e)
         {
-            ProfileSingleton.Create("Default");
+
+            var credential = await _signIn.GoogleAlgorithm(GoogleConstants.GoogleApis);
+            var storedCreds = await _storedCredentialService.FindCredential(credential.Token.AccessToken);
+            var getBaseTable = await _baseTableService.SearchUser(storedCreds.UserEmail);
+            await _userSettingService.UpsertUser(getBaseTable.ReferenceCode, storedCreds.Name);
+
+            _userSettingService.Load(getBaseTable.ReferenceCode);
+
+            //ProfileSingleton.Create("Default");
+
             StartUpdate();//Start the update to get the game address
             this.refreshProcessList(); // refresh the combobox and get the game
             this.profileCb.SelectedItem = "Default";
+            refreshProfileList();
 
-            var credential = await _signIn.GoogleAlgorithm(GoogleConstants.GoogleApis);
+
             var name = await _storedCredentialService.FindCredential(credential.Token.AccessToken);
             lblUserName.Text = $"Welcome back, {name.Name}";
         }
@@ -249,7 +268,7 @@ namespace RagnarokHotKeyInWinforms
                 clients.AddRange(LocalServerManager.GetLocalClients());
                 //If tech is successful load the resource file locally now API needed
                 //path where the supported_server.json was saved \bin\Debug\Resources
-                string localFilePath = Path.Combine(AppConfig.LocalResourcePath, "supported_servers.json");
+                string localFilePath = Path.Combine(AppConfig.LocalResourcePath, RagnarokConstants.SupportedServerJson);
                 string localServerRaw = File.ReadAllText(localFilePath);
                 clients.AddRange(JsonConvert.DeserializeObject<List<ClientDTO>>(localServerRaw));
             }
@@ -353,13 +372,17 @@ namespace RagnarokHotKeyInWinforms
             subject.Notify(new Utilities.Message(Utilities.MessageCode.PROCESS_CHANGED, null));
         }
         //Load the profile
-        private void profileCb_SelectedIndexChanged(object sender, EventArgs e)
+        private async void profileCb_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (this.profileCb.Text != currentProfile)
             {
                 try
                 {
-                    ProfileSingleton.Load(this.profileCb.Text); //Load the profile
+                    var credential = await _signIn.GoogleAlgorithm(GoogleConstants.GoogleApis);
+                    var storedCreds = await _storedCredentialService.FindCredential(credential.Token.AccessToken);
+                    var getBaseTable = await _baseTableService.SearchUser(storedCreds.UserEmail);
+                    _userSettingService.Load(getBaseTable.ReferenceCode);
+                    //ProfileSingleton.Load(this.profileCb.Text); //Load the profile
                     subject.Notify(new Utilities.Message(MessageCode.PROFILE_CHANGED, null));
                     currentProfile = this.profileCb.Text.ToString();
                 }
@@ -391,6 +414,16 @@ namespace RagnarokHotKeyInWinforms
             var storedCredential = Program.ServiceProvider.GetRequiredService<IStoredCredentialService>();
             SignInForm sf = new SignInForm(getUserInfoInterface, userSignIn, storedCredential);
             sf.ShowDialog();
+        }
+
+        private void btnRefreshProfile_Click(object sender, EventArgs e)
+        {
+            refreshProfileList();
+        }
+
+        private void btnToggle_Click(object sender, EventArgs e)
+        {
+            SetToggleApplicationStateWindow();
         }
     }
 }

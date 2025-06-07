@@ -20,3 +20,9 @@ June 01, 2025
 - Integration of database;
 - Registering of user using google sign in;
 - Refactor the code and written constant values (google constants).
+
+June 07, 2025
+-Successfully figured out how to serialize and deserialize data from .Json and store it into database.
+-Data retrieval success.
+-Cleaning of source code.
+-Transitioned into one form (frm_Main).

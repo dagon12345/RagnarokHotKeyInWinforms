@@ -14,6 +14,9 @@ namespace Infrastructure
         {
         }
 
+        public ApplicationDbContext()
+        {
+        }
     }
 
 }

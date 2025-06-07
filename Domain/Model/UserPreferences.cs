@@ -5,8 +5,9 @@ namespace RagnarokHotKeyInWinforms.Model
 {
     public class UserPreferences : Action
     {
-        public string ACTION_NAME = "UserPreferences";
-        public string toggleStateKey { get; set; } //= Keys.End.ToString();
+        public string actionName { get; set; } = "UserPreferences";
+        public string toggleStateKey { get; set; }
+
         public UserPreferences()
         {
 
@@ -14,7 +15,7 @@ namespace RagnarokHotKeyInWinforms.Model
 
         public string GetActionName()
         {
-            return ACTION_NAME;
+            return actionName;
         }
 
         public string GetConfiguration()

@@ -111,7 +111,7 @@ namespace RagnarokHotKeyInWinforms.Model
                 this.Name = name;
                 this.UserPreferences = new UserPreferences();
                 this.AHK = new AHK();
-                this.Autopot = new Autopot(Autopot.ACTION_NAME_AUTOPOT);
+                this.Autopot = new Autopot(Autopot.actionNameAutopot);
                 this.AutopotYgg = new Autopot(Autopot.ACTION_NAME_AUTOPOT_YGG);
                 this.AutoRefreshSpammer = new AutoRefreshSpammer();
                 this.AutoBuff = new AutoBuff();

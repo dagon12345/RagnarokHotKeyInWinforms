@@ -28,21 +28,43 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_Main));
             this.label1 = new System.Windows.Forms.Label();
             this.characterName = new System.Windows.Forms.Label();
             this.processCombobox = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.lblSupportedServer = new System.Windows.Forms.Label();
             this.pbSupportedServer = new System.Windows.Forms.ProgressBar();
-            this.brnRefresh = new System.Windows.Forms.Button();
             this.tabControlAutopot = new System.Windows.Forms.TabControl();
             this.tabPageAutopot = new System.Windows.Forms.TabPage();
-            this.tabPageYggAutopot = new System.Windows.Forms.TabPage();
-            this.tabPageSkillTimer = new System.Windows.Forms.TabPage();
-            this.profileCb = new System.Windows.Forms.ComboBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.txtAutopotDelay = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label16 = new System.Windows.Forms.Label();
+            this.txtSPpct = new System.Windows.Forms.NumericUpDown();
+            this.txtHPpct = new System.Windows.Forms.NumericUpDown();
+            this.txtSpKey = new System.Windows.Forms.TextBox();
+            this.txtHpKey = new System.Windows.Forms.TextBox();
+            this.tabPageSkillTimer = new System.Windows.Forms.TabPage();
+            this.label17 = new System.Windows.Forms.Label();
+            this.label18 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.txtAutoRefreshDelay = new System.Windows.Forms.NumericUpDown();
+            this.txtSkillTimerKey = new System.Windows.Forms.TextBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.panel5 = new System.Windows.Forms.Panel();
+            this.label20 = new System.Windows.Forms.Label();
+            this.pictureBox2 = new System.Windows.Forms.PictureBox();
+            this.txtNewStatusKey = new System.Windows.Forms.TextBox();
+            this.label21 = new System.Windows.Forms.Label();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
+            this.txtStatusKey = new System.Windows.Forms.TextBox();
+            this.lblStatusToggle = new System.Windows.Forms.TextBox();
+            this.btnStatusToggle = new System.Windows.Forms.Button();
+            this.txtStatusToggleKey = new System.Windows.Forms.TextBox();
             this.tabMain = new System.Windows.Forms.TabControl();
             this.tabPageSpammer = new System.Windows.Forms.TabPage();
             this.label5 = new System.Windows.Forms.Label();
@@ -60,10 +82,17 @@
             this.label11 = new System.Windows.Forms.Label();
             this.btnLogout = new System.Windows.Forms.Button();
             this.lblUserName = new System.Windows.Forms.Label();
-            this.btnRefreshProfile = new System.Windows.Forms.Button();
-            this.btnToggle = new System.Windows.Forms.Button();
+            this.btnRefresh = new System.Windows.Forms.Button();
             this.tabControlAutopot.SuspendLayout();
+            this.tabPageAutopot.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.txtAutopotDelay)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtSPpct)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtHPpct)).BeginInit();
+            this.tabPageSkillTimer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.txtAutoRefreshDelay)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabMain.SuspendLayout();
             this.tabPageSpammer.SuspendLayout();
             this.tabPageProfiles.SuspendLayout();
@@ -77,7 +106,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(271, 101);
+            this.label1.Location = new System.Drawing.Point(577, 40);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(84, 13);
             this.label1.TabIndex = 0;
@@ -86,7 +115,7 @@
             // characterName
             // 
             this.characterName.AutoSize = true;
-            this.characterName.Location = new System.Drawing.Point(271, 123);
+            this.characterName.Location = new System.Drawing.Point(667, 40);
             this.characterName.Name = "characterName";
             this.characterName.Size = new System.Drawing.Size(37, 13);
             this.characterName.TabIndex = 1;
@@ -95,16 +124,16 @@
             // processCombobox
             // 
             this.processCombobox.FormattingEnabled = true;
-            this.processCombobox.Location = new System.Drawing.Point(271, 65);
+            this.processCombobox.Location = new System.Drawing.Point(361, 37);
             this.processCombobox.Name = "processCombobox";
-            this.processCombobox.Size = new System.Drawing.Size(121, 21);
+            this.processCombobox.Size = new System.Drawing.Size(194, 21);
             this.processCombobox.TabIndex = 2;
             this.processCombobox.SelectedIndexChanged += new System.EventHandler(this.processCombobox_SelectedIndexChanged);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(271, 49);
+            this.label2.Location = new System.Drawing.Point(272, 40);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(83, 13);
             this.label2.TabIndex = 3;
@@ -128,94 +157,296 @@
             this.pbSupportedServer.Size = new System.Drawing.Size(789, 10);
             this.pbSupportedServer.TabIndex = 4;
             // 
-            // brnRefresh
-            // 
-            this.brnRefresh.Location = new System.Drawing.Point(398, 65);
-            this.brnRefresh.Name = "brnRefresh";
-            this.brnRefresh.Size = new System.Drawing.Size(75, 21);
-            this.brnRefresh.TabIndex = 6;
-            this.brnRefresh.Text = "Refresh";
-            this.brnRefresh.UseVisualStyleBackColor = true;
-            this.brnRefresh.Click += new System.EventHandler(this.brnRefresh_Click);
-            // 
             // tabControlAutopot
             // 
             this.tabControlAutopot.Controls.Add(this.tabPageAutopot);
-            this.tabControlAutopot.Controls.Add(this.tabPageYggAutopot);
             this.tabControlAutopot.Controls.Add(this.tabPageSkillTimer);
             this.tabControlAutopot.Location = new System.Drawing.Point(2, 189);
             this.tabControlAutopot.Name = "tabControlAutopot";
             this.tabControlAutopot.SelectedIndex = 0;
-            this.tabControlAutopot.Size = new System.Drawing.Size(267, 154);
+            this.tabControlAutopot.Size = new System.Drawing.Size(228, 154);
             this.tabControlAutopot.TabIndex = 7;
             // 
             // tabPageAutopot
             // 
+            this.tabPageAutopot.Controls.Add(this.txtAutopotDelay);
+            this.tabPageAutopot.Controls.Add(this.label4);
+            this.tabPageAutopot.Controls.Add(this.label12);
+            this.tabPageAutopot.Controls.Add(this.label13);
+            this.tabPageAutopot.Controls.Add(this.label14);
+            this.tabPageAutopot.Controls.Add(this.label15);
+            this.tabPageAutopot.Controls.Add(this.label16);
+            this.tabPageAutopot.Controls.Add(this.txtSPpct);
+            this.tabPageAutopot.Controls.Add(this.txtHPpct);
+            this.tabPageAutopot.Controls.Add(this.txtSpKey);
+            this.tabPageAutopot.Controls.Add(this.txtHpKey);
             this.tabPageAutopot.Location = new System.Drawing.Point(4, 22);
             this.tabPageAutopot.Name = "tabPageAutopot";
             this.tabPageAutopot.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageAutopot.Size = new System.Drawing.Size(259, 128);
+            this.tabPageAutopot.Size = new System.Drawing.Size(220, 128);
             this.tabPageAutopot.TabIndex = 0;
             this.tabPageAutopot.Text = "Autopot";
             this.tabPageAutopot.UseVisualStyleBackColor = true;
             // 
-            // tabPageYggAutopot
+            // txtAutopotDelay
             // 
-            this.tabPageYggAutopot.Location = new System.Drawing.Point(4, 22);
-            this.tabPageYggAutopot.Name = "tabPageYggAutopot";
-            this.tabPageYggAutopot.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageYggAutopot.Size = new System.Drawing.Size(259, 128);
-            this.tabPageYggAutopot.TabIndex = 1;
-            this.tabPageYggAutopot.Text = "Ygg";
-            this.tabPageYggAutopot.UseVisualStyleBackColor = true;
-            // 
-            // tabPageSkillTimer
-            // 
-            this.tabPageSkillTimer.Location = new System.Drawing.Point(4, 22);
-            this.tabPageSkillTimer.Name = "tabPageSkillTimer";
-            this.tabPageSkillTimer.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageSkillTimer.Size = new System.Drawing.Size(259, 128);
-            this.tabPageSkillTimer.TabIndex = 2;
-            this.tabPageSkillTimer.Text = "Skill Timer";
-            this.tabPageSkillTimer.UseVisualStyleBackColor = true;
-            // 
-            // profileCb
-            // 
-            this.profileCb.FormattingEnabled = true;
-            this.profileCb.Location = new System.Drawing.Point(520, 65);
-            this.profileCb.Name = "profileCb";
-            this.profileCb.Size = new System.Drawing.Size(121, 21);
-            this.profileCb.TabIndex = 8;
-            this.profileCb.SelectedIndexChanged += new System.EventHandler(this.profileCb_SelectedIndexChanged);
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(517, 45);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(36, 13);
-            this.label3.TabIndex = 9;
-            this.label3.Text = "Profile";
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Location = new System.Drawing.Point(2, 0);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(263, 183);
-            this.groupBox1.TabIndex = 10;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Visible = false;
+            this.txtAutopotDelay.Location = new System.Drawing.Point(144, 77);
+            this.txtAutopotDelay.Name = "txtAutopotDelay";
+            this.txtAutopotDelay.ReadOnly = true;
+            this.txtAutopotDelay.Size = new System.Drawing.Size(39, 20);
+            this.txtAutopotDelay.TabIndex = 20;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(53, 65);
+            this.label4.Location = new System.Drawing.Point(187, 58);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(159, 40);
-            this.label4.TabIndex = 11;
-            this.label4.Text = "Toggle Application\r\nStatus Effect Area";
+            this.label4.Size = new System.Drawing.Size(15, 13);
+            this.label4.TabIndex = 19;
+            this.label4.Text = "%";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(187, 31);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(15, 13);
+            this.label12.TabIndex = 18;
+            this.label12.Text = "%";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(41, 56);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(21, 13);
+            this.label13.TabIndex = 16;
+            this.label13.Text = "SP";
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(41, 30);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(22, 13);
+            this.label14.TabIndex = 17;
+            this.label14.Text = "HP";
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(189, 79);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(20, 13);
+            this.label15.TabIndex = 15;
+            this.label15.Text = "ms";
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(104, 80);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(34, 13);
+            this.label16.TabIndex = 14;
+            this.label16.Text = "Delay";
+            // 
+            // txtSPpct
+            // 
+            this.txtSPpct.Location = new System.Drawing.Point(144, 54);
+            this.txtSPpct.Name = "txtSPpct";
+            this.txtSPpct.ReadOnly = true;
+            this.txtSPpct.Size = new System.Drawing.Size(39, 20);
+            this.txtSPpct.TabIndex = 13;
+            // 
+            // txtHPpct
+            // 
+            this.txtHPpct.Location = new System.Drawing.Point(144, 27);
+            this.txtHPpct.Name = "txtHPpct";
+            this.txtHPpct.ReadOnly = true;
+            this.txtHPpct.Size = new System.Drawing.Size(39, 20);
+            this.txtHPpct.TabIndex = 12;
+            // 
+            // txtSpKey
+            // 
+            this.txtSpKey.Location = new System.Drawing.Point(81, 53);
+            this.txtSpKey.Name = "txtSpKey";
+            this.txtSpKey.Size = new System.Drawing.Size(57, 20);
+            this.txtSpKey.TabIndex = 10;
+            // 
+            // txtHpKey
+            // 
+            this.txtHpKey.Location = new System.Drawing.Point(81, 27);
+            this.txtHpKey.Name = "txtHpKey";
+            this.txtHpKey.Size = new System.Drawing.Size(57, 20);
+            this.txtHpKey.TabIndex = 11;
+            // 
+            // tabPageSkillTimer
+            // 
+            this.tabPageSkillTimer.Controls.Add(this.label17);
+            this.tabPageSkillTimer.Controls.Add(this.label18);
+            this.tabPageSkillTimer.Controls.Add(this.label19);
+            this.tabPageSkillTimer.Controls.Add(this.txtAutoRefreshDelay);
+            this.tabPageSkillTimer.Controls.Add(this.txtSkillTimerKey);
+            this.tabPageSkillTimer.Location = new System.Drawing.Point(4, 22);
+            this.tabPageSkillTimer.Name = "tabPageSkillTimer";
+            this.tabPageSkillTimer.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageSkillTimer.Size = new System.Drawing.Size(220, 128);
+            this.tabPageSkillTimer.TabIndex = 2;
+            this.tabPageSkillTimer.Text = "Skill Timer";
+            this.tabPageSkillTimer.UseVisualStyleBackColor = true;
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(139, 40);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(47, 13);
+            this.label17.TabIndex = 20;
+            this.label17.Text = "seconds";
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(34, 64);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(25, 13);
+            this.label18.TabIndex = 18;
+            this.label18.Text = "Key";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(34, 38);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(34, 13);
+            this.label19.TabIndex = 19;
+            this.label19.Text = "Delay";
+            // 
+            // txtAutoRefreshDelay
+            // 
+            this.txtAutoRefreshDelay.Location = new System.Drawing.Point(74, 37);
+            this.txtAutoRefreshDelay.Name = "txtAutoRefreshDelay";
+            this.txtAutoRefreshDelay.ReadOnly = true;
+            this.txtAutoRefreshDelay.Size = new System.Drawing.Size(57, 20);
+            this.txtAutoRefreshDelay.TabIndex = 17;
+            // 
+            // txtSkillTimerKey
+            // 
+            this.txtSkillTimerKey.Location = new System.Drawing.Point(74, 61);
+            this.txtSkillTimerKey.Name = "txtSkillTimerKey";
+            this.txtSkillTimerKey.Size = new System.Drawing.Size(57, 20);
+            this.txtSkillTimerKey.TabIndex = 16;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.panel5);
+            this.groupBox1.Controls.Add(this.label20);
+            this.groupBox1.Controls.Add(this.pictureBox2);
+            this.groupBox1.Controls.Add(this.txtNewStatusKey);
+            this.groupBox1.Controls.Add(this.label21);
+            this.groupBox1.Controls.Add(this.pictureBox1);
+            this.groupBox1.Controls.Add(this.txtStatusKey);
+            this.groupBox1.Controls.Add(this.lblStatusToggle);
+            this.groupBox1.Controls.Add(this.btnStatusToggle);
+            this.groupBox1.Controls.Add(this.txtStatusToggleKey);
+            this.groupBox1.Location = new System.Drawing.Point(2, 5);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(263, 183);
+            this.groupBox1.TabIndex = 10;
+            this.groupBox1.TabStop = false;
+            // 
+            // panel5
+            // 
+            this.panel5.BackColor = System.Drawing.Color.Silver;
+            this.panel5.Location = new System.Drawing.Point(132, 147);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(1, 30);
+            this.panel5.TabIndex = 33;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(170, 156);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(37, 13);
+            this.label20.TabIndex = 32;
+            this.label20.Text = "Status";
+            // 
+            // pictureBox2
+            // 
+            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
+            this.pictureBox2.Location = new System.Drawing.Point(144, 150);
+            this.pictureBox2.Name = "pictureBox2";
+            this.pictureBox2.Size = new System.Drawing.Size(24, 24);
+            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox2.TabIndex = 31;
+            this.pictureBox2.TabStop = false;
+            // 
+            // txtNewStatusKey
+            // 
+            this.txtNewStatusKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.txtNewStatusKey.Location = new System.Drawing.Point(207, 151);
+            this.txtNewStatusKey.Name = "txtNewStatusKey";
+            this.txtNewStatusKey.Size = new System.Drawing.Size(45, 23);
+            this.txtNewStatusKey.TabIndex = 30;
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(39, 156);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(37, 13);
+            this.label21.TabIndex = 29;
+            this.label21.Text = "Status";
+            // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
+            this.pictureBox1.Location = new System.Drawing.Point(13, 150);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(24, 24);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 28;
+            this.pictureBox1.TabStop = false;
+            // 
+            // txtStatusKey
+            // 
+            this.txtStatusKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
+            this.txtStatusKey.Location = new System.Drawing.Point(76, 151);
+            this.txtStatusKey.Name = "txtStatusKey";
+            this.txtStatusKey.Size = new System.Drawing.Size(45, 23);
+            this.txtStatusKey.TabIndex = 27;
+            // 
+            // lblStatusToggle
+            // 
+            this.lblStatusToggle.BackColor = System.Drawing.SystemColors.Control;
+            this.lblStatusToggle.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.lblStatusToggle.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblStatusToggle.Location = new System.Drawing.Point(4, 110);
+            this.lblStatusToggle.Name = "lblStatusToggle";
+            this.lblStatusToggle.ReadOnly = true;
+            this.lblStatusToggle.Size = new System.Drawing.Size(243, 16);
+            this.lblStatusToggle.TabIndex = 5;
+            this.lblStatusToggle.Text = "Press the button to start!";
+            this.lblStatusToggle.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // btnStatusToggle
+            // 
+            this.btnStatusToggle.Location = new System.Drawing.Point(78, 35);
+            this.btnStatusToggle.Name = "btnStatusToggle";
+            this.btnStatusToggle.Size = new System.Drawing.Size(100, 23);
+            this.btnStatusToggle.TabIndex = 4;
+            this.btnStatusToggle.Text = "Off";
+            this.btnStatusToggle.UseVisualStyleBackColor = true;
+            this.btnStatusToggle.Click += new System.EventHandler(this.btnStatusToggle_Click);
+            // 
+            // txtStatusToggleKey
+            // 
+            this.txtStatusToggleKey.Location = new System.Drawing.Point(78, 64);
+            this.txtStatusToggleKey.Multiline = true;
+            this.txtStatusToggleKey.Name = "txtStatusToggleKey";
+            this.txtStatusToggleKey.Size = new System.Drawing.Size(100, 40);
+            this.txtStatusToggleKey.TabIndex = 3;
             // 
             // tabMain
             // 
@@ -408,41 +639,27 @@
             this.lblUserName.TabIndex = 12;
             this.lblUserName.Text = "Welcome back, {name}";
             // 
-            // btnRefreshProfile
+            // btnRefresh
             // 
-            this.btnRefreshProfile.Location = new System.Drawing.Point(647, 64);
-            this.btnRefreshProfile.Name = "btnRefreshProfile";
-            this.btnRefreshProfile.Size = new System.Drawing.Size(101, 21);
-            this.btnRefreshProfile.TabIndex = 13;
-            this.btnRefreshProfile.Text = "Refresh Profile";
-            this.btnRefreshProfile.UseVisualStyleBackColor = true;
-            this.btnRefreshProfile.Click += new System.EventHandler(this.btnRefreshProfile_Click);
-            // 
-            // btnToggle
-            // 
-            this.btnToggle.Location = new System.Drawing.Point(271, 139);
-            this.btnToggle.Name = "btnToggle";
-            this.btnToggle.Size = new System.Drawing.Size(117, 118);
-            this.btnToggle.TabIndex = 14;
-            this.btnToggle.Text = "Toggle";
-            this.btnToggle.UseVisualStyleBackColor = true;
-            this.btnToggle.Click += new System.EventHandler(this.btnToggle_Click);
+            this.btnRefresh.Location = new System.Drawing.Point(361, 64);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(121, 23);
+            this.btnRefresh.TabIndex = 13;
+            this.btnRefresh.Text = "Refresh";
+            this.btnRefresh.UseVisualStyleBackColor = true;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
             // 
             // frm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 689);
-            this.Controls.Add(this.btnToggle);
-            this.Controls.Add(this.btnRefreshProfile);
+            this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.lblUserName);
             this.Controls.Add(this.btnLogout);
             this.Controls.Add(this.tabMain);
             this.Controls.Add(this.groupBox1);
-            this.Controls.Add(this.label3);
-            this.Controls.Add(this.profileCb);
             this.Controls.Add(this.tabControlAutopot);
-            this.Controls.Add(this.brnRefresh);
             this.Controls.Add(this.lblSupportedServer);
             this.Controls.Add(this.pbSupportedServer);
             this.Controls.Add(this.label2);
@@ -455,8 +672,18 @@
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frm_Main_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.tabControlAutopot.ResumeLayout(false);
+            this.tabPageAutopot.ResumeLayout(false);
+            this.tabPageAutopot.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.txtAutopotDelay)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtSPpct)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.txtHPpct)).EndInit();
+            this.tabPageSkillTimer.ResumeLayout(false);
+            this.tabPageSkillTimer.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.txtAutoRefreshDelay)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabMain.ResumeLayout(false);
             this.tabPageSpammer.ResumeLayout(false);
             this.tabPageSpammer.PerformLayout();
@@ -485,18 +712,13 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Label lblSupportedServer;
         private System.Windows.Forms.ProgressBar pbSupportedServer;
-        private System.Windows.Forms.Button brnRefresh;
         private System.Windows.Forms.TabControl tabControlAutopot;
         private System.Windows.Forms.TabPage tabPageAutopot;
-        private System.Windows.Forms.TabPage tabPageYggAutopot;
-        private System.Windows.Forms.ComboBox profileCb;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TabPage tabPageSkillTimer;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.TabControl tabMain;
         private System.Windows.Forms.TabPage tabPageSpammer;
         private System.Windows.Forms.TabPage tabPageProfiles;
-        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TabPage tabAutoBuffStuff;
@@ -511,8 +733,33 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.Button btnLogout;
         private System.Windows.Forms.Label lblUserName;
-        private System.Windows.Forms.Button btnRefreshProfile;
-        private System.Windows.Forms.Button btnToggle;
+        private System.Windows.Forms.TextBox lblStatusToggle;
+        private System.Windows.Forms.Button btnStatusToggle;
+        private System.Windows.Forms.TextBox txtStatusToggleKey;
+        private System.Windows.Forms.NumericUpDown txtAutopotDelay;
+        private System.Windows.Forms.Label label4;
+        private System.Windows.Forms.Label label12;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.NumericUpDown txtSPpct;
+        private System.Windows.Forms.NumericUpDown txtHPpct;
+        private System.Windows.Forms.TextBox txtSpKey;
+        private System.Windows.Forms.TextBox txtHpKey;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.NumericUpDown txtAutoRefreshDelay;
+        private System.Windows.Forms.TextBox txtSkillTimerKey;
+        private System.Windows.Forms.Panel panel5;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.PictureBox pictureBox2;
+        private System.Windows.Forms.TextBox txtNewStatusKey;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.PictureBox pictureBox1;
+        private System.Windows.Forms.TextBox txtStatusKey;
+        private System.Windows.Forms.Button btnRefresh;
     }
 }
 

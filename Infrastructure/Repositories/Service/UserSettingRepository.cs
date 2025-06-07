@@ -35,5 +35,6 @@ namespace Infrastructure.Repositories.Service
             }
             return selectUserPreference;
         }
+
     }
 }

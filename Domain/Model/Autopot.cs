@@ -10,15 +10,15 @@ namespace RagnarokHotKeyInWinforms.Model
 {
     public class Autopot : Action
     {
-        public static string ACTION_NAME_AUTOPOT = "Autopot";
+        public static string actionNameAutopot { get; set; } = "Autopot";
         public static string ACTION_NAME_AUTOPOT_YGG = "AutopotYgg";
 
         public Key hpKey { get; set; }
         public int hpPercent { get; set; }
         public Key spKey { get; set; }
         public int spPercent { get; set; }
-        public int delay { get; set; } = 15;
-        public int delayYgg { get; set; } = 50;
+        public int delay { get; set; }
+        public int delayYgg { get; set; }
 
         public string actionName { get; set; }
         private _4RThread thread;
@@ -70,7 +70,7 @@ namespace RagnarokHotKeyInWinforms.Model
 
         public string GetActionName()
         {
-            return this.actionName != null ? this.actionName : ACTION_NAME_AUTOPOT;
+            return this.actionName != null ? this.actionName : actionNameAutopot;
         }
 
         #region Private methods

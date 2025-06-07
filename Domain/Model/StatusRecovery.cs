@@ -13,7 +13,7 @@ namespace RagnarokHotKeyInWinforms.Model
         public static string ACTION_NAME_STATUS_AUTOBUFF = "StatusAutoBuff";
 
         private _4RThread thread;
-        public Dictionary<EffectStatusIDs, Key> buffMapping = new Dictionary<EffectStatusIDs, Key>();
+        public Dictionary<EffectStatusIDs, Key> buffMapping { get; set; } = new Dictionary<EffectStatusIDs, Key>();
         public int delay { get; set; } = 1;
 
         public string GetActionName()

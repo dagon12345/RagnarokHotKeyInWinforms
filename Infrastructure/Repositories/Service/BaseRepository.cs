@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Repositories.Interface;
+using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories.Service
@@ -19,5 +20,6 @@ namespace Infrastructure.Repositories.Service
         {
             _context.Set<T>().Add(table);
         }
+
     }
 }

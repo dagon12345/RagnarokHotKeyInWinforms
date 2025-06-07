@@ -77,12 +77,6 @@
     <Compile Include="Forms\AtkDefForm.Designer.cs">
       <DependentUpon>AtkDefForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\AutopotForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\AutopotForm.Designer.cs">
-      <DependentUpon>AutopotForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\frm_Main.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -125,23 +119,11 @@
     <Compile Include="Forms\SkillTimerForm.Designer.cs">
       <DependentUpon>SkillTimerForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\StatusEffectForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\StatusEffectForm.Designer.cs">
-      <DependentUpon>StatusEffectForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\StuffAutoBuffForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\StuffAutoBuffForm.Designer.cs">
       <DependentUpon>StuffAutoBuffForm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ToggleApplicationStateForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ToggleApplicationStateForm.Designer.cs">
-      <DependentUpon>ToggleApplicationStateForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Interface\IBaseTableService.cs" />
     <Compile Include="Interface\IGetUserInfo.cs" />
@@ -167,9 +149,6 @@
     <EmbeddedResource Include="Forms\AtkDefForm.resx">
       <DependentUpon>AtkDefForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\AutopotForm.resx">
-      <DependentUpon>AutopotForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frm_Main.resx">
       <DependentUpon>frm_Main.cs</DependentUpon>
     </EmbeddedResource>
@@ -191,14 +170,8 @@
     <EmbeddedResource Include="Forms\SkillTimerForm.resx">
       <DependentUpon>SkillTimerForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Forms\StatusEffectForm.resx">
-      <DependentUpon>StatusEffectForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Forms\StuffAutoBuffForm.resx">
       <DependentUpon>StuffAutoBuffForm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ToggleApplicationStateForm.resx">
-      <DependentUpon>ToggleApplicationStateForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

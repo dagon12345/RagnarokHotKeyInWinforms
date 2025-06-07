@@ -47,7 +47,7 @@ namespace RagnarokHotKeyInWinforms.Utilities
                 catch (Exception ex)
                 {
 
-                    Console.WriteLine("[4R Thread Exception] =========== We could not suspend curren thread: " + ex);
+                    Console.WriteLine("[4R Thread Exception] =========== We could not suspend current thread: " + ex);
                 }
             }
         }

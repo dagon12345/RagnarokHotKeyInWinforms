@@ -25,7 +25,6 @@ namespace RagnarokHotKeyInWinforms.Forms
 
             ProfileSingleton.Create(newProfileName);
             this.lbProfilesList.Items.Add(newProfileName);
-            this.formMain.refreshProfileList();
             this.txtProfileName.Text = ""; // Clear textbox
         }
 
@@ -46,7 +45,6 @@ namespace RagnarokHotKeyInWinforms.Forms
             {
                 ProfileSingleton.Delete(selectedProfile);
                 this.lbProfilesList.Items.Remove(selectedProfile); // Remove the created profile
-                this.formMain.refreshProfileList();//refresh the combobox Profile selection
             }
         }
     }

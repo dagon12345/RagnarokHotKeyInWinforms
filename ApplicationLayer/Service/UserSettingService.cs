@@ -1,7 +1,6 @@
 ﻿using ApplicationLayer.Interface;
 using Domain.Constants;
 using Domain.Model.DataModels;
-using Domain.Model.ModelConfigurations;
 using Infrastructure.Repositories.Interface;
 using Newtonsoft.Json;
 using RagnarokHotKeyInWinforms;
@@ -21,42 +20,6 @@ namespace ApplicationLayer.Service
         {
             _userSettingRepository = userSettingRepository;
         }
-
-        public void Load(Guid referenceCode)
-        {
-            try
-            {
-
-                //This File is located into directory bin/Debug/Profile/Default.json
-                string json = File.ReadAllText(AppConfig.ProfileFolder + RagnarokConstants.DefaultJson);
-                dynamic jsonData = JsonConvert.DeserializeObject<dynamic>(json);
-
-                if (jsonData != null)
-                {
-                    // Populate Singleton profile with data from the database
-                    profile.Name = jsonData.Name;
-                    //profile.UserPreferences = JsonConvert.DeserializeObject<UserPreferences>(GetByAction(jsonData, profileConfiguration.UserPreferences));
-                    profile.AHK = JsonConvert.DeserializeObject<AHK>(GetByAction(jsonData, profileConfiguration.AHK));
-                    profile.AutopotYgg = JsonConvert.DeserializeObject<Autopot>(GetByAction(jsonData, profileConfiguration.AutopotYgg));
-                    profile.StatusRecovery = JsonConvert.DeserializeObject<StatusRecovery>(GetByAction(jsonData, profileConfiguration.StatusRecovery));
-                    profile.AutoRefreshSpammer = JsonConvert.DeserializeObject<AutoRefreshSpammer>(GetByAction(jsonData, profileConfiguration.AutoRefreshSpammer));
-                    profile.AutoBuff = JsonConvert.DeserializeObject<AutoBuff>(GetByAction(jsonData, profileConfiguration.AutoBuff));
-                    profile.SongMacro = JsonConvert.DeserializeObject<Macro>(GetByAction(jsonData, profileConfiguration.SongMacro));
-                    profile.AtkDefMode = JsonConvert.DeserializeObject<ATKDefMode>(GetByAction(jsonData, profileConfiguration.AtkDefMode));
-                    profile.MacroSwitch = JsonConvert.DeserializeObject<Macro>(GetByAction(jsonData, profileConfiguration.MacroSwitch));
-                }
-                else
-                {
-                    throw new Exception("Profile not found in database.");
-                }
-
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
         public static object GetByAction(dynamic obj, RagnarokHotKeyInWinforms.Model.Action action)
         {
             if (obj != null & obj[action.GetActionName()] != null)
@@ -88,6 +51,7 @@ namespace ApplicationLayer.Service
                     Name = Name,
                     UserPreferences = JsonConvert.SerializeObject(profileConfiguration.UserPreferences),
                     Ahk = JsonConvert.SerializeObject(profileConfiguration.AHK),
+                    Autopot = JsonConvert.SerializeObject(profileConfiguration.Autopot),
                     AutopotYgg = JsonConvert.SerializeObject(profileConfiguration.AutopotYgg),
                     StatusRecovery = JsonConvert.SerializeObject(profileConfiguration.StatusRecovery),
                     AutoRefreshSpammer = JsonConvert.SerializeObject(profileConfiguration.AutoRefreshSpammer),
@@ -97,22 +61,8 @@ namespace ApplicationLayer.Service
                     MacroSwitch = JsonConvert.SerializeObject(profileConfiguration.MacroSwitch)
                 };
                 _userSettingRepository.Add(userSettings);
+                await _userSettingRepository.SaveChangesAsync();
             }
-            //Update settings
-            //else
-            //{
-            //    // Update existing profile
-            //    //userSettings.UserPreferences = JsonConvert.SerializeObject(profileConfiguration.UserPreferences);
-            //    userSettings.Ahk = JsonConvert.SerializeObject(profileConfiguration.AHK);
-            //    userSettings.AutopotYgg = JsonConvert.SerializeObject(profileConfiguration.AutopotYgg);
-            //    userSettings.StatusRecovery = JsonConvert.SerializeObject(profileConfiguration.StatusRecovery);
-            //    userSettings.AutoRefreshSpammer = JsonConvert.SerializeObject(profileConfiguration.AutoRefreshSpammer);
-            //    userSettings.Ahk = JsonConvert.SerializeObject(profileConfiguration.AutoBuff);
-            //    userSettings.SongMacro = JsonConvert.SerializeObject(profileConfiguration.SongMacro);
-            //    userSettings.AtkDefMode = JsonConvert.SerializeObject(profileConfiguration.AtkDefMode);
-            //    userSettings.MacroSwitch = JsonConvert.SerializeObject(profileConfiguration.MacroSwitch);
-            //}
-            await _userSettingRepository.SaveChangesAsync();
         }
 
         public async Task<UserSettings> SelectUserPreference(Guid referenceCode)

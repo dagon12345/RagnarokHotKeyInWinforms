@@ -64,10 +64,6 @@
     <Compile Include="Model\DataModels\BaseTable.cs" />
     <Compile Include="Model\DataModels\StoredCredential.cs" />
     <Compile Include="Model\DataModels\UserSettings.cs" />
-    <Compile Include="Model\JsonModels\AutopotSetting.cs" />
-    <Compile Include="Model\JsonModels\AutoRefereshSpammerSetting.cs" />
-    <Compile Include="Model\JsonModels\StatusRecoverySetting.cs" />
-    <Compile Include="Model\JsonModels\UserPreferenceSetting.cs" />
     <Compile Include="Model\LocalServerManager.cs" />
     <Compile Include="Model\Macro.cs" />
     <Compile Include="Model\Profile.cs" />

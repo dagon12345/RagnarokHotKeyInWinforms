@@ -1,54 +1,67 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 namespace RagnarokHotKeyInWinforms.Utilities
 {
-    //used by AutoPot class
     public class _4RThread
     {
-        private Thread thread;
-
-        public _4RThread(Func<int, int> toRun)
+        private Thread monitorThread;
+        private CancellationTokenSource cancellationTokenSource;
+        public _4RThread(Action<CancellationToken> toRun)
         {
-            this.thread = new Thread(() =>
+            StartNewThread(toRun);
+        }
+
+        private void StartNewThread(Action<CancellationToken> toRun)
+        {
+            cancellationTokenSource = new CancellationTokenSource();
+            monitorThread = new Thread(() =>
             {
-                while (true)
+                while (!cancellationTokenSource.Token.IsCancellationRequested)
                 {
                     try
                     {
-                        toRun(0);
+                        toRun(cancellationTokenSource.Token);
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine("[4RThread Exception] Error while Executing Thread Method ==== " + ex.Message);
+                        Console.WriteLine("[4RThread Exception] Error while executing thread: " + ex.Message);
                     }
-                    finally
-                    {
-                        Thread.Sleep(5);
-                    }
+
+                    Thread.Sleep(50);
                 }
             });
-            this.thread.SetApartmentState(ApartmentState.STA);
+            monitorThread.SetApartmentState(ApartmentState.STA); // ✅ Set before starting
+            monitorThread.IsBackground = true;
+            monitorThread.Start();
         }
 
-        public static void Start(_4RThread _4RThread)
+        public void Start(Action<CancellationToken> toRun)
         {
-            _4RThread.thread.Start();
-        }
-        public static void Stop(_4RThread _4RThread)
-        {
-            //thread is not null and thread is alive
-            if (_4RThread.thread != null && _4RThread.thread.IsAlive)
+            if (monitorThread == null || !monitorThread.IsAlive)
             {
-                try
-                {
-                    _4RThread.thread.Suspend();
-                }
-                catch (Exception ex)
-                {
+                Console.WriteLine("Starting new thread...");
+                StartNewThread(toRun); // ✅ Creates a fresh thread instance
+            }
+            else
+            {
+                Console.WriteLine("Thread is already running.");
+            }
+        }
 
-                    Console.WriteLine("[4R Thread Exception] =========== We could not suspend current thread: " + ex);
-                }
+        public void Stop()
+        {
+            if (monitorThread != null && monitorThread.IsAlive)
+            {
+                Console.WriteLine("Stopping thread...");
+                cancellationTokenSource.Cancel(); // ✅ Signals thread to exit
+                monitorThread.Join(); // ✅ Ensures full termination
+                Console.WriteLine("Thread successfully stopped.");
+            }
+            else
+            {
+                Console.WriteLine("No active thread found to stop.");
             }
         }
     }

@@ -117,5 +117,10 @@ namespace ApplicationLayer.Forms
             frm_Main mainMenuForm = new frm_Main(storedCredential, userSignIn, userSettings, baseTable);
             mainMenuForm.ShowDialog();
         }
+
+        private void SignInForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Application.Exit();
+        }
     }
 }

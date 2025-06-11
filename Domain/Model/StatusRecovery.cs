@@ -41,7 +41,7 @@ namespace RagnarokHotKeyInWinforms.Model
                     }
                 }
                 Thread.Sleep(this.delay);
-                return 0;
+                //return 0;
             });
 
             return statusEffectsThread;
@@ -49,22 +49,26 @@ namespace RagnarokHotKeyInWinforms.Model
 
         public void Start()
         {
-            if(thread != null)
-            {
-               Stop();// Commented this and uncomment if thread later is needed.
-            }
 
             Client roClient = ClientSingleton.GetClient();
             if(roClient != null)
             {
+
+                if (thread != null)
+                {
+                    Stop();// Commented this and uncomment if thread later is needed.
+                }
                 this.thread = RestoreStatusThread(roClient);
-                _4RThread.Start(this.thread);
             }
         }
 
         public void Stop()
         {
-            _4RThread.Stop(this.thread);
+            if (thread != null)
+            {
+                thread.Stop();
+                thread = null; // Optionally set to null after stopping
+            }
         }
 
         public string GetConfiguration()

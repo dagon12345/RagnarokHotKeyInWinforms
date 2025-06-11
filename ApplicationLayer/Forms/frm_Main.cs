@@ -2,7 +2,6 @@
 using ApplicationLayer.Interface;
 using Domain.Constants;
 using Domain.Model.DataModels;
-using Domain.Model.JsonModels;
 using Microsoft.Extensions.DependencyInjection;
 using RagnarokHotKeyInWinforms.Forms;
 using RagnarokHotKeyInWinforms.Model;
@@ -20,8 +19,7 @@ namespace RagnarokHotKeyInWinforms
 {
     public partial class frm_Main : Form, IObserver
     {
-        private AutopotSetting autopotSetting = new AutopotSetting();
-        private Subject subject = new Subject();
+        private Subject subject = new Subject();//subject triggers the Update() method inside notify function
         private Timer progressTimer;
         private int progressIncrement; // Increment value for each tick
         private int targetProgress; // Target progress value
@@ -48,16 +46,13 @@ namespace RagnarokHotKeyInWinforms
             #endregion
 
             this.Text = AppConfig.Name + " - " + AppConfig.Version; // Window title
-            //SetAutoStatusEffectWindow();
-            //SetAHKWindow();//Tab spammer
-            //SetProfileWindow();//Profile
             //SetAutobuffStuffWindow();//AutoBuff Stuff
             //SetAutobuffSkillWindow();//AutoBuff Skill
             //SetSongMacroWindow(); // Macro Song Form
             //SetAtkDefWindow();//AtkDef tab page
             //SetMacroSwitchWindow();
         }
-        #region ToggleApplicationStateFunction
+        #region ToggleApplicationStateFunction (No Start Method)
         private bool toggleStatus()
         {
             bool isOn = this.btnStatusToggle.Text == "On";
@@ -111,9 +106,9 @@ namespace RagnarokHotKeyInWinforms
         {
             var toggleStateValue = await ReturnToggleKey();
             // Parse JSON and extract toggleStateKey
-            var jsonObject = JsonSerializer.Deserialize<UserPreferenceSetting>(toggleStateValue.UserPreferences);
+            var jsonObject = JsonSerializer.Deserialize<UserPreferences>(toggleStateValue.UserPreferences);
             this.txtStatusToggleKey.Text = jsonObject.toggleStateKey;
-            txtStatusToggleKey.KeyDown += new KeyEventHandler(FormUtils.OnKeyDown);
+            txtStatusToggleKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
             this.txtStatusToggleKey.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
             this.txtStatusToggleKey.TextChanged += async (sender, e) => await onStatusToggleKeyChange(sender, e);
 
@@ -128,7 +123,7 @@ namespace RagnarokHotKeyInWinforms
 
 
             // Deserialize JSON to update value
-            var jsonObject = JsonSerializer.Deserialize<UserPreferenceSetting>(toggleStateValue.UserPreferences);
+            var jsonObject = JsonSerializer.Deserialize<UserPreferences>(toggleStateValue.UserPreferences);
             if (jsonObject != null)
             {
                 jsonObject.toggleStateKey = currentToggleKey.ToString(); // Update key
@@ -144,11 +139,11 @@ namespace RagnarokHotKeyInWinforms
             lastKey = currentToggleKey; //Refresh lastKey to update 
         }
         #endregion ToggleApplicationStateFunction
-        #region AutopotSettings
+        #region AutopotSettings(Triggered with Start() method)
         private async Task RetrieveAutopot()
         {
             var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AutopotSetting>(userToggleState.Autopot);
+            var jsonObject = JsonSerializer.Deserialize<Autopot>(userToggleState.Autopot);
 
             txtHpKey.Text = jsonObject.hpKey.ToString() ?? "0";
             txtSpKey.Text = jsonObject.spKey.ToString() ?? "0";
@@ -157,42 +152,42 @@ namespace RagnarokHotKeyInWinforms
             txtAutopotDelay.Text = jsonObject.delay.ToString() ?? "0";
 
             //HPkey Controls
-            txtHpKey.KeyDown += new KeyEventHandler(FormUtils.OnKeyDown);
+            txtHpKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
             txtHpKey.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
             txtHpKey.TextChanged += async (sender, e) => await onHpTextChange(sender, e);
 
             //HPPercent Controls
-            txtHPpct.KeyDown += new KeyEventHandler(FormUtils.OnKeyDown);
+            txtHPpct.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
             txtHPpct.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
             txtHPpct.TextChanged += async (sender, e) => await txtHPpctTextChanged(sender, e);
 
             //SPKey controls
-            txtSpKey.KeyDown += new KeyEventHandler(FormUtils.OnKeyDown);
+            txtSpKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
             txtSpKey.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
             txtSpKey.TextChanged += async (sender, e) => await onSpTextChange(sender, e);
 
             //SpPercent Controls
-            txtSPpct.KeyDown += new KeyEventHandler(FormUtils.OnKeyDown);
+            txtSPpct.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
             txtSPpct.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
             txtSPpct.TextChanged += async (sender, e) => await txtSPpctTextChanged(sender, e);
 
 
             //Delay
-            txtAutopotDelay.KeyDown += new KeyEventHandler(FormUtils.OnKeyDown);
+            txtAutopotDelay.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
             txtAutopotDelay.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
             txtAutopotDelay.TextChanged += async (sender, e) => await txtAutopotDelayTextChanged(sender, e);
         }
-        #region HpTexAndPercent
+        #region HpTexAndPercent Autopot
         private async Task onHpTextChange(object sender, EventArgs e)
         {
             var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AutopotSetting>(userToggleState.Autopot);
+            var jsonObject = JsonSerializer.Deserialize<Autopot>(userToggleState.Autopot);
             Key key = (Key)Enum.Parse(typeof(Key), txtHpKey.Text);
 
             if (jsonObject != null)
             {
                 jsonObject.hpKey = key;
-                jsonObject.actionName = autopotSetting.actionName;
+                jsonObject.GetActionName();
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.Autopot = updatedJson;
                 // Persist changes
@@ -206,13 +201,13 @@ namespace RagnarokHotKeyInWinforms
         private async Task txtHPpctTextChanged(object sender, EventArgs e)
         {
             var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AutopotSetting>(userToggleState.Autopot);
+            var jsonObject = JsonSerializer.Deserialize<Autopot>(userToggleState.Autopot);
             Key key = (Key)Enum.Parse(typeof(Key), txtHPpct.Text);
 
             if (jsonObject != null)
             {
                 jsonObject.hpPercent = Convert.ToInt32(key);
-                jsonObject.actionName = autopotSetting.actionName;
+                jsonObject.GetActionName();
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.Autopot = updatedJson;
                 // Persist changes
@@ -225,17 +220,17 @@ namespace RagnarokHotKeyInWinforms
 
         }
         #endregion
-        #region SpTextAndPercent
+        #region SpTextAndPercent Autopot
         private async Task onSpTextChange(object sender, EventArgs e)
         {
             var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AutopotSetting>(userToggleState.Autopot);
+            var jsonObject = JsonSerializer.Deserialize<Autopot>(userToggleState.Autopot);
             Key key = (Key)Enum.Parse(typeof(Key), txtSpKey.Text);
 
             if (jsonObject != null)
             {
                 jsonObject.spKey = key;
-                jsonObject.actionName = autopotSetting.actionName;
+                jsonObject.GetActionName();
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.Autopot = updatedJson;
                 // Persist changes
@@ -250,13 +245,13 @@ namespace RagnarokHotKeyInWinforms
         private async Task txtSPpctTextChanged(object sender, EventArgs e)
         {
             var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AutopotSetting>(userToggleState.Autopot);
+            var jsonObject = JsonSerializer.Deserialize<Autopot>(userToggleState.Autopot);
             Key key = (Key)Enum.Parse(typeof(Key), txtSPpct.Text);
 
             if (jsonObject != null)
             {
                 jsonObject.spPercent = Convert.ToInt32(key);
-                jsonObject.actionName = autopotSetting.actionName;
+                jsonObject.GetActionName();
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.Autopot = updatedJson;
                 // Persist changes
@@ -270,13 +265,12 @@ namespace RagnarokHotKeyInWinforms
         private async Task txtAutopotDelayTextChanged(object sender, EventArgs e)
         {
             var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AutopotSetting>(userToggleState.Autopot);
+            var jsonObject = JsonSerializer.Deserialize<Autopot>(userToggleState.Autopot);
             Key key = (Key)Enum.Parse(typeof(Key), txtAutopotDelay.Text);
 
             if (jsonObject != null)
             {
                 jsonObject.delay = Convert.ToInt32(key);
-                jsonObject.actionName = autopotSetting.actionName;
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.Autopot = updatedJson;
                 // Persist changes
@@ -289,17 +283,17 @@ namespace RagnarokHotKeyInWinforms
         }
         #endregion
         #endregion AutopotSettings
-        #region SkillTimer
+        #region SkillTimer(Triggered with Start() method)
         private async Task SkillTimerRetrieve()
         {
             var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AutoRefereshSpammerSetting>(userToggleState.AutoRefreshSpammer);
+            var jsonObject = JsonSerializer.Deserialize<AutoRefreshSpammer>(userToggleState.AutoRefreshSpammer);
 
             txtAutoRefreshDelay.Text = jsonObject.refreshDelay.ToString() ?? "0";
             txtSkillTimerKey.Text = jsonObject.refreshKey.ToString() ?? "0";
 
             //Default values from hotkeys
-            this.txtSkillTimerKey.KeyDown += new KeyEventHandler(FormUtils.OnKeyDown);
+            this.txtSkillTimerKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
             this.txtSkillTimerKey.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
             this.txtSkillTimerKey.TextChanged += new EventHandler(this.onSkillTimerKeyChange);
             this.txtAutoRefreshDelay.ValueChanged += new EventHandler(this.txtAutoRefreshDelayTextChanged);
@@ -307,7 +301,7 @@ namespace RagnarokHotKeyInWinforms
         private async void onSkillTimerKeyChange(object sender, EventArgs e)
         {
             var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AutoRefereshSpammerSetting>(userToggleState.AutoRefreshSpammer);
+            var jsonObject = JsonSerializer.Deserialize<AutoRefreshSpammer>(userToggleState.AutoRefreshSpammer);
 
             Key key = (Key)Enum.Parse(typeof(Key), txtSkillTimerKey.Text.ToString());
 
@@ -327,7 +321,7 @@ namespace RagnarokHotKeyInWinforms
         private async void txtAutoRefreshDelayTextChanged(object sender, EventArgs e)
         {
             var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AutoRefereshSpammerSetting>(userToggleState.AutoRefreshSpammer);
+            var jsonObject = JsonSerializer.Deserialize<AutoRefreshSpammer>(userToggleState.AutoRefreshSpammer);
 
             Key key = (Key)Enum.Parse(typeof(Key), txtAutoRefreshDelay.Text.ToString());
 
@@ -345,28 +339,23 @@ namespace RagnarokHotKeyInWinforms
             }
         }
         #endregion SkillTimer
-        #region Status Recovery Effect Form
-        private void KeyPressFunction()
-        {
-        
-        }
+        #region Status Recovery Effect Form(Triggered with Start() method)
         private async Task RetrieveStatusEffect()
         {
             try
             {
                 var userToggleState = await ReturnToggleKey();
-                var jsonObject = JsonSerializer.Deserialize<StatusRecoverySetting>(userToggleState.StatusRecovery);
+                var jsonObject = JsonSerializer.Deserialize<StatusRecovery>(userToggleState.StatusRecovery);
 
                 if (jsonObject.buffMapping.Count > 0)
                 {
-                    txtStatusKey.Text = jsonObject.buffMapping[EffectStatusIDs.SILENCE].ToString() ?? "None";
-                    txtNewStatusKey.Text = jsonObject.buffMapping[EffectStatusIDs.PROPERTYUNDEAD].ToString() ?? "None";
+                    txtStatusKey.Text = jsonObject.buffMapping[EffectStatusIDs.SILENCE].ToString();
                 }
 
-                this.txtStatusKey.KeyDown += new KeyEventHandler(FormUtils.OnKeyDown);
+                this.txtStatusKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
                 this.txtStatusKey.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
                 this.txtStatusKey.TextChanged += new EventHandler(onStatusKeyChange);
-                this.txtNewStatusKey.KeyDown += new KeyEventHandler(FormUtils.OnKeyDown);
+                this.txtNewStatusKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
                 this.txtNewStatusKey.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
                 this.txtNewStatusKey.TextChanged += new EventHandler(on3RDStatusKeyChange);
 
@@ -384,7 +373,7 @@ namespace RagnarokHotKeyInWinforms
         private async void onStatusKeyChange(object sender, EventArgs e)
         {
             var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<StatusRecoverySetting>(userToggleState.StatusRecovery);
+            var jsonObject = JsonSerializer.Deserialize<StatusRecovery>(userToggleState.StatusRecovery);
             Key key = (Key)Enum.Parse(typeof(Key), txtStatusKey.Text.ToString());
 
             if (jsonObject != null)
@@ -399,7 +388,7 @@ namespace RagnarokHotKeyInWinforms
 
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.StatusRecovery = updatedJson;
-                // Persist changes
+                // Persist changes add to the object array in database
                 await _userSettingService.SaveChangesAsync();
             }
             else
@@ -411,7 +400,7 @@ namespace RagnarokHotKeyInWinforms
         private async void on3RDStatusKeyChange(object sender, EventArgs e)
         {
             var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<StatusRecoverySetting>(userToggleState.StatusRecovery);
+            var jsonObject = JsonSerializer.Deserialize<StatusRecovery>(userToggleState.StatusRecovery);
             Key key = (Key)Enum.Parse(typeof(Key), txtNewStatusKey.Text.ToString());
 
             if (jsonObject != null)
@@ -424,7 +413,7 @@ namespace RagnarokHotKeyInWinforms
 
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.StatusRecovery = updatedJson;
-                // Persist changes
+                // Persist changes add to the object array in database
                 await _userSettingService.SaveChangesAsync();
             }
             else
@@ -435,6 +424,262 @@ namespace RagnarokHotKeyInWinforms
         }
         #endregion
         #endregion Status Effect From
+        #region Ahk Region (Triggered with Start() method)
+        private async Task AhkRetrieval()
+        {
+            //Default values of legend
+            SetLegendDefaultValues();
+
+            //remove handlers so that it wont trigger the onCheckedChange on loop
+            foreach (Control c in this.tabPageSpammer.Controls)
+            {
+                if (c is CheckBox check)
+                {
+                    if (check.Enabled)
+                        check.CheckStateChanged -= onCheckChange; // Remove event handler before modification
+                }
+            }
+
+            var userToggleState = await ReturnToggleKey();
+            var jsonObject = JsonSerializer.Deserialize<AHK>(userToggleState.Ahk);
+            txtSpammerDelay.Text = jsonObject.AhkDelay.ToString() ?? "0";
+            await DisableControlsIfSpeedBoost();
+            #region Keys that have key
+            Dictionary<string, KeyConfig> ahkClones = new Dictionary<string, KeyConfig>(jsonObject.AhkEntries);
+            foreach (KeyValuePair<string, KeyConfig> config in ahkClones)
+            {
+               ToggleCheckboxByName(config.Key, config.Value.ClickActive);
+            }
+
+            //Check the tab spammer for checkboxes. This will be triggered by the method ToggleCheckboxByName on loop.
+            foreach (Control c in this.tabPageSpammer.Controls)
+            {
+                if (c is CheckBox)
+                {
+                    CheckBox check = (CheckBox)c;
+                    if ((check.Name.Split(new[] { "chk" }, StringSplitOptions.None).Length == 2))
+                    {
+                        check.ThreeState = true; // Include the CheckState.Indeterminate three state insted of just true or false
+                    };
+
+                    if (check.Enabled)
+                        check.CheckStateChanged += onCheckChange;
+                }
+            }
+            #endregion  Keys that have key
+            #region Keys that have no key in keyboard
+            Dictionary<string, KeyConfigOthers> ahkCloneKeyConfig = new Dictionary<string, KeyConfigOthers>(jsonObject.AhkEntriesOthers);
+
+            foreach (KeyValuePair<string, KeyConfigOthers> config in ahkCloneKeyConfig)
+            {
+                ToggleCheckboxByName(config.Key, config.Value.ClickActive);
+            }
+
+            foreach (Control c in this.keyConfig.Controls)
+            {
+                if (c is CheckBox)
+                {
+                    CheckBox check = (CheckBox)c;
+                    if (check.Enabled)
+                        check.CheckStateChanged += onCheckChangeKeyConfig;
+                }
+            }
+            #endregion Keys that have no key in keyboard
+
+            //SpPercent Controls
+            txtSpammerDelay.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
+            txtSpammerDelay.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
+            txtSpammerDelay.TextChanged += async (sender, e) => await txtSpammerDelayChanged(sender, e);
+        }
+        private async Task txtSpammerDelayChanged(object sender, EventArgs e)
+        {
+            var userToggleState = await ReturnToggleKey();
+            var jsonObject = JsonSerializer.Deserialize<AHK>(userToggleState.Ahk);
+            Key key = (Key)Enum.Parse(typeof(Key), txtSpammerDelay.Text);
+
+            if (jsonObject != null)
+            {
+                jsonObject.AhkDelay = Convert.ToInt32(key);
+                jsonObject.GetActionName();
+                var updatedJson = JsonSerializer.Serialize(jsonObject);
+                userToggleState.Ahk = updatedJson;
+                // Persist changes
+                await _userSettingService.SaveChangesAsync();
+            }
+            else
+            {
+                return;
+            }
+        }
+        private async Task DisableControlsIfSpeedBoost()
+        {
+            var userToggleState = await ReturnToggleKey();
+            var jsonObject = JsonSerializer.Deserialize<AHK>(userToggleState.Ahk);
+            if (jsonObject.ahkMode == AHK.SPEED_BOOST)
+            {
+                this.ahkSpeedBoost.Checked = true;
+                this.chkMouseFlick.Enabled = false;
+                this.chkNoShift.Enabled = false;
+            }
+            else
+            {
+                this.ahkCompatibility.Checked = true;
+                this.chkMouseFlick.Enabled = true;
+                this.chkNoShift.Enabled = true;
+            }
+        }
+
+
+        private async void ahkCompatibility_CheckedChanged(object sender, EventArgs e)
+        {
+            var userToggleState = await ReturnToggleKey();
+            var jsonObject = JsonSerializer.Deserialize<AHK>(userToggleState.Ahk);
+            if(ahkCompatibility.Checked)
+            {
+                jsonObject.ahkMode = AHK.COMPATABILITY;
+                var updatedJson = JsonSerializer.Serialize(jsonObject);
+                userToggleState.Ahk = updatedJson;
+
+                this.chkMouseFlick.Enabled = true;
+                this.chkNoShift.Enabled = true;
+            }
+            else
+            {
+                jsonObject.ahkMode = AHK.SPEED_BOOST;
+                var updatedJson = JsonSerializer.Serialize(jsonObject);
+                userToggleState.Ahk = updatedJson;
+                this.chkMouseFlick.Enabled = false;
+                this.chkNoShift.Enabled = false;
+            }
+            // Persist changes add to the object array in database
+            await _userSettingService.SaveChangesAsync();
+        }
+        private void ToggleCheckboxByName(string Name, bool state)
+        {
+            CheckBox checkbox = (CheckBox)this.Controls.Find(Name, true)[0];
+            checkbox.CheckState = state ? CheckState.Checked : CheckState.Indeterminate;
+        }
+        private void SetLegendDefaultValues()
+        {
+            //No mouse click cbWithNoClick
+            this.cbWithNoClick.ThreeState = true;
+            this.cbWithNoClick.CheckState = System.Windows.Forms.CheckState.Indeterminate;
+            this.cbWithNoClick.AutoCheck = false;
+            //With mouse click cbWithClick
+            this.cbWithClick.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbWithClick.ThreeState = true;
+            this.cbWithClick.AutoCheck = false;
+        }
+        private async void onCheckChange(object sender, EventArgs e)
+        {
+            CheckBox checkbox = (CheckBox)sender;
+            Key key = (Key)new KeyConverter().ConvertFromString(checkbox.Text);
+            bool haveMouseClick = checkbox.CheckState == CheckState.Checked ? true : false;
+
+            var userToggleState = await ReturnToggleKey();
+            var jsonObject = JsonSerializer.Deserialize<AHK>(userToggleState.Ahk);
+            //If there is a checked key in checkbox then register this to the profile that was selected.
+            if (checkbox.CheckState == CheckState.Checked || checkbox.CheckState == CheckState.Indeterminate)
+            {
+                //add every entry that the user changed
+                jsonObject.AddAHKEntry(checkbox.Name, new KeyConfig(key, haveMouseClick));
+            }
+
+            else
+            {
+                //remove the entry if the user click unchecked
+                jsonObject.RemoveAHKEntry(checkbox.Name);
+            }
+            var updatedJson = JsonSerializer.Serialize(jsonObject);
+            userToggleState.Ahk = updatedJson;
+            // Persist changes add to the object array in database
+            await _userSettingService.SaveChangesAsync();
+        }
+
+        private async void onCheckChangeKeyConfig(object sender, EventArgs e)
+        {
+            CheckBox checkbox = (CheckBox)sender;
+            bool haveMouseClick = checkbox.CheckState == CheckState.Checked ? true : false;
+
+            var userToggleState = await ReturnToggleKey();
+            var jsonObject = JsonSerializer.Deserialize<AHK>(userToggleState.Ahk);
+            //If there is a checked key in checkbox then register this to the profile that was selected.
+            if (checkbox.CheckState == CheckState.Checked)
+            {
+                //add every entry that the user changed
+                jsonObject.AddAHKEntryKeyConfig(checkbox.Name, new KeyConfigOthers(haveMouseClick));
+            }
+
+            else
+            {
+                //remove the entry if the user click unchecked
+                jsonObject.RemoveAHKEntryKeyConfig(checkbox.Name);
+            }
+            var updatedJson = JsonSerializer.Serialize(jsonObject);
+            userToggleState.Ahk = updatedJson;
+            // Persist changes add to the object array in database
+            await _userSettingService.SaveChangesAsync();
+        }
+    
+        #endregion Ahk Region
+        public async Task<T> GetDeserializedObject<T>(Func<Task<string>> getJsonData)
+        {
+            var jsonData = await getJsonData();
+            return JsonSerializer.Deserialize<T>(jsonData);
+        }
+        private async Task TriggerStartActions()
+        {
+            //Trigger all the actions we've created.
+            var jsonObjectAutopot = await GetDeserializedObject<Autopot>(async () => (await ReturnToggleKey()).Autopot);
+            var jsonObjectAutoRefresh = await GetDeserializedObject<AutoRefreshSpammer>(async () => (await ReturnToggleKey()).AutoRefreshSpammer);
+            var jsonObjectStatusRecovery = await GetDeserializedObject<StatusRecovery>(async () => (await ReturnToggleKey()).StatusRecovery);
+            var jsonObjectAhk = await GetDeserializedObject<AHK>(async () => (await ReturnToggleKey()).Ahk);
+
+            jsonObjectAutopot.Start();
+            jsonObjectAutoRefresh.Start();
+            jsonObjectStatusRecovery.Start();
+            jsonObjectAhk.Start();
+        }
+        private async Task TriggerStopActions()
+        {
+            //Trigger all the actions we've created.
+            var jsonObjectAutopot = await GetDeserializedObject<Autopot>(async () => (await ReturnToggleKey()).Autopot);
+            var jsonObjectAutoRefresh = await GetDeserializedObject<AutoRefreshSpammer>(async () => (await ReturnToggleKey()).AutoRefreshSpammer);
+            var jsonObjectStatusRecovery = await GetDeserializedObject<StatusRecovery>(async () => (await ReturnToggleKey()).StatusRecovery);
+            var jsonObjectAhk = await GetDeserializedObject<AHK>(async () => (await ReturnToggleKey()).Ahk);
+
+            jsonObjectAutopot.Stop();
+            jsonObjectAutoRefresh.Stop();
+            jsonObjectStatusRecovery.Stop();
+            jsonObjectAhk.Stop();
+        }
+        public async void Update(ISubject subject)
+        {
+            switch ((subject as Subject).Message.code)
+            {
+                case MessageCode.TURN_ON:
+                    Client client = ClientSingleton.GetClient();
+                    if (client != null)
+                    {
+                        characterName.Text = ClientSingleton.GetClient().ReadCharacterName();
+                    }
+                    await TriggerStartActions();
+                    break;
+                case MessageCode.TURN_OFF:
+                    await TriggerStopActions();
+                    break;
+                case MessageCode.SERVER_LIST_CHANGED:
+                    this.refreshProcessList();
+                    break;
+                case MessageCode.CLICK_ICON_TRAY:
+                    this.Show();
+                    this.WindowState = FormWindowState.Normal;
+                    break;
+                case MessageCode.SHUTDOWN_APPLICATION:
+                    this.ShutdownApplication();
+                    break;
+            }
+        }
         //addform used for each forms
         public void addForm(TabPage tp, Form f)
         {
@@ -493,26 +738,13 @@ namespace RagnarokHotKeyInWinforms
             frm.Show();
             addForm(this.tabAutoBuffStuff, frm);
         }
-        public void SetProfileWindow()
-        {
-            ProfileForm frm = new ProfileForm(this);
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Location = new Point(0, 65);
-            frm.MdiParent = this;
-            frm.Show();
-            addForm(this.tabPageProfiles, frm);
-        }
-        public void SetAHKWindow()
-        {
-            AHKForm frm = new AHKForm(subject);
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Location = new Point(0, 65);
-            frm.MdiParent = this;
-            frm.Show();
-            addForm(this.tabPageSpammer, frm);
-        }
 
         #endregion
+
+        #region Public methods
+
+        #endregion
+        #region Private Methods
         private async void Form1_Load(object sender, EventArgs e)
         {
             StartUpdate();//Start the update to get the game address
@@ -530,36 +762,9 @@ namespace RagnarokHotKeyInWinforms
             await RetrieveAutopot();
             await SkillTimerRetrieve();
             await RetrieveStatusEffect();
+            await AhkRetrieval();
             this.refreshProcessList();
-
         }
-        #region Public methods
-        public void Update(ISubject subject)
-        {
-            switch ((subject as Subject).Message.code)
-            {
-                case MessageCode.TURN_ON:
-                case MessageCode.PROFILE_CHANGED:
-                    Client client = ClientSingleton.GetClient();
-                    if (client != null)
-                    {
-                        characterName.Text = ClientSingleton.GetClient().ReadCharacterName();
-                    }
-                    break;
-                case MessageCode.SERVER_LIST_CHANGED:
-                    this.refreshProcessList();
-                    break;
-                case MessageCode.CLICK_ICON_TRAY:
-                    this.Show();
-                    this.WindowState = FormWindowState.Normal;
-                    break;
-                case MessageCode.SHUTDOWN_APPLICATION:
-                    this.ShutdownApplication();
-                    break;
-            }
-        }
-        #endregion
-        #region Private Methods
         private void StartUpdate()
         {
 
@@ -649,7 +854,7 @@ namespace RagnarokHotKeyInWinforms
             subject.Notify(new Utilities.Message(MessageCode.TURN_OFF, null));
             Environment.Exit(0);
         }
-        #endregion
+
         private void processCombobox_SelectedIndexChanged(object sender, EventArgs e)
         {
             //When clicked get the name of the charcter to preview in the label
@@ -661,7 +866,7 @@ namespace RagnarokHotKeyInWinforms
         }
         private void frm_Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Application.Exit();
+            Environment.Exit(0); // Immediately ends all execution
         }
 
         private async void btnLogout_Click(object sender, EventArgs e)
@@ -683,12 +888,19 @@ namespace RagnarokHotKeyInWinforms
 
         private void ProcessTimer_Tick(object sender, EventArgs e)
         {
-            
+
         }
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
             this.refreshProcessList();
         }
+
+        private void btnSample_Click(object sender, EventArgs e)
+        {
+        }
+
+        #endregion
+
     }
 }

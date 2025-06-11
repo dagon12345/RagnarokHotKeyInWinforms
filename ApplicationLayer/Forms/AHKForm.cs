@@ -21,6 +21,7 @@ namespace RagnarokHotKeyInWinforms.Forms
             switch ((subject as Subject).Message.code)
             {
                 case MessageCode.PROFILE_CHANGED:
+
                     RemoveHandlers();
                     FormUtils.ResetForm(this);
                     SetLegendDefaultValues();
@@ -39,6 +40,7 @@ namespace RagnarokHotKeyInWinforms.Forms
                     {
                         ToggleCheckboxByName(config.Key, config.Value.ClickActive);
                     }
+
                     break;
                 case MessageCode.TURN_ON:
                     ProfileSingleton.GetCurrent().AHK.Start();

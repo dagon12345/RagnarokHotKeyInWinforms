@@ -41,7 +41,6 @@ namespace RagnarokHotKeyInWinforms.Model
             if (roClient != null)
             {
                 this.thread = new _4RThread(_ => AHKThreadExecution(roClient));
-                _4RThread.Start(this.thread);
             }
         }
 
@@ -108,7 +107,7 @@ namespace RagnarokHotKeyInWinforms.Model
 
         public void Stop()
         {
-            _4RThread.Stop(this.thread);
+            thread.Stop();
         }
     }
 }

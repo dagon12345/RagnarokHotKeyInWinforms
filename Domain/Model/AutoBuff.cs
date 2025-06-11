@@ -38,7 +38,6 @@ namespace RagnarokHotKeyInWinforms.Model
             if (roClient != null)
             {
                 this.thread = AutoBuffThread(roClient);
-                _4RThread.Start(this.thread);
             }
         }
         public _4RThread AutoBuffThread(Client c)
@@ -83,7 +82,7 @@ namespace RagnarokHotKeyInWinforms.Model
                 }
 
                 Thread.Sleep(300);
-                return 0;
+              //  return 0;
 
             });
 
@@ -108,7 +107,7 @@ namespace RagnarokHotKeyInWinforms.Model
         }
         public void Stop()
         {
-            _4RThread.Stop(this.thread);
+            thread.Stop();
         }
         private void useAutobuff(Key key)
         {

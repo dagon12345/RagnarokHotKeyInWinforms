@@ -20,7 +20,20 @@ namespace RagnarokHotKeyInWinforms.Model
             this.key = key;
             ClickActive = clickActive;
         }
+
     }
+
+    public class KeyConfigOthers
+    {
+        public bool ClickActive { get; set; }
+
+        public KeyConfigOthers(bool clickActive)
+        {
+            ClickActive = clickActive;
+        }
+
+    }
+
     public class AHK : Action
     {
         //Import the mouse_event functio from the Windows API
@@ -35,40 +48,51 @@ namespace RagnarokHotKeyInWinforms.Model
         public const string COMPATABILITY = "ahkCompatability";
         public const string SPEED_BOOST = "ahkSpeedBoost";
         public Dictionary<string, KeyConfig> AhkEntries { get; set; } = new Dictionary<string, KeyConfig>();
-        public int AhkDelay { get; set; } = 10;
-        public bool mouseFlick { get; set; } = false;
-        public bool noShift { get; set; } = false;
-        public string ahkMode { get; set; } = COMPATABILITY;
+        public Dictionary<string, KeyConfigOthers> AhkEntriesOthers { get; set; } = new Dictionary<string, KeyConfigOthers>();
+        public int AhkDelay { get; set; }
+        public bool mouseFlick { get; set; }
+        public bool noShift { get; set; } 
+        public string ahkMode { get; set; }
 
         public AHK()
         {
 
         }
 
+
+
+        public void Stop()
+        {
+            if (thread != null)
+            {
+                thread.Stop();
+            }
+
+        }
+
         public void Start()
         {
             Client roClient = ClientSingleton.GetClient();
-            if(roClient != null)
+            if (roClient != null)
             {
-                if(thread != null)
+                if (thread != null)
                 {
-                    _4RThread.Stop(this.thread);
+                    thread.Stop();
                 }
                 this.thread = new _4RThread(_ => AHKThreadExecution(roClient));
-                _4RThread.Start(this.thread);
             }
         }
 
         private int AHKThreadExecution(Client roClient)
         {
-            if(ahkMode.Equals(COMPATABILITY))
+            if (ahkMode.Equals(COMPATABILITY))
             {
-                foreach(KeyConfig config in AhkEntries.Values)
+                foreach (KeyConfig config in AhkEntries.Values)
                 {
                     Keys thisk = (Keys)Enum.Parse(typeof(Keys), config.key.ToString());
-                    if(!Keyboard.IsKeyDown(Key.LeftAlt) && !Keyboard.IsKeyDown(Key.RightAlt))
+                    if (!Keyboard.IsKeyDown(Key.LeftAlt) && !Keyboard.IsKeyDown(Key.RightAlt))
                     {
-                        if(config.ClickActive && Keyboard.IsKeyDown(config.key))
+                        if (config.ClickActive && Keyboard.IsKeyDown(config.key))
                         {
                             if (noShift) keybd_event(Constants.VK_SHIFT, 0x45, Constants.KEYEVENTF_EXTENDEDKEY, 0);
                             _AHKCompatability(roClient, config, thisk);
@@ -83,7 +107,7 @@ namespace RagnarokHotKeyInWinforms.Model
             }
             else
             {
-                foreach(KeyConfig config in AhkEntries.Values)
+                foreach (KeyConfig config in AhkEntries.Values)
                 {
                     Keys thisk = (Keys)Enum.Parse(typeof(Keys), config.key.ToString());
                     this._AHKSpeedBoost(roClient, config, thisk);
@@ -104,9 +128,9 @@ namespace RagnarokHotKeyInWinforms.Model
                 Interop.PostMessage(roClient.process.MainWindowHandle, Constants.WM_LBUTTONUP, 0, 0);
                 return 0;
             };
-            if(this.mouseFlick)
+            if (this.mouseFlick)
             {
-                while(Keyboard.IsKeyDown(config.key) )
+                while (Keyboard.IsKeyDown(config.key))
                 {
                     Interop.PostMessage(roClient.process.MainWindowHandle, Constants.WM_KEYDOWN_MSG_ID, thisk, 0);
                     System.Windows.Forms.Cursor.Position = new Point(System.Windows.Forms.Cursor.Position.X - Constants.MOUSE_DIAGONAL_MOVIMENTATION_PIXELS_AHK, System.Windows.Forms.Cursor.Position.Y - Constants.MOUSE_DIAGONAL_MOVIMENTATION_PIXELS_AHK);
@@ -117,7 +141,7 @@ namespace RagnarokHotKeyInWinforms.Model
             }
             else
             {
-                while(Keyboard.IsKeyDown(config.key) )
+                while (Keyboard.IsKeyDown(config.key))
                 {
                     Interop.PostMessage(roClient.process.MainWindowHandle, Constants.WM_KEYDOWN_MSG_ID, thisk, 0);
                     send_click(0);
@@ -127,7 +151,7 @@ namespace RagnarokHotKeyInWinforms.Model
         }
         private void _AHKNoClick(Client roClient, KeyConfig config, Keys thisk)
         {
-            while(Keyboard.IsKeyDown(config.key) )
+            while (Keyboard.IsKeyDown(config.key))
             {
                 Interop.PostMessage(roClient.process.MainWindowHandle, Constants.WM_KEYDOWN_MSG_ID, thisk, 0);
                 Thread.Sleep(this.AhkDelay);
@@ -135,7 +159,7 @@ namespace RagnarokHotKeyInWinforms.Model
         }
         private void _AHKSpeedBoost(Client roClient, KeyConfig config, Keys thisk)
         {
-            while(Keyboard.IsKeyDown(config.key) )
+            while (Keyboard.IsKeyDown(config.key))
             {
                 Point cursorPos = System.Windows.Forms.Cursor.Position;
                 Interop.PostMessage(roClient.process.MainWindowHandle, Constants.WM_KEYDOWN_MSG_ID, thisk, 0);
@@ -148,7 +172,7 @@ namespace RagnarokHotKeyInWinforms.Model
 
         public void AddAHKEntry(string chkboxName, KeyConfig value)
         {
-            if(this.AhkEntries.ContainsKey(chkboxName))
+            if (this.AhkEntries.ContainsKey(chkboxName))
             {
                 RemoveAHKEntry(chkboxName);
             }
@@ -158,6 +182,21 @@ namespace RagnarokHotKeyInWinforms.Model
         {
             this.AhkEntries.Remove(chkboxName);
         }
+
+
+        public void AddAHKEntryKeyConfig(string chkboxName, KeyConfigOthers value)
+        {
+            if (this.AhkEntries.ContainsKey(chkboxName))
+            {
+                RemoveAHKEntry(chkboxName);
+            }
+            this.AhkEntriesOthers.Add(chkboxName, value);
+        }
+        public void RemoveAHKEntryKeyConfig(string chkboxName)
+        {
+            this.AhkEntriesOthers.Remove(chkboxName);
+        }
+
 
         public string GetActionName()
         {
@@ -169,10 +208,7 @@ namespace RagnarokHotKeyInWinforms.Model
             return JsonConvert.SerializeObject(this);
         }
 
-        public void Stop()
-        {
-            _4RThread.Stop(this.thread);
-        }
+
 
     }
 }

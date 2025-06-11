@@ -44,23 +44,27 @@ namespace RagnarokHotKeyInWinforms.Model
 
         public void Start()
         {
-            //If thread is running then stop and trigger the function after this.
-            if (thread != null)
-            {
-                Stop();// Commented this and uncomment if thread later is needed.
-            }
+
             Client roClient = ClientSingleton.GetClient();
-            if(roClient != null)
+            if (roClient != null)
             {
+                //If thread is running then stop and trigger the function after this.
+                if (thread != null)
+                {
+                    Stop();// Commented this and uncomment if thread later is needed.
+                }
                 int hpPotCount = 0;
                 this.thread = new _4RThread(_ => AutopotThreadExecution(roClient, hpPotCount));
-                _4RThread.Start(this.thread);
             }
         }
 
         public void Stop()
         {
-            _4RThread.Stop(this.thread);
+            if (thread != null)
+            {
+                thread.Stop();
+                thread = null; // Optionally set to null after stopping
+            }
         }
 
         public string GetConfiguration()
@@ -77,15 +81,15 @@ namespace RagnarokHotKeyInWinforms.Model
         private int AutopotThreadExecution(Client roClient, int hpPotCount)
         {
             //Check HP first
-            if(roClient.IsHpBelow(hpPercent))
+            if (roClient.IsHpBelow(hpPercent))
             {
                 pot(this.hpKey);
                 hpPotCount++;
 
-                if(hpPotCount == 3)
+                if (hpPotCount == 3)
                 {
                     hpPotCount = 0;
-                    if(roClient.IsSpBelow(spPercent))
+                    if (roClient.IsSpBelow(spPercent))
                     {
                         pot(this.spKey);
                     }
@@ -103,7 +107,7 @@ namespace RagnarokHotKeyInWinforms.Model
         private void pot(Key key)
         {
             Keys k = (Keys)Enum.Parse(typeof(Keys), key.ToString());
-            if((k != Keys.None) && !Keyboard.IsKeyDown(Key.LeftAlt) && !Keyboard.IsKeyDown(Key.RightAlt))
+            if ((k != Keys.None) && !Keyboard.IsKeyDown(Key.LeftAlt) && !Keyboard.IsKeyDown(Key.RightAlt))
             {
                 Interop.PostMessage(ClientSingleton.GetClient().process.MainWindowHandle, Constants.WM_HOTKEY_MSG_ID, k, 0); //Keydown
                 Interop.PostMessage(ClientSingleton.GetClient().process.MainWindowHandle, Constants.WM_KEYUP_MSG_ID, k, 0); //Keyup

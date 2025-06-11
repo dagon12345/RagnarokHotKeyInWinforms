@@ -28,7 +28,6 @@ namespace RagnarokHotKeyInWinforms.Model
                 int delayInSeconds = this.refreshDelay * 1000;
                 int delay = delayInSeconds == 0 ? defaultDelayInSeconds: delayInSeconds;
                 this.thread = new _4RThread(_ => AutorefreshThreadExecution(roClient, delay));
-                _4RThread.Start(this.thread);
             }
         }
 
@@ -44,7 +43,11 @@ namespace RagnarokHotKeyInWinforms.Model
 
         public void Stop()
         {
-            _4RThread.Stop(this.thread);
+            if (thread != null)
+            {
+                thread.Stop();
+                thread = null; // Optionally set to null after stopping
+            }
         }
 
         public string GetConfiguration()

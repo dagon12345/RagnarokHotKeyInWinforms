@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using RagnarokHotKeyInWinforms.Utilities;
 using System;
-using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 
@@ -44,18 +44,6 @@ namespace RagnarokHotKeyInWinforms.Model
 
         public void Start()
         {
-
-            Client roClient = ClientSingleton.GetClient();
-            if (roClient != null)
-            {
-                //If thread is running then stop and trigger the function after this.
-                if (thread != null)
-                {
-                    Stop();// Commented this and uncomment if thread later is needed.
-                }
-                int hpPotCount = 0;
-                this.thread = new _4RThread(_ => AutopotThreadExecution(roClient, hpPotCount));
-            }
         }
 
         public void Stop()
@@ -78,8 +66,14 @@ namespace RagnarokHotKeyInWinforms.Model
         }
 
         #region Private methods
-        private int AutopotThreadExecution(Client roClient, int hpPotCount)
+        public void AutopotThreadExecution(Client roClient, int hpPotCount)
         {
+            if (roClient == null)
+            {
+                Console.WriteLine("Client not found. Exiting thread.");
+                return;
+            }
+
             //Check HP first
             if (roClient.IsHpBelow(hpPercent))
             {
@@ -100,8 +94,8 @@ namespace RagnarokHotKeyInWinforms.Model
             {
                 pot(this.spKey);
             }
-            Thread.Sleep(this.delay);//Assigned to 15
-            return 0;
+            Task.Delay(50).Wait();
+
         }
 
         private void pot(Key key)

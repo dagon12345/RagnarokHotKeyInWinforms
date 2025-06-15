@@ -1,4 +1,5 @@
-﻿using ApplicationLayer.Forms;
+﻿using _4RTools.Model;
+using ApplicationLayer.Forms;
 using ApplicationLayer.Interface;
 using Domain.Constants;
 using Domain.Model.DataModels;
@@ -20,11 +21,13 @@ namespace RagnarokHotKeyInWinforms
     public partial class frm_Main : Form, IObserver
     {
         private Subject subject = new Subject();//subject triggers the Update() method inside notify function
-        private Timer progressTimer;
+        private System.Windows.Forms.Timer progressTimer;
         private int progressIncrement; // Increment value for each tick
         private int targetProgress; // Target progress value
         List<ClientDTO> clients = new List<ClientDTO>(); // list of clients with address initiated
+        private List<BuffContainer> stuffContainers = new List<BuffContainer>();
         private Keys lastKey;
+        private _4RThread mainThread;
 
         private readonly IStoredCredentialService _storedCredentialService;
         private readonly ISignIn _signIn;
@@ -46,12 +49,12 @@ namespace RagnarokHotKeyInWinforms
             #endregion
 
             this.Text = AppConfig.Name + " - " + AppConfig.Version; // Window title
-            //SetAutobuffStuffWindow();//AutoBuff Stuff
             //SetAutobuffSkillWindow();//AutoBuff Skill
             //SetSongMacroWindow(); // Macro Song Form
             //SetAtkDefWindow();//AtkDef tab page
             //SetMacroSwitchWindow();
         }
+
         #region ToggleApplicationStateFunction (No Start Method)
         private bool toggleStatus()
         {
@@ -424,6 +427,99 @@ namespace RagnarokHotKeyInWinforms
         }
         #endregion
         #endregion Status Effect From
+        #region Stuff Auto Buff (Triggered with Start() method)
+        public async Task RetrieveStuffAutobuffForm()
+        {
+
+            //Load the stuff containers
+            stuffContainers.Add(new BuffContainer(this.PotionsGP, Buff.GetPotionsBuffs()));
+            stuffContainers.Add(new BuffContainer(this.ElementalsGP, Buff.GetElementalsBuffs()));
+            stuffContainers.Add(new BuffContainer(this.BoxesGP, Buff.GetBoxesBuffs()));
+            stuffContainers.Add(new BuffContainer(this.FoodsGP, Buff.GetFoodBuffs()));
+            stuffContainers.Add(new BuffContainer(this.ScrollBuffsGP, Buff.GetScrollBuffs()));
+            stuffContainers.Add(new BuffContainer(this.EtcGP, Buff.GetETCBuffs()));
+
+            //trigger the containers and textboxes doRender()
+            new BuffRenderer(stuffContainers, toolTipAutoBuff).doRender();
+
+            //Retrieve the setting
+            var userToggleState = await ReturnToggleKey();
+            var jsonObject = JsonSerializer.Deserialize<AutoBuff>(userToggleState.Autobuff);
+
+            Dictionary<EffectStatusIDs, Key> autoBuffClones = new Dictionary<EffectStatusIDs, Key>(jsonObject.buffMapping);
+            // Assign key values to corresponding textboxes
+            foreach (KeyValuePair<EffectStatusIDs, Key> config in autoBuffClones)
+            {
+                bool found = false;
+
+                foreach (BuffContainer container in stuffContainers) // Iterate over all containers
+                {
+                    Control[] foundControls = container.container.Controls.Find(config.Key.ToString(), true);
+                    if (foundControls.Length > 0 && foundControls[0] is TextBox textBox)
+                    {
+                        textBox.Text = config.Value.ToString(); // Set the assigned key
+                        found = true;
+
+                        break; // Stop searching once found
+                    }
+                }
+
+                if (!found)
+                {
+                    Console.WriteLine($"Textbox for '{config.Key}' not found in any group!");
+                }
+
+            }
+            // Attach event handlers to textboxes across all GroupBoxes
+            foreach (BuffContainer container in stuffContainers)
+            {
+                foreach (Control c in container.container.Controls)
+                {
+                    if (c is TextBox textBox)
+                    {
+                        textBox.TextChanged += onTextChange;
+                    }
+                }
+            }
+
+        }
+        private async void onTextChange(object sender, EventArgs e)
+        {
+            try
+            {
+                TextBox txtBox = (TextBox)sender;
+                if (!string.IsNullOrWhiteSpace(txtBox.Text))
+                {
+                    if (!Enum.TryParse(txtBox.Name, out EffectStatusIDs statusID))
+                    {
+                        Console.WriteLine($"Invalid EffectStatusID from TextBox name: {txtBox.Name}");
+                        return;
+                    }
+
+                    if (!Enum.TryParse(txtBox.Text, out Key key))
+                    {
+                        Console.WriteLine($"Invalid Key input: {txtBox.Text}");
+                        return;
+                    }
+
+                    var userToggleState = await ReturnToggleKey();
+                    var jsonObject = JsonSerializer.Deserialize<AutoBuff>(userToggleState.Autobuff);
+
+                    jsonObject.AddKeyToBuff(statusID, key);
+
+                    var updatedJson = JsonSerializer.Serialize(jsonObject);
+                    userToggleState.Autobuff = updatedJson;
+
+
+                    await _userSettingService.SaveChangesAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in onTextChange: {ex.Message}");
+            }
+        }
+        #endregion Stuff Auto Buff (No Start() Method)
         #region Ahk Region (Triggered with Start() method)
         private async Task AhkRetrieval()
         {
@@ -448,7 +544,7 @@ namespace RagnarokHotKeyInWinforms
             Dictionary<string, KeyConfig> ahkClones = new Dictionary<string, KeyConfig>(jsonObject.AhkEntries);
             foreach (KeyValuePair<string, KeyConfig> config in ahkClones)
             {
-               ToggleCheckboxByName(config.Key, config.Value.ClickActive);
+                ToggleCheckboxByName(config.Key, config.Value.ClickActive);
             }
 
             //Check the tab spammer for checkboxes. This will be triggered by the method ToggleCheckboxByName on loop.
@@ -534,7 +630,7 @@ namespace RagnarokHotKeyInWinforms
         {
             var userToggleState = await ReturnToggleKey();
             var jsonObject = JsonSerializer.Deserialize<AHK>(userToggleState.Ahk);
-            if(ahkCompatibility.Checked)
+            if (ahkCompatibility.Checked)
             {
                 jsonObject.ahkMode = AHK.COMPATABILITY;
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
@@ -620,38 +716,42 @@ namespace RagnarokHotKeyInWinforms
             // Persist changes add to the object array in database
             await _userSettingService.SaveChangesAsync();
         }
-    
+
         #endregion Ahk Region
+
         public async Task<T> GetDeserializedObject<T>(Func<Task<string>> getJsonData)
         {
             var jsonData = await getJsonData();
             return JsonSerializer.Deserialize<T>(jsonData);
         }
+
+
         private async Task TriggerStartActions()
         {
-            //Trigger all the actions we've created.
-            var jsonObjectAutopot = await GetDeserializedObject<Autopot>(async () => (await ReturnToggleKey()).Autopot);
-            var jsonObjectAutoRefresh = await GetDeserializedObject<AutoRefreshSpammer>(async () => (await ReturnToggleKey()).AutoRefreshSpammer);
-            var jsonObjectStatusRecovery = await GetDeserializedObject<StatusRecovery>(async () => (await ReturnToggleKey()).StatusRecovery);
+            //Done
             var jsonObjectAhk = await GetDeserializedObject<AHK>(async () => (await ReturnToggleKey()).Ahk);
-
-            jsonObjectAutopot.Start();
-            jsonObjectAutoRefresh.Start();
-            jsonObjectStatusRecovery.Start();
-            jsonObjectAhk.Start();
+            //Done
+            var jsonObjectAutopot = await GetDeserializedObject<Autopot>(async () => (await ReturnToggleKey()).Autopot);
+            //Done
+            var jsonObjectAutoRefresh = await GetDeserializedObject<AutoRefreshSpammer>(async () => (await ReturnToggleKey()).AutoRefreshSpammer);
+            //Done
+            var jsonObjectStatusRecovery = await GetDeserializedObject<StatusRecovery>(async () => (await ReturnToggleKey()).StatusRecovery);
+            //Done
+            var jsonObjectAutoBuff = await GetDeserializedObject<AutoBuff>(async () => (await ReturnToggleKey()).Autobuff);
+            mainThread = new _4RThread(_ =>
+            {
+                jsonObjectAhk?.AHKThreadExecution(ClientSingleton.GetClient());
+                jsonObjectAutopot?.AutopotThreadExecution(ClientSingleton.GetClient(), 0);
+                jsonObjectAutoRefresh?.AutorefreshThreadExecution(ClientSingleton.GetClient());
+                jsonObjectStatusRecovery?.RestoreStatusThread(ClientSingleton.GetClient());
+                jsonObjectAutoBuff?.AutoBuffThread(ClientSingleton.GetClient());
+                Task.Delay(50).Wait(); // Safe exit
+            });
         }
-        private async Task TriggerStopActions()
-        {
-            //Trigger all the actions we've created.
-            var jsonObjectAutopot = await GetDeserializedObject<Autopot>(async () => (await ReturnToggleKey()).Autopot);
-            var jsonObjectAutoRefresh = await GetDeserializedObject<AutoRefreshSpammer>(async () => (await ReturnToggleKey()).AutoRefreshSpammer);
-            var jsonObjectStatusRecovery = await GetDeserializedObject<StatusRecovery>(async () => (await ReturnToggleKey()).StatusRecovery);
-            var jsonObjectAhk = await GetDeserializedObject<AHK>(async () => (await ReturnToggleKey()).Ahk);
 
-            jsonObjectAutopot.Stop();
-            jsonObjectAutoRefresh.Stop();
-            jsonObjectStatusRecovery.Stop();
-            jsonObjectAhk.Stop();
+        private void TriggerStopActions()
+        {
+            mainThread?.Stop();
         }
         public async void Update(ISubject subject)
         {
@@ -663,10 +763,11 @@ namespace RagnarokHotKeyInWinforms
                     {
                         characterName.Text = ClientSingleton.GetClient().ReadCharacterName();
                     }
+
                     await TriggerStartActions();
                     break;
                 case MessageCode.TURN_OFF:
-                    await TriggerStopActions();
+                    TriggerStopActions();
                     break;
                 case MessageCode.SERVER_LIST_CHANGED:
                     this.refreshProcessList();
@@ -720,25 +821,6 @@ namespace RagnarokHotKeyInWinforms
             addForm(this.tabPageMacroSongs, frm);
             frm.Show();
         }
-        public void SetAutobuffSkillWindow()
-        {
-            SkillAutoBuffForm frm = new SkillAutoBuffForm(subject);
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Location = new Point(0, 65);
-            frm.MdiParent = this;
-            addForm(this.tabAutoBuffSkill, frm);
-            frm.Show();
-        }
-        public void SetAutobuffStuffWindow()
-        {
-            StuffAutoBuffForm frm = new StuffAutoBuffForm(subject);
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Location = new Point(0, 65);
-            frm.MdiParent = this;
-            frm.Show();
-            addForm(this.tabAutoBuffStuff, frm);
-        }
-
         #endregion
 
         #region Public methods
@@ -758,11 +840,13 @@ namespace RagnarokHotKeyInWinforms
             var name = await _storedCredentialService.FindCredential(credential.Token.AccessToken);
             lblUserName.Text = $"Welcome back, {name.Name}";
 
+            await RetrieveStuffAutobuffForm();
             await Retrieve();
             await RetrieveAutopot();
             await SkillTimerRetrieve();
             await RetrieveStatusEffect();
             await AhkRetrieval();
+
             this.refreshProcessList();
         }
         private void StartUpdate()
@@ -793,7 +877,7 @@ namespace RagnarokHotKeyInWinforms
                 btnLogout.Enabled = false;
                 progressIncrement = 100 / clients.Count; // Calculate increment per client
                 targetProgress = 0; // Start from 0
-                progressTimer = new Timer();
+                progressTimer = new System.Windows.Forms.Timer();
                 progressTimer.Interval = 1000; // Set timer interval (100 ms)
                 progressTimer.Tick += ProgressTimer_Tick; // Attach tick event handler
                 progressTimer.Start(); // Start the timer
@@ -862,7 +946,7 @@ namespace RagnarokHotKeyInWinforms
             ClientSingleton.Instance(client);
             characterName.Text = client.ReadCharacterName();
             //If message code was changed then get the character name
-            subject.Notify(new Utilities.Message(Utilities.MessageCode.PROCESS_CHANGED, null));
+            //subject.Notify(new Utilities.Message(Utilities.MessageCode.PROCESS_CHANGED, null));
         }
         private void frm_Main_FormClosing(object sender, FormClosingEventArgs e)
         {

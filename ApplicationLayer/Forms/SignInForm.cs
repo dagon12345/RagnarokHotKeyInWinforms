@@ -44,7 +44,7 @@ namespace ApplicationLayer.Forms
             var storedAccessToken = searchCredential.AccessToken;
 
             //If the logged in time is less than 2 minutes then restore session else delete the existing login creds and sign in again.
-            if (!string.IsNullOrEmpty(storedAccessToken) && (DateTime.Now - lastLoginTime).TotalMinutes <= 10)  // Check if within 2 minutes
+            if (!string.IsNullOrEmpty(storedAccessToken) && (DateTime.Now - lastLoginTime).TotalMinutes <= 30)  // Check if within 2 minutes
             {
                 // Token is still valid, proceed to MainMenuForm
                 OpenMainMenuForm();

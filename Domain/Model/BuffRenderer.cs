@@ -41,7 +41,6 @@ namespace _4RTools.Model
                     //If not first container to be rendered, get last container height and append 70
                     bk.container.Location = new Point(_containers[i - 1].container.Location.X, _containers[i - 1].container.Location.Y + _containers[i - 1].container.Height + DISTANCE_BETWEEN_CONTAINERS);
                 }
-
                 foreach (Buff skill in bk.skills)
                 {
                     PictureBox pb = new PictureBox();
@@ -59,7 +58,9 @@ namespace _4RTools.Model
                     textBox.TextChanged += new EventHandler(onTextChange);
                     textBox.Size = new Size(55, 20);
                     textBox.Tag = ((int)skill.effectStatusID);
-                    textBox.Name = "in" + ((int)skill.effectStatusID);
+
+                    // Change this:
+                    textBox.Name = skill.effectStatusID.ToString(); // Ensure exact match with enum
                     textBox.Location = new Point(pb.Location.X + 35, pb.Location.Y + 3);
 
                     bk.container.Controls.Add(textBox);
@@ -69,11 +70,11 @@ namespace _4RTools.Model
 
                     if (colCount == BUFFS_PER_ROW)
                     {
-                        //5 Buffs per row
                         colCount = 0;
                         lastLocation = new Point(bk.container.Location.X, lastLocation.Y + DISTANCE_BETWEEN_ROWS);
                     }
                 }
+
             }
         }
 
@@ -81,31 +82,32 @@ namespace _4RTools.Model
         {
             try
             {
-
                 TextBox txtBox = (TextBox)sender;
-                if (txtBox.Text.ToString() != String.Empty)
+
+                if (!string.IsNullOrWhiteSpace(txtBox.Text))
                 {
-                    Key key = (Key)Enum.Parse(typeof(Key), txtBox.Text.ToString());
-                    EffectStatusIDs statusID = (EffectStatusIDs)Int16.Parse(txtBox.Name.Split(new[] { "in" }, StringSplitOptions.None)[1]);
-                    ProfileSingleton.GetCurrent().AutoBuff.AddKeyToBuff(statusID, key);
-                    ProfileSingleton.SetConfiguration(ProfileSingleton.GetCurrent().AutoBuff);
+                    // Parse Key from TextBox value
+                    if (!Enum.TryParse(txtBox.Text, out Key key))
+                    {
+                        Console.WriteLine($"Error: Invalid key format '{txtBox.Text}'");
+                        return;
+                    }
+
+                    // Try to convert TextBox Name directly to EffectStatusIDs
+                    if (!Enum.TryParse(txtBox.Name, out EffectStatusIDs statusID))
+                    {
+                        Console.WriteLine($"Error: TextBox name '{txtBox.Name}' does not match expected EffectStatusIDs.");
+                        return;
+                    }
+
+                    Console.WriteLine($"Successfully updated: {statusID} -> {key}");
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error in onTextChange: {ex.Message}");
+            }
         }
 
-        public static void doUpdate(Dictionary<EffectStatusIDs, Key> autobuffDict, Control control)
-        {
-            FormUtils.ResetForm(control);
-            foreach (EffectStatusIDs effect in autobuffDict.Keys)
-            {
-                Control[] c = control.Controls.Find("in" + (int)effect, true);
-                if (c.Length > 0)
-                {
-                    TextBox textBox = (TextBox)c[0];
-                    textBox.Text = autobuffDict[effect].ToString();
-                }
-            }
-        }
     }
 }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frm_Main));
             this.label1 = new System.Windows.Forms.Label();
             this.characterName = new System.Windows.Forms.Label();
@@ -77,7 +78,6 @@
             this.tabAutoBuffSkill = new System.Windows.Forms.TabPage();
             this.label8 = new System.Windows.Forms.Label();
             this.tabAutoBuffStuff = new System.Windows.Forms.TabPage();
-            this.label7 = new System.Windows.Forms.Label();
             this.tabPageSpammer = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.cbDeactivated = new System.Windows.Forms.CheckBox();
@@ -142,6 +142,13 @@
             this.chkQ = new System.Windows.Forms.CheckBox();
             this.chkW = new System.Windows.Forms.CheckBox();
             this.tabMain = new System.Windows.Forms.TabControl();
+            this.EtcGP = new System.Windows.Forms.GroupBox();
+            this.ScrollBuffsGP = new System.Windows.Forms.GroupBox();
+            this.ElementalsGP = new System.Windows.Forms.GroupBox();
+            this.BoxesGP = new System.Windows.Forms.GroupBox();
+            this.PotionsGP = new System.Windows.Forms.GroupBox();
+            this.FoodsGP = new System.Windows.Forms.GroupBox();
+            this.toolTipAutoBuff = new System.Windows.Forms.ToolTip(this.components);
             this.tabControlAutopot.SuspendLayout();
             this.tabPageAutopot.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtAutopotDelay)).BeginInit();
@@ -636,24 +643,19 @@
             // 
             // tabAutoBuffStuff
             // 
-            this.tabAutoBuffStuff.Controls.Add(this.label7);
+            this.tabAutoBuffStuff.AutoScroll = true;
+            this.tabAutoBuffStuff.Controls.Add(this.EtcGP);
+            this.tabAutoBuffStuff.Controls.Add(this.ScrollBuffsGP);
+            this.tabAutoBuffStuff.Controls.Add(this.ElementalsGP);
+            this.tabAutoBuffStuff.Controls.Add(this.BoxesGP);
+            this.tabAutoBuffStuff.Controls.Add(this.PotionsGP);
+            this.tabAutoBuffStuff.Controls.Add(this.FoodsGP);
             this.tabAutoBuffStuff.Location = new System.Drawing.Point(4, 22);
             this.tabAutoBuffStuff.Name = "tabAutoBuffStuff";
             this.tabAutoBuffStuff.Size = new System.Drawing.Size(800, 280);
             this.tabAutoBuffStuff.TabIndex = 2;
             this.tabAutoBuffStuff.Text = "AutoBuff - Stuffs";
             this.tabAutoBuffStuff.UseVisualStyleBackColor = true;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(337, 108);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(126, 20);
-            this.label7.TabIndex = 14;
-            this.label7.Text = "Auto buff stuff";
-            this.label7.Visible = false;
             // 
             // tabPageSpammer
             // 
@@ -1366,6 +1368,66 @@
             this.tabMain.Size = new System.Drawing.Size(808, 306);
             this.tabMain.TabIndex = 11;
             // 
+            // EtcGP
+            // 
+            this.EtcGP.AutoSize = true;
+            this.EtcGP.Location = new System.Drawing.Point(10, 211);
+            this.EtcGP.Name = "EtcGP";
+            this.EtcGP.Size = new System.Drawing.Size(522, 33);
+            this.EtcGP.TabIndex = 310;
+            this.EtcGP.TabStop = false;
+            this.EtcGP.Text = "ETC";
+            // 
+            // ScrollBuffsGP
+            // 
+            this.ScrollBuffsGP.AutoSize = true;
+            this.ScrollBuffsGP.Location = new System.Drawing.Point(10, 172);
+            this.ScrollBuffsGP.Name = "ScrollBuffsGP";
+            this.ScrollBuffsGP.Size = new System.Drawing.Size(522, 33);
+            this.ScrollBuffsGP.TabIndex = 309;
+            this.ScrollBuffsGP.TabStop = false;
+            this.ScrollBuffsGP.Text = "Scroll Buffs";
+            // 
+            // ElementalsGP
+            // 
+            this.ElementalsGP.AutoSize = true;
+            this.ElementalsGP.Location = new System.Drawing.Point(10, 58);
+            this.ElementalsGP.Name = "ElementalsGP";
+            this.ElementalsGP.Size = new System.Drawing.Size(522, 32);
+            this.ElementalsGP.TabIndex = 308;
+            this.ElementalsGP.TabStop = false;
+            this.ElementalsGP.Text = "Elementals";
+            // 
+            // BoxesGP
+            // 
+            this.BoxesGP.AutoSize = true;
+            this.BoxesGP.Location = new System.Drawing.Point(10, 96);
+            this.BoxesGP.Name = "BoxesGP";
+            this.BoxesGP.Size = new System.Drawing.Size(522, 31);
+            this.BoxesGP.TabIndex = 307;
+            this.BoxesGP.TabStop = false;
+            this.BoxesGP.Text = "Boxes / Speed / Status";
+            // 
+            // PotionsGP
+            // 
+            this.PotionsGP.AutoSize = true;
+            this.PotionsGP.Location = new System.Drawing.Point(10, 23);
+            this.PotionsGP.Name = "PotionsGP";
+            this.PotionsGP.Size = new System.Drawing.Size(522, 29);
+            this.PotionsGP.TabIndex = 306;
+            this.PotionsGP.TabStop = false;
+            this.PotionsGP.Text = "Potions";
+            // 
+            // FoodsGP
+            // 
+            this.FoodsGP.AutoSize = true;
+            this.FoodsGP.Location = new System.Drawing.Point(10, 133);
+            this.FoodsGP.Name = "FoodsGP";
+            this.FoodsGP.Size = new System.Drawing.Size(522, 33);
+            this.FoodsGP.TabIndex = 305;
+            this.FoodsGP.TabStop = false;
+            this.FoodsGP.Text = "Foods";
+            // 
             // frm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1482,7 +1544,6 @@
         private System.Windows.Forms.TabPage tabAutoBuffSkill;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TabPage tabAutoBuffStuff;
-        private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TabPage tabPageSpammer;
         private System.Windows.Forms.GroupBox groupBox3;
         private System.Windows.Forms.CheckBox cbDeactivated;
@@ -1547,6 +1608,13 @@
         private System.Windows.Forms.CheckBox chkQ;
         private System.Windows.Forms.CheckBox chkW;
         private System.Windows.Forms.TabControl tabMain;
+        private System.Windows.Forms.GroupBox EtcGP;
+        private System.Windows.Forms.GroupBox ScrollBuffsGP;
+        private System.Windows.Forms.GroupBox ElementalsGP;
+        private System.Windows.Forms.GroupBox BoxesGP;
+        private System.Windows.Forms.GroupBox PotionsGP;
+        private System.Windows.Forms.GroupBox FoodsGP;
+        private System.Windows.Forms.ToolTip toolTipAutoBuff;
     }
 }
 

@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using RagnarokHotKeyInWinforms.Utilities;
 using System;
-using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 
@@ -21,24 +21,15 @@ namespace RagnarokHotKeyInWinforms.Model
 
         public void Start()
         {
-            Client roClient = ClientSingleton.GetClient();
-            if(roClient != null)
-            {
-                const int defaultDelayInSeconds = 1000;
-                int delayInSeconds = this.refreshDelay * 1000;
-                int delay = delayInSeconds == 0 ? defaultDelayInSeconds: delayInSeconds;
-                this.thread = new _4RThread(_ => AutorefreshThreadExecution(roClient, delay));
-            }
         }
 
-        private int AutorefreshThreadExecution(Client roClient, int delay)
+        public void AutorefreshThreadExecution(Client roClient)
         {
             if(this.refreshKey != Key.None)
             {
                 Interop.PostMessage(roClient.process.MainWindowHandle, Constants.WM_HOTKEY_MSG_ID, (Keys)Enum.Parse(typeof(Keys), this.refreshKey.ToString()), 0);
             }
-            Thread.Sleep(delay);
-            return 0;
+            Task.Delay(50).Wait(); 
         }
 
         public void Stop()

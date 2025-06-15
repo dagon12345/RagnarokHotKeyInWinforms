@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 
@@ -70,6 +71,19 @@ namespace RagnarokHotKeyInWinforms.Model
 
         }
 
+        //public void Start()
+        //{
+        //    Client roClient = ClientSingleton.GetClient();
+        //    if (roClient != null)
+        //    {
+        //        if (thread != null)
+        //        {
+        //            thread.Stop();
+        //        }
+        //        this.thread = new _4RThread(_ => AHKThreadExecution(token, roClient));
+        //       // AHKThreadExecution(roClient);
+        //    }
+        //}
         public void Start()
         {
             Client roClient = ClientSingleton.GetClient();
@@ -79,41 +93,49 @@ namespace RagnarokHotKeyInWinforms.Model
                 {
                     thread.Stop();
                 }
-                this.thread = new _4RThread(_ => AHKThreadExecution(roClient));
+                this.thread = new _4RThread(_ => AHKThreadExecution(roClient)); // ✅ Passes token and roClient
             }
         }
 
-        private int AHKThreadExecution(Client roClient)
+        public void AHKThreadExecution(Client roClient)
         {
-            if (ahkMode.Equals(COMPATABILITY))
+            if (roClient == null)
             {
-                foreach (KeyConfig config in AhkEntries.Values)
+                Console.WriteLine("Client not found. Exiting thread.");
+                return;
+            }
+
+                if (ahkMode.Equals(COMPATABILITY))
                 {
-                    Keys thisk = (Keys)Enum.Parse(typeof(Keys), config.key.ToString());
-                    if (!Keyboard.IsKeyDown(Key.LeftAlt) && !Keyboard.IsKeyDown(Key.RightAlt))
+                    foreach (KeyConfig config in AhkEntries.Values)
                     {
-                        if (config.ClickActive && Keyboard.IsKeyDown(config.key))
+                        Keys thisk = (Keys)Enum.Parse(typeof(Keys), config.key.ToString());
+                        if (!Keyboard.IsKeyDown(Key.LeftAlt) && !Keyboard.IsKeyDown(Key.RightAlt))
                         {
-                            if (noShift) keybd_event(Constants.VK_SHIFT, 0x45, Constants.KEYEVENTF_EXTENDEDKEY, 0);
-                            _AHKCompatability(roClient, config, thisk);
-                            if (noShift) keybd_event(Constants.VK_SHIFT, 0x45, Constants.KEYEVENTF_EXTENDEDKEY | Constants.KEYEVENTF_KEYUP, 0);
-                        }
-                        else
-                        {
-                            this._AHKNoClick(roClient, config, thisk);
+                            if (config.ClickActive && Keyboard.IsKeyDown(config.key))
+                            {
+                                if (noShift) keybd_event(Constants.VK_SHIFT, 0x45, Constants.KEYEVENTF_EXTENDEDKEY, 0);
+                                _AHKCompatability(roClient, config, thisk);
+                                if (noShift) keybd_event(Constants.VK_SHIFT, 0x45, Constants.KEYEVENTF_EXTENDEDKEY | Constants.KEYEVENTF_KEYUP, 0);
+                            }
+                            else
+                            {
+                                this._AHKNoClick(roClient, config, thisk);
+                            }
                         }
                     }
                 }
-            }
-            else
-            {
-                foreach (KeyConfig config in AhkEntries.Values)
+                else
                 {
-                    Keys thisk = (Keys)Enum.Parse(typeof(Keys), config.key.ToString());
-                    this._AHKSpeedBoost(roClient, config, thisk);
+                    foreach (KeyConfig config in AhkEntries.Values)
+                    {
+                        Keys thisk = (Keys)Enum.Parse(typeof(Keys), config.key.ToString());
+                        this._AHKSpeedBoost(roClient, config, thisk);
+                    }
                 }
-            }
-            return 0;
+
+                Task.Delay(50).Wait();
+            
         }
 
         private void _AHKCompatability(Client roClient, KeyConfig config, Keys thisk)

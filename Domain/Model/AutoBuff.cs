@@ -3,6 +3,7 @@ using RagnarokHotKeyInWinforms.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 
@@ -14,7 +15,7 @@ namespace RagnarokHotKeyInWinforms.Model
 
         private _4RThread thread;
         public int delay { get; set; } = 1;
-        public Dictionary<EffectStatusIDs, Key> buffMapping = new Dictionary<EffectStatusIDs, Key>();
+        public Dictionary<EffectStatusIDs, Key> buffMapping { get; set; } = new Dictionary<EffectStatusIDs, Key>();
 
 
         public string GetActionName()
@@ -37,14 +38,12 @@ namespace RagnarokHotKeyInWinforms.Model
             Client roClient = ClientSingleton.GetClient();
             if (roClient != null)
             {
-                this.thread = AutoBuffThread(roClient);
+               // this.thread = AutoBuffThread(roClient);
             }
         }
-        public _4RThread AutoBuffThread(Client c)
+        public void AutoBuffThread(Client c)
         {
-            _4RThread autobuffItemThread = new _4RThread(_ =>
-            {
-
+        
                 bool foundQuag = false;
                 Dictionary<EffectStatusIDs, Key> bmClone = new Dictionary<EffectStatusIDs, Key>(this.buffMapping);
                 for (int i = 0; i < Constants.MAX_BUFF_LIST_INDEX_SIZE; i++)
@@ -82,11 +81,8 @@ namespace RagnarokHotKeyInWinforms.Model
                 }
 
                 Thread.Sleep(300);
-              //  return 0;
 
-            });
-
-            return autobuffItemThread;
+  
         }
 
         public void AddKeyToBuff(EffectStatusIDs status, Key key)

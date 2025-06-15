@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace RagnarokHotKeyInWinforms.Utilities
 {
@@ -29,10 +30,12 @@ namespace RagnarokHotKeyInWinforms.Utilities
                         Console.WriteLine("[4RThread Exception] Error while executing thread: " + ex.Message);
                     }
 
+                    // ✅ Replace Task.Delay with Thread.Sleep for safer execution inside the thread
                     Thread.Sleep(50);
                 }
             });
-            monitorThread.SetApartmentState(ApartmentState.STA); // ✅ Set before starting
+
+            monitorThread.SetApartmentState(ApartmentState.STA);
             monitorThread.IsBackground = true;
             monitorThread.Start();
         }
@@ -56,8 +59,16 @@ namespace RagnarokHotKeyInWinforms.Utilities
             {
                 Console.WriteLine("Stopping thread...");
                 cancellationTokenSource.Cancel(); // ✅ Signals thread to exit
-                monitorThread.Join(); // ✅ Ensures full termination
-                Console.WriteLine("Thread successfully stopped.");
+
+                monitorThread.Join(200); // ✅ Ensures full termination with timeout
+                if (monitorThread.IsAlive)
+                {
+                    Console.WriteLine("Warning: Thread did not stop in time.");
+                }
+                else
+                {
+                    Console.WriteLine("Thread successfully stopped.");
+                }
             }
             else
             {

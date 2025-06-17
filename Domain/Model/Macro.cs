@@ -3,6 +3,7 @@ using RagnarokHotKeyInWinforms.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 
@@ -21,11 +22,11 @@ namespace RagnarokHotKeyInWinforms.Model
     }
     public class ChainConfig
     {
-        public int Id;
+        public int Id { get; set; }
         public Key trigger { get; set; }
         public Key daggerKey { get; set; }
         public Key instrumentKey { get; set; }
-        public int delay { get; set; } = 50;
+        public int delay { get; set; }
         public Dictionary<string, MacroKey> macroEntries { get; set; } = new Dictionary<string, MacroKey>();
 
         public ChainConfig()
@@ -57,7 +58,6 @@ namespace RagnarokHotKeyInWinforms.Model
     {
         public static string ACTION_NAME_SONG_MACRO = "SongMacro2.0";
         public static string ACTION_NAME_MACRO_SWITCH = "MacroSwitch";
-
         public string actionName { get; set; }
         private _4RThread thread;
         public List<ChainConfig> chainConfigs { get; set; } = new List<ChainConfig>();
@@ -69,6 +69,10 @@ namespace RagnarokHotKeyInWinforms.Model
             {
                 chainConfigs.Add(new ChainConfig(i, Key.None));
             }
+        }
+        public Macro()
+        {
+
         }
         public void ResetMacro(int macroId)
         {
@@ -88,7 +92,7 @@ namespace RagnarokHotKeyInWinforms.Model
         {
             return JsonConvert.SerializeObject(this);
         }
-        private int MacroExecutionThread(Client roClient)
+        public void MacroExecutionThread(Client roClient)
         {
             foreach (ChainConfig chainConfig in this.chainConfigs)
             {
@@ -119,8 +123,7 @@ namespace RagnarokHotKeyInWinforms.Model
                     }
                 }
             }
-            Thread.Sleep(100);
-            return 0;
+            Task.Delay(50).Wait(); // Safe exit
         }
 
         public void Start()

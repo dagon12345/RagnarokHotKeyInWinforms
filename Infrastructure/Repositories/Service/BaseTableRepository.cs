@@ -13,7 +13,7 @@ namespace Infrastructure.Repositories.Service
 
         public async Task<BaseTable> SearchUsers(string email)
         {
-           var searchUser = await _context.BaseTables
+            var searchUser = await _context.BaseTables
                 .AsNoTracking()
                 .FirstOrDefaultAsync(x => x.Email.Equals(email));
            return searchUser;

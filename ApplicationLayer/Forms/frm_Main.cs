@@ -25,7 +25,8 @@ namespace RagnarokHotKeyInWinforms
         private int progressIncrement; // Increment value for each tick
         private int targetProgress; // Target progress value
         List<ClientDTO> clients = new List<ClientDTO>(); // list of clients with address initiated
-        private List<BuffContainer> stuffContainers = new List<BuffContainer>();
+        private List<BuffContainer> stuffBuffContainers = new List<BuffContainer>();
+        private List<BuffContainer> skillBuffContainers = new List<BuffContainer>();
         private Keys lastKey;
         private _4RThread mainThread;
 
@@ -427,32 +428,42 @@ namespace RagnarokHotKeyInWinforms
         }
         #endregion
         #endregion Status Effect From
-        #region Stuff Auto Buff (Triggered with Start() method)
+        #region Stuff and Skill Auto Buff (Triggered with Start() method)
+
+        #region Skill and Stuff Auto Buff key mapping
+        public async Task<Dictionary<EffectStatusIDs, Key>> RetrieveAutoBuffFromDb()
+        {
+            // Retrieve the setting
+            var userToggleState = await ReturnToggleKey();
+            var jsonObject = JsonSerializer.Deserialize<AutoBuff>(userToggleState.Autobuff);
+
+            // Return the dictionary
+            return new Dictionary<EffectStatusIDs, Key>(jsonObject.buffMapping);
+        }
+        #endregion Skill and Stuff Auto Buff key mapping
+
         public async Task RetrieveStuffAutobuffForm()
         {
 
             //Load the stuff containers
-            stuffContainers.Add(new BuffContainer(this.PotionsGP, Buff.GetPotionsBuffs()));
-            stuffContainers.Add(new BuffContainer(this.ElementalsGP, Buff.GetElementalsBuffs()));
-            stuffContainers.Add(new BuffContainer(this.BoxesGP, Buff.GetBoxesBuffs()));
-            stuffContainers.Add(new BuffContainer(this.FoodsGP, Buff.GetFoodBuffs()));
-            stuffContainers.Add(new BuffContainer(this.ScrollBuffsGP, Buff.GetScrollBuffs()));
-            stuffContainers.Add(new BuffContainer(this.EtcGP, Buff.GetETCBuffs()));
+            stuffBuffContainers.Add(new BuffContainer(this.PotionsGP, Buff.GetPotionsBuffs()));
+            stuffBuffContainers.Add(new BuffContainer(this.ElementalsGP, Buff.GetElementalsBuffs()));
+            stuffBuffContainers.Add(new BuffContainer(this.BoxesGP, Buff.GetBoxesBuffs()));
+            stuffBuffContainers.Add(new BuffContainer(this.FoodsGP, Buff.GetFoodBuffs()));
+            stuffBuffContainers.Add(new BuffContainer(this.ScrollBuffsGP, Buff.GetScrollBuffs()));
+            stuffBuffContainers.Add(new BuffContainer(this.EtcGP, Buff.GetETCBuffs()));
+
 
             //trigger the containers and textboxes doRender()
-            new BuffRenderer(stuffContainers, toolTipAutoBuff).doRender();
+            new BuffRenderer(stuffBuffContainers, toolTipAutoBuff).doRender();
 
-            //Retrieve the setting
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AutoBuff>(userToggleState.Autobuff);
-
-            Dictionary<EffectStatusIDs, Key> autoBuffClones = new Dictionary<EffectStatusIDs, Key>(jsonObject.buffMapping);
+            var autoBuffClones = await RetrieveAutoBuffFromDb();
             // Assign key values to corresponding textboxes
             foreach (KeyValuePair<EffectStatusIDs, Key> config in autoBuffClones)
             {
                 bool found = false;
 
-                foreach (BuffContainer container in stuffContainers) // Iterate over all containers
+                foreach (BuffContainer container in stuffBuffContainers) // Iterate over all containers
                 {
                     Control[] foundControls = container.container.Controls.Find(config.Key.ToString(), true);
                     if (foundControls.Length > 0 && foundControls[0] is TextBox textBox)
@@ -471,7 +482,56 @@ namespace RagnarokHotKeyInWinforms
 
             }
             // Attach event handlers to textboxes across all GroupBoxes
-            foreach (BuffContainer container in stuffContainers)
+            foreach (BuffContainer container in stuffBuffContainers)
+            {
+                foreach (Control c in container.container.Controls)
+                {
+                    if (c is TextBox textBox)
+                    {
+                        textBox.TextChanged += onTextChange;
+                    }
+                }
+            }
+
+            //Skill Auto Buff region
+
+            skillBuffContainers.Add(new BuffContainer(this.ArcherSkillsGP, Buff.GetArcherSkills()));
+            skillBuffContainers.Add(new BuffContainer(this.SwordmanSkillGP, Buff.GetSwordmanSkill()));
+            skillBuffContainers.Add(new BuffContainer(this.MageSkillGP, Buff.GetMageSkills()));
+            skillBuffContainers.Add(new BuffContainer(this.MerchantSkillsGP, Buff.GetMerchantSkills()));
+            skillBuffContainers.Add(new BuffContainer(this.ThiefSkillsGP, Buff.GetThiefSkills()));
+            skillBuffContainers.Add(new BuffContainer(this.AcolyteSkillsGP, Buff.GetAcolyteSkills()));
+            skillBuffContainers.Add(new BuffContainer(this.TKSkillGroupBox, Buff.GetTaekwonSkills()));
+            skillBuffContainers.Add(new BuffContainer(this.NinjaSkillsGP, Buff.GetNinjaSkills()));
+            skillBuffContainers.Add(new BuffContainer(this.GunsSkillsGP, Buff.GetGunsSkills()));
+
+            //trigger the containers and textboxes doRender()
+            new BuffRenderer(skillBuffContainers, toolTipAutoBuff).doRender();
+            //The retrieving of this from database is from our Stuff Autobuff
+            foreach (KeyValuePair<EffectStatusIDs, Key> config in autoBuffClones)
+            {
+                bool found = false;
+
+                foreach (BuffContainer container in skillBuffContainers) // Iterate over all containers
+                {
+                    Control[] foundControls = container.container.Controls.Find(config.Key.ToString(), true);
+                    if (foundControls.Length > 0 && foundControls[0] is TextBox textBox)
+                    {
+                        textBox.Text = config.Value.ToString(); // Set the assigned key
+                        found = true;
+
+                        break; // Stop searching once found
+                    }
+                }
+
+                if (!found)
+                {
+                    Console.WriteLine($"Textbox for '{config.Key}' not found in any group!");
+                }
+
+            }
+            // Attach event handlers to textboxes across all GroupBoxes
+            foreach (BuffContainer container in skillBuffContainers)
             {
                 foreach (Control c in container.container.Controls)
                 {
@@ -519,7 +579,7 @@ namespace RagnarokHotKeyInWinforms
                 Console.WriteLine($"Error in onTextChange: {ex.Message}");
             }
         }
-        #endregion Stuff Auto Buff (No Start() Method)
+        #endregion Stuff and Skill Auto Buff
         #region Ahk Region (Triggered with Start() method)
         private async Task AhkRetrieval()
         {
@@ -728,6 +788,7 @@ namespace RagnarokHotKeyInWinforms
 
         private async Task TriggerStartActions()
         {
+            Client client = ClientSingleton.GetClient();
             //Done
             var jsonObjectAhk = await GetDeserializedObject<AHK>(async () => (await ReturnToggleKey()).Ahk);
             //Done
@@ -740,11 +801,11 @@ namespace RagnarokHotKeyInWinforms
             var jsonObjectAutoBuff = await GetDeserializedObject<AutoBuff>(async () => (await ReturnToggleKey()).Autobuff);
             mainThread = new _4RThread(_ =>
             {
-                jsonObjectAhk?.AHKThreadExecution(ClientSingleton.GetClient());
-                jsonObjectAutopot?.AutopotThreadExecution(ClientSingleton.GetClient(), 0);
-                jsonObjectAutoRefresh?.AutorefreshThreadExecution(ClientSingleton.GetClient());
-                jsonObjectStatusRecovery?.RestoreStatusThread(ClientSingleton.GetClient());
-                jsonObjectAutoBuff?.AutoBuffThread(ClientSingleton.GetClient());
+                jsonObjectAhk?.AHKThreadExecution(client);
+                jsonObjectAutopot?.AutopotThreadExecution(client, 0);
+                jsonObjectAutoRefresh?.AutorefreshThreadExecution(client);
+                jsonObjectStatusRecovery?.RestoreStatusThread(client);
+                jsonObjectAutoBuff?.AutoBuffThread(client);
                 Task.Delay(50).Wait(); // Safe exit
             });
         }
@@ -763,7 +824,6 @@ namespace RagnarokHotKeyInWinforms
                     {
                         characterName.Text = ClientSingleton.GetClient().ReadCharacterName();
                     }
-
                     await TriggerStartActions();
                     break;
                 case MessageCode.TURN_OFF:

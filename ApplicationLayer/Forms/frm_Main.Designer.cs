@@ -76,8 +76,13 @@
             this.tabPageMacroSongs = new System.Windows.Forms.TabPage();
             this.label9 = new System.Windows.Forms.Label();
             this.tabAutoBuffSkill = new System.Windows.Forms.TabPage();
-            this.label8 = new System.Windows.Forms.Label();
             this.tabAutoBuffStuff = new System.Windows.Forms.TabPage();
+            this.EtcGP = new System.Windows.Forms.GroupBox();
+            this.ScrollBuffsGP = new System.Windows.Forms.GroupBox();
+            this.ElementalsGP = new System.Windows.Forms.GroupBox();
+            this.BoxesGP = new System.Windows.Forms.GroupBox();
+            this.PotionsGP = new System.Windows.Forms.GroupBox();
+            this.FoodsGP = new System.Windows.Forms.GroupBox();
             this.tabPageSpammer = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
             this.cbDeactivated = new System.Windows.Forms.CheckBox();
@@ -142,13 +147,16 @@
             this.chkQ = new System.Windows.Forms.CheckBox();
             this.chkW = new System.Windows.Forms.CheckBox();
             this.tabMain = new System.Windows.Forms.TabControl();
-            this.EtcGP = new System.Windows.Forms.GroupBox();
-            this.ScrollBuffsGP = new System.Windows.Forms.GroupBox();
-            this.ElementalsGP = new System.Windows.Forms.GroupBox();
-            this.BoxesGP = new System.Windows.Forms.GroupBox();
-            this.PotionsGP = new System.Windows.Forms.GroupBox();
-            this.FoodsGP = new System.Windows.Forms.GroupBox();
             this.toolTipAutoBuff = new System.Windows.Forms.ToolTip(this.components);
+            this.GunsSkillsGP = new System.Windows.Forms.GroupBox();
+            this.NinjaSkillsGP = new System.Windows.Forms.GroupBox();
+            this.TKSkillGroupBox = new System.Windows.Forms.GroupBox();
+            this.AcolyteSkillsGP = new System.Windows.Forms.GroupBox();
+            this.ThiefSkillsGP = new System.Windows.Forms.GroupBox();
+            this.MerchantSkillsGP = new System.Windows.Forms.GroupBox();
+            this.MageSkillGP = new System.Windows.Forms.GroupBox();
+            this.ArcherSkillsGP = new System.Windows.Forms.GroupBox();
+            this.SwordmanSkillGP = new System.Windows.Forms.GroupBox();
             this.tabControlAutopot.SuspendLayout();
             this.tabPageAutopot.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtAutopotDelay)).BeginInit();
@@ -218,7 +226,7 @@
             // 
             this.lblSupportedServer.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
             this.lblSupportedServer.AutoSize = true;
-            this.lblSupportedServer.Location = new System.Drawing.Point(11, 658);
+            this.lblSupportedServer.Location = new System.Drawing.Point(11, 758);
             this.lblSupportedServer.Name = "lblSupportedServer";
             this.lblSupportedServer.Size = new System.Drawing.Size(150, 13);
             this.lblSupportedServer.TabIndex = 5;
@@ -227,7 +235,7 @@
             // pbSupportedServer
             // 
             this.pbSupportedServer.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.pbSupportedServer.Location = new System.Drawing.Point(14, 674);
+            this.pbSupportedServer.Location = new System.Drawing.Point(14, 774);
             this.pbSupportedServer.Name = "pbSupportedServer";
             this.pbSupportedServer.Size = new System.Drawing.Size(789, 10);
             this.pbSupportedServer.TabIndex = 4;
@@ -621,25 +629,23 @@
             // 
             // tabAutoBuffSkill
             // 
-            this.tabAutoBuffSkill.Controls.Add(this.label8);
+            this.tabAutoBuffSkill.AutoScroll = true;
+            this.tabAutoBuffSkill.Controls.Add(this.GunsSkillsGP);
+            this.tabAutoBuffSkill.Controls.Add(this.NinjaSkillsGP);
+            this.tabAutoBuffSkill.Controls.Add(this.TKSkillGroupBox);
+            this.tabAutoBuffSkill.Controls.Add(this.AcolyteSkillsGP);
+            this.tabAutoBuffSkill.Controls.Add(this.ThiefSkillsGP);
+            this.tabAutoBuffSkill.Controls.Add(this.MerchantSkillsGP);
+            this.tabAutoBuffSkill.Controls.Add(this.MageSkillGP);
+            this.tabAutoBuffSkill.Controls.Add(this.ArcherSkillsGP);
+            this.tabAutoBuffSkill.Controls.Add(this.SwordmanSkillGP);
             this.tabAutoBuffSkill.Location = new System.Drawing.Point(4, 22);
             this.tabAutoBuffSkill.Name = "tabAutoBuffSkill";
             this.tabAutoBuffSkill.Padding = new System.Windows.Forms.Padding(3);
-            this.tabAutoBuffSkill.Size = new System.Drawing.Size(800, 280);
+            this.tabAutoBuffSkill.Size = new System.Drawing.Size(800, 376);
             this.tabAutoBuffSkill.TabIndex = 3;
             this.tabAutoBuffSkill.Text = "AutoBuff - Skills";
             this.tabAutoBuffSkill.UseVisualStyleBackColor = true;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(330, 130);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(119, 20);
-            this.label8.TabIndex = 15;
-            this.label8.Text = "Auto buff skill";
-            this.label8.Visible = false;
             // 
             // tabAutoBuffStuff
             // 
@@ -656,6 +662,66 @@
             this.tabAutoBuffStuff.TabIndex = 2;
             this.tabAutoBuffStuff.Text = "AutoBuff - Stuffs";
             this.tabAutoBuffStuff.UseVisualStyleBackColor = true;
+            // 
+            // EtcGP
+            // 
+            this.EtcGP.AutoSize = true;
+            this.EtcGP.Location = new System.Drawing.Point(10, 211);
+            this.EtcGP.Name = "EtcGP";
+            this.EtcGP.Size = new System.Drawing.Size(522, 33);
+            this.EtcGP.TabIndex = 310;
+            this.EtcGP.TabStop = false;
+            this.EtcGP.Text = "ETC";
+            // 
+            // ScrollBuffsGP
+            // 
+            this.ScrollBuffsGP.AutoSize = true;
+            this.ScrollBuffsGP.Location = new System.Drawing.Point(10, 172);
+            this.ScrollBuffsGP.Name = "ScrollBuffsGP";
+            this.ScrollBuffsGP.Size = new System.Drawing.Size(522, 33);
+            this.ScrollBuffsGP.TabIndex = 309;
+            this.ScrollBuffsGP.TabStop = false;
+            this.ScrollBuffsGP.Text = "Scroll Buffs";
+            // 
+            // ElementalsGP
+            // 
+            this.ElementalsGP.AutoSize = true;
+            this.ElementalsGP.Location = new System.Drawing.Point(10, 58);
+            this.ElementalsGP.Name = "ElementalsGP";
+            this.ElementalsGP.Size = new System.Drawing.Size(522, 32);
+            this.ElementalsGP.TabIndex = 308;
+            this.ElementalsGP.TabStop = false;
+            this.ElementalsGP.Text = "Elementals";
+            // 
+            // BoxesGP
+            // 
+            this.BoxesGP.AutoSize = true;
+            this.BoxesGP.Location = new System.Drawing.Point(10, 96);
+            this.BoxesGP.Name = "BoxesGP";
+            this.BoxesGP.Size = new System.Drawing.Size(522, 31);
+            this.BoxesGP.TabIndex = 307;
+            this.BoxesGP.TabStop = false;
+            this.BoxesGP.Text = "Boxes / Speed / Status";
+            // 
+            // PotionsGP
+            // 
+            this.PotionsGP.AutoSize = true;
+            this.PotionsGP.Location = new System.Drawing.Point(10, 23);
+            this.PotionsGP.Name = "PotionsGP";
+            this.PotionsGP.Size = new System.Drawing.Size(522, 29);
+            this.PotionsGP.TabIndex = 306;
+            this.PotionsGP.TabStop = false;
+            this.PotionsGP.Text = "Potions";
+            // 
+            // FoodsGP
+            // 
+            this.FoodsGP.AutoSize = true;
+            this.FoodsGP.Location = new System.Drawing.Point(10, 133);
+            this.FoodsGP.Name = "FoodsGP";
+            this.FoodsGP.Size = new System.Drawing.Size(522, 33);
+            this.FoodsGP.TabIndex = 305;
+            this.FoodsGP.TabStop = false;
+            this.FoodsGP.Text = "Foods";
             // 
             // tabPageSpammer
             // 
@@ -1365,74 +1431,104 @@
             this.tabMain.Location = new System.Drawing.Point(6, 345);
             this.tabMain.Name = "tabMain";
             this.tabMain.SelectedIndex = 0;
-            this.tabMain.Size = new System.Drawing.Size(808, 306);
+            this.tabMain.Size = new System.Drawing.Size(808, 402);
             this.tabMain.TabIndex = 11;
             // 
-            // EtcGP
+            // GunsSkillsGP
             // 
-            this.EtcGP.AutoSize = true;
-            this.EtcGP.Location = new System.Drawing.Point(10, 211);
-            this.EtcGP.Name = "EtcGP";
-            this.EtcGP.Size = new System.Drawing.Size(522, 33);
-            this.EtcGP.TabIndex = 310;
-            this.EtcGP.TabStop = false;
-            this.EtcGP.Text = "ETC";
+            this.GunsSkillsGP.AutoSize = true;
+            this.GunsSkillsGP.Location = new System.Drawing.Point(6, 330);
+            this.GunsSkillsGP.Name = "GunsSkillsGP";
+            this.GunsSkillsGP.Size = new System.Drawing.Size(505, 35);
+            this.GunsSkillsGP.TabIndex = 217;
+            this.GunsSkillsGP.TabStop = false;
+            this.GunsSkillsGP.Text = "Gunslinger Skills";
             // 
-            // ScrollBuffsGP
+            // NinjaSkillsGP
             // 
-            this.ScrollBuffsGP.AutoSize = true;
-            this.ScrollBuffsGP.Location = new System.Drawing.Point(10, 172);
-            this.ScrollBuffsGP.Name = "ScrollBuffsGP";
-            this.ScrollBuffsGP.Size = new System.Drawing.Size(522, 33);
-            this.ScrollBuffsGP.TabIndex = 309;
-            this.ScrollBuffsGP.TabStop = false;
-            this.ScrollBuffsGP.Text = "Scroll Buffs";
+            this.NinjaSkillsGP.AutoSize = true;
+            this.NinjaSkillsGP.Location = new System.Drawing.Point(6, 289);
+            this.NinjaSkillsGP.Name = "NinjaSkillsGP";
+            this.NinjaSkillsGP.Size = new System.Drawing.Size(505, 35);
+            this.NinjaSkillsGP.TabIndex = 216;
+            this.NinjaSkillsGP.TabStop = false;
+            this.NinjaSkillsGP.Text = "Ninja Skills";
             // 
-            // ElementalsGP
+            // TKSkillGroupBox
             // 
-            this.ElementalsGP.AutoSize = true;
-            this.ElementalsGP.Location = new System.Drawing.Point(10, 58);
-            this.ElementalsGP.Name = "ElementalsGP";
-            this.ElementalsGP.Size = new System.Drawing.Size(522, 32);
-            this.ElementalsGP.TabIndex = 308;
-            this.ElementalsGP.TabStop = false;
-            this.ElementalsGP.Text = "Elementals";
+            this.TKSkillGroupBox.AutoSize = true;
+            this.TKSkillGroupBox.Location = new System.Drawing.Point(6, 248);
+            this.TKSkillGroupBox.Name = "TKSkillGroupBox";
+            this.TKSkillGroupBox.Size = new System.Drawing.Size(505, 35);
+            this.TKSkillGroupBox.TabIndex = 215;
+            this.TKSkillGroupBox.TabStop = false;
+            this.TKSkillGroupBox.Text = "Taekwon Skills";
             // 
-            // BoxesGP
+            // AcolyteSkillsGP
             // 
-            this.BoxesGP.AutoSize = true;
-            this.BoxesGP.Location = new System.Drawing.Point(10, 96);
-            this.BoxesGP.Name = "BoxesGP";
-            this.BoxesGP.Size = new System.Drawing.Size(522, 31);
-            this.BoxesGP.TabIndex = 307;
-            this.BoxesGP.TabStop = false;
-            this.BoxesGP.Text = "Boxes / Speed / Status";
+            this.AcolyteSkillsGP.AutoSize = true;
+            this.AcolyteSkillsGP.Location = new System.Drawing.Point(6, 207);
+            this.AcolyteSkillsGP.Name = "AcolyteSkillsGP";
+            this.AcolyteSkillsGP.Size = new System.Drawing.Size(505, 35);
+            this.AcolyteSkillsGP.TabIndex = 214;
+            this.AcolyteSkillsGP.TabStop = false;
+            this.AcolyteSkillsGP.Text = "Acolyte Skills";
             // 
-            // PotionsGP
+            // ThiefSkillsGP
             // 
-            this.PotionsGP.AutoSize = true;
-            this.PotionsGP.Location = new System.Drawing.Point(10, 23);
-            this.PotionsGP.Name = "PotionsGP";
-            this.PotionsGP.Size = new System.Drawing.Size(522, 29);
-            this.PotionsGP.TabIndex = 306;
-            this.PotionsGP.TabStop = false;
-            this.PotionsGP.Text = "Potions";
+            this.ThiefSkillsGP.AutoSize = true;
+            this.ThiefSkillsGP.Location = new System.Drawing.Point(6, 162);
+            this.ThiefSkillsGP.Name = "ThiefSkillsGP";
+            this.ThiefSkillsGP.Size = new System.Drawing.Size(505, 35);
+            this.ThiefSkillsGP.TabIndex = 213;
+            this.ThiefSkillsGP.TabStop = false;
+            this.ThiefSkillsGP.Text = "Thief Skills";
             // 
-            // FoodsGP
+            // MerchantSkillsGP
             // 
-            this.FoodsGP.AutoSize = true;
-            this.FoodsGP.Location = new System.Drawing.Point(10, 133);
-            this.FoodsGP.Name = "FoodsGP";
-            this.FoodsGP.Size = new System.Drawing.Size(522, 33);
-            this.FoodsGP.TabIndex = 305;
-            this.FoodsGP.TabStop = false;
-            this.FoodsGP.Text = "Foods";
+            this.MerchantSkillsGP.AutoSize = true;
+            this.MerchantSkillsGP.Location = new System.Drawing.Point(6, 121);
+            this.MerchantSkillsGP.Name = "MerchantSkillsGP";
+            this.MerchantSkillsGP.Size = new System.Drawing.Size(505, 35);
+            this.MerchantSkillsGP.TabIndex = 212;
+            this.MerchantSkillsGP.TabStop = false;
+            this.MerchantSkillsGP.Text = "Merchant Skills";
+            // 
+            // MageSkillGP
+            // 
+            this.MageSkillGP.AutoSize = true;
+            this.MageSkillGP.Location = new System.Drawing.Point(6, 80);
+            this.MageSkillGP.Name = "MageSkillGP";
+            this.MageSkillGP.Size = new System.Drawing.Size(505, 35);
+            this.MageSkillGP.TabIndex = 211;
+            this.MageSkillGP.TabStop = false;
+            this.MageSkillGP.Text = "Mage Skills";
+            // 
+            // ArcherSkillsGP
+            // 
+            this.ArcherSkillsGP.AutoSize = true;
+            this.ArcherSkillsGP.Location = new System.Drawing.Point(6, 6);
+            this.ArcherSkillsGP.Name = "ArcherSkillsGP";
+            this.ArcherSkillsGP.Size = new System.Drawing.Size(505, 30);
+            this.ArcherSkillsGP.TabIndex = 209;
+            this.ArcherSkillsGP.TabStop = false;
+            this.ArcherSkillsGP.Text = "Archer Skills";
+            // 
+            // SwordmanSkillGP
+            // 
+            this.SwordmanSkillGP.AutoSize = true;
+            this.SwordmanSkillGP.Location = new System.Drawing.Point(6, 42);
+            this.SwordmanSkillGP.Name = "SwordmanSkillGP";
+            this.SwordmanSkillGP.Size = new System.Drawing.Size(505, 32);
+            this.SwordmanSkillGP.TabIndex = 210;
+            this.SwordmanSkillGP.TabStop = false;
+            this.SwordmanSkillGP.Text = "Swordsman Skills";
             // 
             // frm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(814, 689);
+            this.ClientSize = new System.Drawing.Size(814, 789);
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.lblUserName);
             this.Controls.Add(this.btnLogout);
@@ -1542,7 +1638,6 @@
         private System.Windows.Forms.TabPage tabPageMacroSongs;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TabPage tabAutoBuffSkill;
-        private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TabPage tabAutoBuffStuff;
         private System.Windows.Forms.TabPage tabPageSpammer;
         private System.Windows.Forms.GroupBox groupBox3;
@@ -1615,6 +1710,15 @@
         private System.Windows.Forms.GroupBox PotionsGP;
         private System.Windows.Forms.GroupBox FoodsGP;
         private System.Windows.Forms.ToolTip toolTipAutoBuff;
+        private System.Windows.Forms.GroupBox GunsSkillsGP;
+        private System.Windows.Forms.GroupBox NinjaSkillsGP;
+        private System.Windows.Forms.GroupBox TKSkillGroupBox;
+        private System.Windows.Forms.GroupBox AcolyteSkillsGP;
+        private System.Windows.Forms.GroupBox ThiefSkillsGP;
+        private System.Windows.Forms.GroupBox MerchantSkillsGP;
+        private System.Windows.Forms.GroupBox MageSkillGP;
+        private System.Windows.Forms.GroupBox ArcherSkillsGP;
+        private System.Windows.Forms.GroupBox SwordmanSkillGP;
     }
 }
 

@@ -50,7 +50,6 @@ namespace RagnarokHotKeyInWinforms
             #endregion
 
             this.Text = AppConfig.Name + " - " + AppConfig.Version; // Window title
-            //SetAutobuffSkillWindow();//AutoBuff Skill
             //SetSongMacroWindow(); // Macro Song Form
             //SetAtkDefWindow();//AtkDef tab page
             //SetMacroSwitchWindow();
@@ -431,7 +430,7 @@ namespace RagnarokHotKeyInWinforms
         #region Stuff and Skill Auto Buff (Triggered with Start() method)
 
         #region Skill and Stuff Auto Buff key mapping
-        public async Task<Dictionary<EffectStatusIDs, Key>> RetrieveAutoBuffFromDb()
+        private async Task<Dictionary<EffectStatusIDs, Key>> RetrieveAutoBuffFromDb()
         {
             // Retrieve the setting
             var userToggleState = await ReturnToggleKey();
@@ -442,7 +441,7 @@ namespace RagnarokHotKeyInWinforms
         }
         #endregion Skill and Stuff Auto Buff key mapping
 
-        public async Task RetrieveStuffAutobuffForm()
+        private async Task RetrieveStuffAutobuffForm()
         {
 
             //Load the stuff containers
@@ -543,6 +542,7 @@ namespace RagnarokHotKeyInWinforms
             }
 
         }
+        //Updating when text changed.
         private async void onTextChange(object sender, EventArgs e)
         {
             try
@@ -778,42 +778,36 @@ namespace RagnarokHotKeyInWinforms
         }
 
         #endregion Ahk Region
-
-        public async Task<T> GetDeserializedObject<T>(Func<Task<string>> getJsonData)
+        #region Frames
+        public void SetMacroSwitchWindow()
         {
-            var jsonData = await getJsonData();
-            return JsonSerializer.Deserialize<T>(jsonData);
+            MacroSwitchForm frm = new MacroSwitchForm(subject);
+            frm.FormBorderStyle = FormBorderStyle.None;
+            frm.Location = new Point(0, 65);
+            frm.MdiParent = this;
+            addForm(this.tabPageMacroSwitch, frm);
+            frm.Show();
         }
-
-
-        private async Task TriggerStartActions()
+        public void SetAtkDefWindow()
         {
-            Client client = ClientSingleton.GetClient();
-            //Done
-            var jsonObjectAhk = await GetDeserializedObject<AHK>(async () => (await ReturnToggleKey()).Ahk);
-            //Done
-            var jsonObjectAutopot = await GetDeserializedObject<Autopot>(async () => (await ReturnToggleKey()).Autopot);
-            //Done
-            var jsonObjectAutoRefresh = await GetDeserializedObject<AutoRefreshSpammer>(async () => (await ReturnToggleKey()).AutoRefreshSpammer);
-            //Done
-            var jsonObjectStatusRecovery = await GetDeserializedObject<StatusRecovery>(async () => (await ReturnToggleKey()).StatusRecovery);
-            //Done
-            var jsonObjectAutoBuff = await GetDeserializedObject<AutoBuff>(async () => (await ReturnToggleKey()).Autobuff);
-            mainThread = new _4RThread(_ =>
-            {
-                jsonObjectAhk?.AHKThreadExecution(client);
-                jsonObjectAutopot?.AutopotThreadExecution(client, 0);
-                jsonObjectAutoRefresh?.AutorefreshThreadExecution(client);
-                jsonObjectStatusRecovery?.RestoreStatusThread(client);
-                jsonObjectAutoBuff?.AutoBuffThread(client);
-                Task.Delay(50).Wait(); // Safe exit
-            });
+            AtkDefForm frm = new AtkDefForm(subject);
+            frm.FormBorderStyle = FormBorderStyle.None;
+            frm.Location = new Point(0, 65);
+            frm.MdiParent = this;
+            addForm(this.tabPageAtkDef, frm);
+            frm.Show();
         }
-
-        private void TriggerStopActions()
+        public void SetSongMacroWindow()
         {
-            mainThread?.Stop();
+            MacroSongForm frm = new MacroSongForm(subject);
+            frm.FormBorderStyle = FormBorderStyle.None;
+            frm.Location = new Point(0, 65);
+            frm.MdiParent = this;
+            addForm(this.tabPageMacroSongs, frm);
+            frm.Show();
         }
+        #endregion
+        #region Public methods
         public async void Update(ISubject subject)
         {
             switch ((subject as Subject).Message.code)
@@ -853,40 +847,41 @@ namespace RagnarokHotKeyInWinforms
             }
             Refresh();
         }
-        #region Frames
-        public void SetMacroSwitchWindow()
-        {
-            MacroSwitchForm frm = new MacroSwitchForm(subject);
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Location = new Point(0, 65);
-            frm.MdiParent = this;
-            addForm(this.tabPageMacroSwitch, frm);
-            frm.Show();
-        }
-        public void SetAtkDefWindow()
-        {
-            AtkDefForm frm = new AtkDefForm(subject);
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Location = new Point(0, 65);
-            frm.MdiParent = this;
-            addForm(this.tabPageAtkDef, frm);
-            frm.Show();
-        }
-        public void SetSongMacroWindow()
-        {
-            MacroSongForm frm = new MacroSongForm(subject);
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Location = new Point(0, 65);
-            frm.MdiParent = this;
-            addForm(this.tabPageMacroSongs, frm);
-            frm.Show();
-        }
-        #endregion
-
-        #region Public methods
-
         #endregion
         #region Private Methods
+        private async Task<T> GetDeserializedObject<T>(Func<Task<string>> getJsonData)
+        {
+            var jsonData = await getJsonData();
+            return JsonSerializer.Deserialize<T>(jsonData);
+        }
+        private async Task TriggerStartActions()
+        {
+            Client client = ClientSingleton.GetClient();
+            //Done
+            var jsonObjectAhk = await GetDeserializedObject<AHK>(async () => (await ReturnToggleKey()).Ahk);
+            //Done
+            var jsonObjectAutopot = await GetDeserializedObject<Autopot>(async () => (await ReturnToggleKey()).Autopot);
+            //Done
+            var jsonObjectAutoRefresh = await GetDeserializedObject<AutoRefreshSpammer>(async () => (await ReturnToggleKey()).AutoRefreshSpammer);
+            //Done
+            var jsonObjectStatusRecovery = await GetDeserializedObject<StatusRecovery>(async () => (await ReturnToggleKey()).StatusRecovery);
+            //Done
+            var jsonObjectAutoBuff = await GetDeserializedObject<AutoBuff>(async () => (await ReturnToggleKey()).Autobuff);
+            mainThread = new _4RThread(_ =>
+            {
+                jsonObjectAhk?.AHKThreadExecution(client);
+                jsonObjectAutopot?.AutopotThreadExecution(client, 0);
+                jsonObjectAutoRefresh?.AutorefreshThreadExecution(client);
+                jsonObjectStatusRecovery?.RestoreStatusThread(client);
+                jsonObjectAutoBuff?.AutoBuffThread(client);
+                Task.Delay(50).Wait(); // Safe exit
+            });
+        }
+        private void TriggerStopActions()
+        {
+            mainThread?.Stop();
+        }
+
         private async void Form1_Load(object sender, EventArgs e)
         {
             StartUpdate();//Start the update to get the game address
@@ -1029,22 +1024,10 @@ namespace RagnarokHotKeyInWinforms
             SignInForm sf = new SignInForm(getUserInfoInterface, userSignIn, storedCredential);
             sf.ShowDialog();
         }
-
-        private void ProcessTimer_Tick(object sender, EventArgs e)
-        {
-
-        }
-
         private void btnRefresh_Click(object sender, EventArgs e)
         {
             this.refreshProcessList();
         }
-
-        private void btnSample_Click(object sender, EventArgs e)
-        {
-        }
-
         #endregion
-
     }
 }

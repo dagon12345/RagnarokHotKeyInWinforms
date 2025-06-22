@@ -811,7 +811,6 @@ namespace RagnarokHotKeyInWinforms
         }
 
         #endregion Ahk Region
-
         #region MacroSongForm (Triggered with Start() method)
         private async Task<Macro> ReturnMacro()
         {
@@ -1079,6 +1078,9 @@ namespace RagnarokHotKeyInWinforms
 
 
         #endregion MacroSongForm (Triggered with Start() method)
+        #region MacroSwitch (Triggered with Start() method)
+
+        #endregion
         #region Frames
         public void SetMacroSwitchWindow()
         {
@@ -1096,15 +1098,6 @@ namespace RagnarokHotKeyInWinforms
             frm.Location = new Point(0, 65);
             frm.MdiParent = this;
             addForm(this.tabPageAtkDef, frm);
-            frm.Show();
-        }
-        public void SetSongMacroWindow()
-        {
-            MacroSongForm frm = new MacroSongForm(subject);
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Location = new Point(0, 65);
-            frm.MdiParent = this;
-            addForm(this.tabPageMacroSongs, frm);
             frm.Show();
         }
         #endregion

@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppConfig.cs" />
+    <Compile Include="Constants\GoogleConstants.cs" />
     <Compile Include="Constants\RagnarokConstants.cs" />
     <Compile Include="Model\Action.cs" />
     <Compile Include="Model\AHK.cs" />

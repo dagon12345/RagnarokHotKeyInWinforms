@@ -31,4 +31,6 @@ June 22, 2025
 -Successfully created the new Macro Switch form. This is all database integrated;
 -Removed the secret keys and secret appsettings.json for privacy purposes.
 -Removed the additional unused form;
--Created a new model named Macro Switch instead of just Macro.
+-Created a new model named Macro Switch instead of just Macro;
+-Finished the attack defend functionality;
+-Finished all the function needed.

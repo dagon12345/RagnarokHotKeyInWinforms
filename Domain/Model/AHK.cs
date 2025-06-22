@@ -57,7 +57,8 @@ namespace RagnarokHotKeyInWinforms.Model
 
         public AHK()
         {
-
+            //For account new account to avoid errors
+            ahkMode = COMPATABILITY;
         }
 
 
@@ -70,20 +71,6 @@ namespace RagnarokHotKeyInWinforms.Model
             }
 
         }
-
-        //public void Start()
-        //{
-        //    Client roClient = ClientSingleton.GetClient();
-        //    if (roClient != null)
-        //    {
-        //        if (thread != null)
-        //        {
-        //            thread.Stop();
-        //        }
-        //        this.thread = new _4RThread(_ => AHKThreadExecution(token, roClient));
-        //       // AHKThreadExecution(roClient);
-        //    }
-        //}
         public void Start()
         {
             Client roClient = ClientSingleton.GetClient();

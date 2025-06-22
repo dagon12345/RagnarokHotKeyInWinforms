@@ -57,8 +57,8 @@ namespace ApplicationLayer.Service
                     AutoRefreshSpammer = JsonConvert.SerializeObject(profileConfiguration.AutoRefreshSpammer),
                     Autobuff = JsonConvert.SerializeObject(profileConfiguration.AutoBuff),
                     SongMacro = JsonConvert.SerializeObject(profileConfiguration.SongMacro),
+                    MacroSwitch = JsonConvert.SerializeObject(profileConfiguration.MacroSwitch),
                     AtkDefMode = JsonConvert.SerializeObject(profileConfiguration.AtkDefMode),
-                    MacroSwitch = JsonConvert.SerializeObject(profileConfiguration.MacroSwitch)
                 };
                 _userSettingRepository.Add(userSettings);
                 await _userSettingRepository.SaveChangesAsync();

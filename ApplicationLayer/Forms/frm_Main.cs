@@ -5,7 +5,6 @@ using Domain.Constants;
 using Domain.Model;
 using Domain.Model.DataModels;
 using Microsoft.Extensions.DependencyInjection;
-using RagnarokHotKeyInWinforms.Forms;
 using RagnarokHotKeyInWinforms.Model;
 using RagnarokHotKeyInWinforms.Utilities;
 using System;
@@ -41,7 +40,6 @@ namespace RagnarokHotKeyInWinforms
         public frm_Main(IStoredCredentialService storedCredentialService, ISignIn signIn,
             IUserSettingService userSettingService, IBaseTableService baseTableService)
         {
-
             this.subject.Attach(this);
             InitializeComponent();
             KeyboardHook.Enable();
@@ -53,9 +51,6 @@ namespace RagnarokHotKeyInWinforms
             #endregion
 
             this.Text = AppConfig.Name + " - " + AppConfig.Version; // Window title
-            //SetSongMacroWindow(); // Macro Song Form
-            //SetAtkDefWindow();//AtkDef tab page
-            //SetMacroSwitchWindow();
         }
 
         #region ToggleApplicationStateFunction (No Start Method)
@@ -1117,7 +1112,7 @@ namespace RagnarokHotKeyInWinforms
                         }
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     Console.WriteLine(ex.Message);
                 };
@@ -1145,7 +1140,7 @@ namespace RagnarokHotKeyInWinforms
 
             int chainID = Int16.Parse(textBox.Parent.Name.Split(new[] { "chainGroup" }, StringSplitOptions.None)[1]);
             GroupBox group = (GroupBox)this.Controls.Find("chainGroup" + chainID, true)[0];
-           //Done: ChainConfigSwitch
+            //Done: ChainConfigSwitch
             ChainConfigSwitch chainConfig = jsonObject.chainConfigs.Find(config => config.Id == chainID); //search inside our column
 
 
@@ -1182,7 +1177,7 @@ namespace RagnarokHotKeyInWinforms
             ChainConfigSwitch chainConfig = jsonObject.chainConfigs.Find(config => config.Id == chainID);
 
             String cbName = delayInput.Name.Split(new[] { "delay" }, StringSplitOptions.None)[0];
-           // chainConfig.macroEntries[cbName].delay = decimal.ToInt16(delayInput.Value);
+            // chainConfig.macroEntries[cbName].delay = decimal.ToInt16(delayInput.Value);
 
             if (chainConfig.macroEntries.ContainsKey(cbName))
             {
@@ -1226,17 +1221,141 @@ namespace RagnarokHotKeyInWinforms
             catch { }
         }
         #endregion
-        #region Frames
-        public void SetAtkDefWindow()
+        #region Attack Defend Form (Triggered with start() method)
+        private async Task DisplayAttackDefendMode()
         {
-            AtkDefForm frm = new AtkDefForm(subject);
-            frm.FormBorderStyle = FormBorderStyle.None;
-            frm.Location = new Point(0, 65);
-            frm.MdiParent = this;
-            addForm(this.tabPageAtkDef, frm);
-            frm.Show();
+
+            var toggleStateValue = await ReturnToggleKey();
+            var jsonObject = JsonSerializer.Deserialize<ATKDefMode>(toggleStateValue.AtkDefMode);
+
+            this.inSpammerKey.Text = jsonObject.keySpammer.ToString();
+            this.spammerDelay.Value = jsonObject.ahkDelay;
+            this.switchDelay.Value = jsonObject.switchDelay;
+            this.inSpammerClick.Checked = jsonObject.keySpammerWithClick;
+            Dictionary<string, Key> atkKeys = new Dictionary<string, Key>(jsonObject.atkKeys);
+            Dictionary<string, Key> defKeys = new Dictionary<string, Key>(jsonObject.defKeys);
+
+            foreach (Control control in this.panelSwitch.Controls)
+            {
+                if (control is TextBox)
+                {
+
+                    TextBox tb = (TextBox)control;
+                    if (!tb.Tag.ToString().Equals("spammerKey"))
+                    {
+                        ATKDEFEnum mode = (ATKDEFEnum)Int16.Parse(tb.Tag.ToString());
+                        if (mode == ATKDEFEnum.DEF)
+                        {
+                            tb.Text = defKeys.ContainsKey(tb.Name) ? defKeys[tb.Name].ToString() : Keys.None.ToString();
+                        }
+                        else
+                        {
+                            tb.Text = atkKeys.ContainsKey(tb.Name) ? atkKeys[tb.Name].ToString() : Keys.None.ToString();
+                        }
+                    }
+
+                    TextBox textBox = (TextBox)control;
+                    textBox.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
+                    textBox.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
+                    textBox.TextChanged += new EventHandler(this.AttackDefendonTextChange);
+
+                }
+            }
+
+            foreach (Control c in this.groupBoxATKxDEFConfig.Controls)
+            {
+                if (c is CheckBox check)
+                {
+                    if (check.Enabled)
+                        check.CheckStateChanged += ChkBox_CheckedChanged;
+                }
+            }
+
+            //Delay
+            spammerDelay.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
+            spammerDelay.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
+            spammerDelay.TextChanged += async (sender, e) => await txtSpammerDelayTextChanged(sender, e);
+
+            //Switch Delay
+            switchDelay.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
+            switchDelay.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
+            switchDelay.TextChanged += async (sender, e) => await txtSwitchDelayTextChanged(sender, e);
+
         }
-        #endregion
+        private async Task txtSpammerDelayTextChanged(object sender, EventArgs e)
+        {
+            var userToggleState = await ReturnToggleKey();
+            var jsonObject = JsonSerializer.Deserialize<ATKDefMode>(userToggleState.AtkDefMode);
+            Key key = (Key)Enum.Parse(typeof(Key), spammerDelay.Text);
+
+            if (jsonObject != null)
+            {
+                jsonObject.ahkDelay = Convert.ToInt32(key);
+                var updatedJson = JsonSerializer.Serialize(jsonObject);
+                userToggleState.AtkDefMode = updatedJson;
+                // Persist changes
+                await _userSettingService.SaveChangesAsync();
+            }
+            else
+            {
+                return;
+            }
+        }
+        private async Task txtSwitchDelayTextChanged(object sender, EventArgs e)
+        {
+            var userToggleState = await ReturnToggleKey();
+            var jsonObject = JsonSerializer.Deserialize<ATKDefMode>(userToggleState.AtkDefMode);
+            Key key = (Key)Enum.Parse(typeof(Key), switchDelay.Text);
+
+            if (jsonObject != null)
+            {
+                jsonObject.switchDelay = Convert.ToInt32(key);
+                var updatedJson = JsonSerializer.Serialize(jsonObject);
+                userToggleState.AtkDefMode = updatedJson;
+                // Persist changes
+                await _userSettingService.SaveChangesAsync();
+            }
+            else
+            {
+                return;
+            }
+        }
+        private async void ChkBox_CheckedChanged(object sender, EventArgs e)
+        {
+            var toggleStateValue = await ReturnToggleKey();
+            var jsonObject = JsonSerializer.Deserialize<ATKDefMode>(toggleStateValue.AtkDefMode);
+
+            jsonObject.keySpammerWithClick = this.inSpammerClick.Checked;
+            var updatedJson = JsonSerializer.Serialize(jsonObject);
+            toggleStateValue.AtkDefMode = updatedJson;
+            // Persist changes
+            await _userSettingService.SaveChangesAsync();
+        }
+        private async void AttackDefendonTextChange(object sender, EventArgs e)
+        {
+            var toggleStateValue = await ReturnToggleKey();
+            var jsonObject = JsonSerializer.Deserialize<ATKDefMode>(toggleStateValue.AtkDefMode);
+
+            TextBox textBox = (TextBox)sender;
+            Key key = (Key)Enum.Parse(typeof(Key), textBox.Text.ToString());
+
+            //If it's ATK OR DEF
+            if (textBox.Tag.Equals("spammerKey"))
+            {
+                jsonObject.keySpammer = key;
+            }
+            else
+            {
+                ATKDEFEnum mode = (ATKDEFEnum)Int16.Parse(textBox.Tag.ToString());
+                jsonObject.AddSwitchItem(textBox.Name, key, mode);
+            }
+            var updatedJson = JsonSerializer.Serialize(jsonObject);
+            toggleStateValue.AtkDefMode = updatedJson;
+            // Persist changes
+            await _userSettingService.SaveChangesAsync();
+
+        }
+        #endregion Attack Defend Form
         #region Public methods
         public async void Update(ISubject subject)
         {
@@ -1265,18 +1384,6 @@ namespace RagnarokHotKeyInWinforms
                     break;
             }
         }
-        //addform used for each forms
-        public void addForm(TabPage tp, Form f)
-        {
-            if (!tp.Controls.Contains(f))
-            {
-                tp.Controls.Add(f);
-                f.Dock = DockStyle.Fill;
-                f.Show();
-                Refresh();
-            }
-            Refresh();
-        }
         #endregion
         #region Private Methods
         private async Task<T> GetDeserializedObject<T>(Func<Task<string>> getJsonData)
@@ -1301,6 +1408,8 @@ namespace RagnarokHotKeyInWinforms
             var jsonObjectMacroSong = await GetDeserializedObject<Macro>(async () => (await ReturnToggleKey()).SongMacro);
             //Done
             var jsonObjectMacroSwitch = await GetDeserializedObject<MacroSwitch>(async () => (await ReturnToggleKey()).MacroSwitch);
+            //Done
+            var jsonObjectAtkDef = await GetDeserializedObject<ATKDefMode>(async () => (await ReturnToggleKey()).AtkDefMode);
             mainThread = new _4RThread(_ =>
             {
                 jsonObjectAhk?.AHKThreadExecution(client);
@@ -1310,6 +1419,7 @@ namespace RagnarokHotKeyInWinforms
                 jsonObjectAutoBuff?.AutoBuffThread(client);
                 jsonObjectMacroSong?.MacroExecutionThread(client);
                 jsonObjectMacroSwitch?.MacroExecutionThreadSwitch(client);
+                jsonObjectAtkDef?.AttacKDefAHKThreadExecution(client);
                 Task.Delay(50).Wait(); // Safe exit
             });
         }
@@ -1336,13 +1446,11 @@ namespace RagnarokHotKeyInWinforms
             await RetrieveAutopot();
             await SkillTimerRetrieve();
             await RetrieveStatusEffect();
-            await AhkRetrieval();// causing threading
-
+            await AhkRetrieval();
             await RetrieveStuffAutobuffForm();
-
             await updateUi();
             await DisplayMacroSwitch();
-
+            await DisplayAttackDefendMode();
             this.refreshProcessList();
         }
         private void StartUpdate()

@@ -2,9 +2,12 @@
 using RagnarokHotKeyInWinforms.Utilities;
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Drawing;
+
 
 namespace RagnarokHotKeyInWinforms.Model
 {
@@ -23,6 +26,10 @@ namespace RagnarokHotKeyInWinforms.Model
         public bool keySpammerWithClick { get; set; } = true;
         public Dictionary<string, Key> defKeys { get; set; } = new Dictionary<string, Key>();
         public Dictionary<string, Key> atkKeys { get; set; } = new Dictionary<string, Key>();
+        [DllImport("user32.dll")]
+        private static extern bool GetCursorPos(out System.Drawing.Point lpPoint);
+        [DllImport("user32.dll")]
+        private static extern bool SetCursorPos(int X, int Y);
         private int PX_MOV = Constants.MOUSE_DIAGONAL_MOVIMENTATION_PIXELS_AHK;
 
         public string GetActionName()
@@ -40,11 +47,18 @@ namespace RagnarokHotKeyInWinforms.Model
             Client roClient = ClientSingleton.GetClient();
             if (roClient != null)
             {
-                this.thread = new _4RThread(_ => AHKThreadExecution(roClient));
+                this.thread = new _4RThread(_ => AttacKDefAHKThreadExecution(roClient));
             }
         }
 
-        private int AHKThreadExecution(Client roClient)
+        private void MoveMouseInCircle(int radius, double angle)
+        {
+            GetCursorPos(out Point pos);
+            int x = pos.X + (int)(radius * Math.Cos(angle));
+            int y = pos.Y + (int)(radius * Math.Sin(angle));
+            SetCursorPos(x, y);
+        }
+        public void AttacKDefAHKThreadExecution(Client roClient)
         {
             Keys thisk = toKeys(keySpammer);
             //Is not equal to none and iskey is clicked
@@ -55,16 +69,27 @@ namespace RagnarokHotKeyInWinforms.Model
                     Interop.PostMessage(roClient.process.MainWindowHandle, Constants.WM_KEYDOWN_MSG_ID, toKeys(key), 0);
                     Thread.Sleep(this.switchDelay);
                 }
-                if(this.keySpammerWithClick)
+                //This is circle spammer
+                if (this.keySpammerWithClick)
                 {
-                    while(Keyboard.IsKeyDown(keySpammer))
+                    double angle = 0;
+                    double increment = Math.PI / 15; // adjust smoothness
+                    int radius = 2; // subtle shake radius
+
+                    while (Keyboard.IsKeyDown(keySpammer))
                     {
                         Interop.PostMessage(roClient.process.MainWindowHandle, Constants.WM_KEYDOWN_MSG_ID, thisk, 0);
                         Interop.PostMessage(roClient.process.MainWindowHandle, Constants.WM_LBUTTONDOWN, 0, 0);
                         Thread.Sleep(1);
                         Interop.PostMessage(roClient.process.MainWindowHandle, Constants.WM_LBUTTONUP, 0, 0);
+
+                        MoveMouseInCircle(radius, angle);
+                        angle += increment;
+
                         Thread.Sleep(this.ahkDelay);
                     }
+
+
                 }
                 else
                 {
@@ -81,7 +106,6 @@ namespace RagnarokHotKeyInWinforms.Model
                     Thread.Sleep(this.switchDelay);
                 }
             }
-            return 0;
         }
         public void AddSwitchItem(string dictKey, Key k, ATKDEFEnum type)
         {

@@ -34,3 +34,6 @@ June 22, 2025
 -Created a new model named Macro Switch instead of just Macro;
 -Finished the attack defend functionality;
 -Finished all the function needed.
+June 25, 2025
+-Success integration of online Database.
+-Todo error handling on autopot and beyond.

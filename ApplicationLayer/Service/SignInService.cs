@@ -18,11 +18,8 @@ namespace ApplicationLayer.Service
             _baseTableRepository = baseTableRepository;
         }
 
-        public async Task CreateUser(BaseTable baseTable, string email)
+        public async Task CreateUser(BaseTable baseTable)
         {
-            baseTable.ReferenceCode = Guid.NewGuid();
-            baseTable.Email = email;
-
             _baseTableRepository.Add(baseTable);
             await _baseTableRepository.SaveChangesAsync();
         }

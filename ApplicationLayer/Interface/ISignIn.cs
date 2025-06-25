@@ -8,7 +8,7 @@ namespace ApplicationLayer.Interface
     public interface ISignIn
     {
         Task<string> SearchExistingUser(string ReferenceCode);
-        Task CreateUser(BaseTable baseTable, string email);
+        Task CreateUser(BaseTable baseTable);
         Task<UserCredential> GoogleAlgorithm(string googleApisFolder);
     }
 }

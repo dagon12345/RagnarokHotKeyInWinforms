@@ -52,6 +52,7 @@
     <Compile Include="AppConfig.cs" />
     <Compile Include="Constants\GoogleConstants.cs" />
     <Compile Include="Constants\RagnarokConstants.cs" />
+    <Compile Include="ErrorMessages\ErrorCodes.cs" />
     <Compile Include="Model\Action.cs" />
     <Compile Include="Model\AHK.cs" />
     <Compile Include="Model\ATKDefMode.cs" />
@@ -69,6 +70,8 @@
     <Compile Include="Model\Macro.cs" />
     <Compile Include="Model\MacroSwitch.cs" />
     <Compile Include="Model\Profile.cs" />
+    <Compile Include="Model\SettingModels\DatabaseSettings.cs" />
+    <Compile Include="Model\SettingModels\SshSettings.cs" />
     <Compile Include="Model\StatusRecovery.cs" />
     <Compile Include="Model\UserInfo.cs" />
     <Compile Include="Model\UserPreferences.cs" />
@@ -629,5 +632,6 @@
   <ItemGroup>
     <None Include="Resources\wz_sightblaster.gif" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -391,6 +391,8 @@
             this.chkW = new System.Windows.Forms.CheckBox();
             this.tabMain = new System.Windows.Forms.TabControl();
             this.toolTipAutoBuff = new System.Windows.Forms.ToolTip(this.components);
+            this.progressBar1 = new System.Windows.Forms.ProgressBar();
+            this.lblLoadingSettings = new System.Windows.Forms.Label();
             this.tabControlAutopot.SuspendLayout();
             this.tabPageAutopot.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtAutopotDelay)).BeginInit();
@@ -4278,11 +4280,31 @@
             this.tabMain.Size = new System.Drawing.Size(808, 435);
             this.tabMain.TabIndex = 11;
             // 
+            // progressBar1
+            // 
+            this.progressBar1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.progressBar1.Location = new System.Drawing.Point(225, 302);
+            this.progressBar1.Name = "progressBar1";
+            this.progressBar1.Size = new System.Drawing.Size(583, 15);
+            this.progressBar1.TabIndex = 14;
+            // 
+            // lblLoadingSettings
+            // 
+            this.lblLoadingSettings.AutoSize = true;
+            this.lblLoadingSettings.Location = new System.Drawing.Point(225, 286);
+            this.lblLoadingSettings.Name = "lblLoadingSettings";
+            this.lblLoadingSettings.Size = new System.Drawing.Size(102, 13);
+            this.lblLoadingSettings.TabIndex = 15;
+            this.lblLoadingSettings.Text = "Loading settings......";
+            this.lblLoadingSettings.Visible = false;
+            // 
             // frm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(814, 798);
+            this.Controls.Add(this.lblLoadingSettings);
+            this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.lblUserName);
             this.Controls.Add(this.btnLogout);
@@ -4834,6 +4856,8 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.NumericUpDown spammerDelay;
         private System.Windows.Forms.Label label35;
+        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.Label lblLoadingSettings;
     }
 }
 

@@ -1,6 +1,7 @@
 ﻿using Domain.Model.DataModels;
 using Infrastructure.Repositories.Interface;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories.Service
@@ -15,7 +16,7 @@ namespace Infrastructure.Repositories.Service
         {
             var findCredential = await _context.StoredCredentials
                 .AsNoTracking()
-                .FirstOrDefaultAsync(x => x.AccessToken.Equals(accessToken));
+                .FirstOrDefaultAsync(x => x.AccessToken == accessToken);
             return findCredential;
         }
 

@@ -19,12 +19,8 @@ namespace ApplicationLayer.Service
             return findCredential;
         }
 
-        public async Task SaveCredentials(StoredCredential credential, string accessToken, DateTimeOffset lastTimeLogin, string Name, string Email)
+        public async Task SaveCredentials(StoredCredential credential)
         {
-            credential.Name = Name;
-            credential.AccessToken = accessToken;
-            credential.LastLoginTime = lastTimeLogin;
-            credential.UserEmail = Email;
             _storedCredentialRepository.Add(credential);
             await _storedCredentialRepository.SaveChangesAsync();
         }

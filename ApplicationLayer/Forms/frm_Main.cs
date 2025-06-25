@@ -2,6 +2,7 @@
 using ApplicationLayer.Forms;
 using ApplicationLayer.Interface;
 using Domain.Constants;
+using Domain.ErrorMessages;
 using Domain.Model;
 using Domain.Model.DataModels;
 using Microsoft.Extensions.DependencyInjection;
@@ -116,28 +117,42 @@ namespace RagnarokHotKeyInWinforms
         }
         private async Task onStatusToggleKeyChange(object sender, EventArgs e)
         {
-            var toggleStateValue = await ReturnToggleKey();
-            //Get last key from profile before update it in json
-            Keys currentToggleKey = (Keys)Enum.Parse(typeof(Keys), txtStatusToggleKey.Text);
-            KeyboardHook.Remove(lastKey);
-            KeyboardHook.Add(currentToggleKey, new KeyboardHook.KeyPressed(this.toggleStatus));
+            try
+            {
 
 
-            // Deserialize JSON to update value
-            var jsonObject = JsonSerializer.Deserialize<UserPreferences>(toggleStateValue.UserPreferences);
-            if (jsonObject != null)
-            {
-                jsonObject.toggleStateKey = currentToggleKey.ToString(); // Update key
-                var updatedJson = JsonSerializer.Serialize(jsonObject);
-                toggleStateValue.UserPreferences = updatedJson;
-                // Persist changes
-                await _userSettingService.SaveChangesAsync();
+                txtStatusToggleKey.Enabled = false;
+                var toggleStateValue = await ReturnToggleKey();
+                //Get last key from profile before update it in json
+                Keys currentToggleKey = (Keys)Enum.Parse(typeof(Keys), txtStatusToggleKey.Text);
+                KeyboardHook.Remove(lastKey);
+                KeyboardHook.Add(currentToggleKey, new KeyboardHook.KeyPressed(this.toggleStatus));
+
+
+                // Deserialize JSON to update value
+                var jsonObject = JsonSerializer.Deserialize<UserPreferences>(toggleStateValue.UserPreferences);
+                if (jsonObject != null)
+                {
+                    jsonObject.toggleStateKey = currentToggleKey.ToString(); // Update key
+                    var updatedJson = JsonSerializer.Serialize(jsonObject);
+                    toggleStateValue.UserPreferences = updatedJson;
+                    // Persist changes
+                    await _userSettingService.SaveChangesAsync();
+                    txtStatusToggleKey.Enabled = true;
+                }
+                else
+                {
+                    return;
+                }
+                lastKey = currentToggleKey; //Refresh lastKey to update 
+
             }
-            else
+            catch (Exception)
             {
-                return;
+
+                MessageBox.Show(ErrorCodes.UnableToUpdate, ErrorCodes.TryAgain, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                txtStatusToggleKey.Enabled = true;
             }
-            lastKey = currentToggleKey; //Refresh lastKey to update 
         }
         #endregion ToggleApplicationStateFunction
         #region AutopotSettings(Triggered with Start() method)
@@ -181,22 +196,33 @@ namespace RagnarokHotKeyInWinforms
         #region HpTexAndPercent Autopot
         private async Task onHpTextChange(object sender, EventArgs e)
         {
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<Autopot>(userToggleState.Autopot);
-            Key key = (Key)Enum.Parse(typeof(Key), txtHpKey.Text);
+            try
+            {
 
-            if (jsonObject != null)
-            {
-                jsonObject.hpKey = key;
-                jsonObject.GetActionName();
-                var updatedJson = JsonSerializer.Serialize(jsonObject);
-                userToggleState.Autopot = updatedJson;
-                // Persist changes
-                await _userSettingService.SaveChangesAsync();
+                txtHpKey.Enabled = false;
+                var userToggleState = await ReturnToggleKey();
+                var jsonObject = JsonSerializer.Deserialize<Autopot>(userToggleState.Autopot);
+                Key key = (Key)Enum.Parse(typeof(Key), txtHpKey.Text);
+
+                if (jsonObject != null)
+                {
+                    jsonObject.hpKey = key;
+                    jsonObject.GetActionName();
+                    var updatedJson = JsonSerializer.Serialize(jsonObject);
+                    userToggleState.Autopot = updatedJson;
+                    // Persist changes
+                    await _userSettingService.SaveChangesAsync();
+                    txtHpKey.Enabled = true;
+                }
+                else
+                {
+                    return;
+                }
             }
-            else
+            catch (Exception)
             {
-                return;
+                MessageBox.Show(ErrorCodes.UnableToUpdate, ErrorCodes.TryAgain, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                txtHpKey.Enabled = true;
             }
         }
         private async Task txtHPpctTextChanged(object sender, EventArgs e)
@@ -263,19 +289,23 @@ namespace RagnarokHotKeyInWinforms
                 return;
             }
         }
+
         private async Task txtAutopotDelayTextChanged(object sender, EventArgs e)
         {
+            txtAutopotDelay.Enabled = false;
             var userToggleState = await ReturnToggleKey();
             var jsonObject = JsonSerializer.Deserialize<Autopot>(userToggleState.Autopot);
             Key key = (Key)Enum.Parse(typeof(Key), txtAutopotDelay.Text);
 
             if (jsonObject != null)
             {
+
                 jsonObject.delay = Convert.ToInt32(key);
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.Autopot = updatedJson;
                 // Persist changes
                 await _userSettingService.SaveChangesAsync();
+                txtAutopotDelay.Enabled = true;
             }
             else
             {
@@ -1280,7 +1310,30 @@ namespace RagnarokHotKeyInWinforms
             switchDelay.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
             switchDelay.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
             switchDelay.TextChanged += async (sender, e) => await txtSwitchDelayTextChanged(sender, e);
+            //
+            inSpammerKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
+            inSpammerKey.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
+            inSpammerKey.TextChanged += async (sender, e) => await txtInSpammerDelayTextChanged(sender, e);
 
+        }
+        private async Task txtInSpammerDelayTextChanged(object sender, EventArgs e)
+        {
+            var userToggleState = await ReturnToggleKey();
+            var jsonObject = JsonSerializer.Deserialize<ATKDefMode>(userToggleState.AtkDefMode);
+            Key key = (Key)Enum.Parse(typeof(Key), inSpammerKey.Text);
+
+            if (jsonObject != null)
+            {
+                jsonObject.keySpammer = key;
+                var updatedJson = JsonSerializer.Serialize(jsonObject);
+                userToggleState.AtkDefMode = updatedJson;
+                // Persist changes
+                await _userSettingService.SaveChangesAsync();
+            }
+            else
+            {
+                return;
+            }
         }
         private async Task txtSpammerDelayTextChanged(object sender, EventArgs e)
         {
@@ -1430,29 +1483,55 @@ namespace RagnarokHotKeyInWinforms
 
         private async void Form1_Load(object sender, EventArgs e)
         {
-            StartUpdate();//Start the update to get the game address
-            this.refreshProcessList(); // refresh the combobox and get the game
-
-            var credential = await _signIn.GoogleAlgorithm(GoogleConstants.GoogleApis);
-            var storedCreds = await _storedCredentialService.FindCredential(credential.Token.AccessToken);
-            var getBaseTable = await _baseTableService.SearchUser(storedCreds.UserEmail);
-            await _userSettingService.UpsertUser(getBaseTable.ReferenceCode, storedCreds.Name);
-
-            var name = await _storedCredentialService.FindCredential(credential.Token.AccessToken);
-            lblUserName.Text = $"Welcome back, {name.Name}";
+            try
+            {
 
 
-            await Retrieve();
-            await RetrieveAutopot();
-            await SkillTimerRetrieve();
-            await RetrieveStatusEffect();
-            await AhkRetrieval();
-            await RetrieveStuffAutobuffForm();
-            await updateUi();
-            await DisplayMacroSwitch();
-            await DisplayAttackDefendMode();
-            this.refreshProcessList();
+                progressBar1.Value = 0;
+                progressBar1.Maximum = 15;
+                lblLoadingSettings.Visible = true;
+
+                StartUpdate();
+                refreshProcessList();
+                progressBar1.Value++;
+
+                var credential = await _signIn.GoogleAlgorithm(GoogleConstants.GoogleApis);
+                progressBar1.Value++;
+
+                var storedCreds = await _storedCredentialService.FindCredential(credential.Token.AccessToken);
+                progressBar1.Value++;
+
+                var getBaseTable = await _baseTableService.SearchUser(storedCreds.UserEmail);
+                progressBar1.Value++;
+
+                await _userSettingService.UpsertUser(getBaseTable.ReferenceCode, storedCreds.Name);
+                progressBar1.Value++;
+
+                var name = await _storedCredentialService.FindCredential(credential.Token.AccessToken);
+                lblUserName.Text = $"Welcome back, {name.Name}";
+                progressBar1.Value++;
+
+                await Retrieve(); progressBar1.Value++;
+                await RetrieveAutopot(); progressBar1.Value++;
+                await SkillTimerRetrieve(); progressBar1.Value++;
+                await RetrieveStatusEffect(); progressBar1.Value++;
+                await AhkRetrieval(); progressBar1.Value++;
+                await RetrieveStuffAutobuffForm(); progressBar1.Value++;
+                await updateUi(); progressBar1.Value++;
+                await DisplayMacroSwitch(); progressBar1.Value++;
+                await DisplayAttackDefendMode(); progressBar1.Value++;
+                refreshProcessList();
+
+                progressBar1.Value = 0; // Ensure it completes
+                lblLoadingSettings.Visible = false;
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.Message);
+            }
         }
+
         private void StartUpdate()
         {
 

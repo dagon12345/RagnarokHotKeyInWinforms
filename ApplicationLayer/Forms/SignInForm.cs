@@ -71,16 +71,19 @@ namespace ApplicationLayer.Forms
             var userInfo = await _getUserInfo.GetUserInfo(credential.Token.AccessToken);
             //Search through stored credential database
             var searchUser = await _storedCredentialService.SearchUser(userInfo.Email);
+            var accessToken = credential.Token.AccessToken; 
             if (searchUser == null)
             {
-                var storedCredential = new StoredCredential();
-                var accessToken = credential.Token.AccessToken;
-                var lastTimeLogin = DateTime.Now;
-                var Name = userInfo.Name;
-                var Email = userInfo.Email;
+                var storedCredential = new StoredCredential
+                {
+                    AccessToken = accessToken,
+                    LastLoginTime = DateTime.Now,
+                    Name = userInfo.Name,
+                    UserEmail = userInfo.Email,
+                };
+
                 //save once captured
-                await _storedCredentialService.SaveCredentials(storedCredential, accessToken, lastTimeLogin,
-                    Name, Email);
+                await _storedCredentialService.SaveCredentials(storedCredential);
             }
             else
             {
@@ -95,8 +98,12 @@ namespace ApplicationLayer.Forms
             if (searchExisitingUser == null)
             {
                 //if not existed then add to database Email/ReferenceCode.
-                BaseTable baseTable = new BaseTable();
-                await _signIn.CreateUser(baseTable, userInfo.Email);
+                BaseTable baseTable = new BaseTable
+                {
+                    ReferenceCode = Guid.NewGuid(),
+                    Email = userInfo.Email,
+                };
+                await _signIn.CreateUser(baseTable);
             }
             //Open Form
             OpenMainMenuForm();

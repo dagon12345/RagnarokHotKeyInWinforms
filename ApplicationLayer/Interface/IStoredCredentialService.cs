@@ -9,7 +9,6 @@ namespace ApplicationLayer.Interface
         Task SaveChangesAsync();
         Task<StoredCredential> FindCredential(string accessToken);
         Task<StoredCredential> SearchUser(string userEmail);
-        Task SaveCredentials(StoredCredential credential, string accessToken,
-            DateTimeOffset lastTimeLogin, string Name, string Email);
+        Task SaveCredentials(StoredCredential credential);
     }
 }

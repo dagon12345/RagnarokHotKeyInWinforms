@@ -394,6 +394,7 @@
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.lblLoadingSettings = new System.Windows.Forms.Label();
             this.logListBox = new System.Windows.Forms.ListBox();
+            this.lblLogs = new System.Windows.Forms.Label();
             this.tabControlAutopot.SuspendLayout();
             this.tabPageAutopot.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtAutopotDelay)).BeginInit();
@@ -546,7 +547,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(271, 45);
+            this.label1.Location = new System.Drawing.Point(272, 118);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(84, 13);
             this.label1.TabIndex = 0;
@@ -555,7 +556,7 @@
             // characterName
             // 
             this.characterName.AutoSize = true;
-            this.characterName.Location = new System.Drawing.Point(272, 69);
+            this.characterName.Location = new System.Drawing.Point(272, 142);
             this.characterName.Name = "characterName";
             this.characterName.Size = new System.Drawing.Size(37, 13);
             this.characterName.TabIndex = 1;
@@ -565,7 +566,7 @@
             // 
             this.processCombobox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.processCombobox.FormattingEnabled = true;
-            this.processCombobox.Location = new System.Drawing.Point(270, 140);
+            this.processCombobox.Location = new System.Drawing.Point(272, 54);
             this.processCombobox.Name = "processCombobox";
             this.processCombobox.Size = new System.Drawing.Size(194, 21);
             this.processCombobox.TabIndex = 2;
@@ -574,7 +575,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(267, 124);
+            this.label2.Location = new System.Drawing.Point(272, 38);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(83, 13);
             this.label2.TabIndex = 3;
@@ -891,7 +892,7 @@
             // 
             // btnLogout
             // 
-            this.btnLogout.Location = new System.Drawing.Point(721, 5);
+            this.btnLogout.Location = new System.Drawing.Point(733, 6);
             this.btnLogout.Name = "btnLogout";
             this.btnLogout.Size = new System.Drawing.Size(75, 23);
             this.btnLogout.TabIndex = 12;
@@ -911,7 +912,7 @@
             // 
             // btnRefresh
             // 
-            this.btnRefresh.Location = new System.Drawing.Point(271, 167);
+            this.btnRefresh.Location = new System.Drawing.Point(272, 81);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(121, 23);
             this.btnRefresh.TabIndex = 13;
@@ -4303,16 +4304,26 @@
             // 
             this.logListBox.FormattingEnabled = true;
             this.logListBox.HorizontalScrollbar = true;
-            this.logListBox.Location = new System.Drawing.Point(528, 36);
+            this.logListBox.Location = new System.Drawing.Point(528, 75);
             this.logListBox.Name = "logListBox";
-            this.logListBox.Size = new System.Drawing.Size(268, 251);
+            this.logListBox.Size = new System.Drawing.Size(268, 212);
             this.logListBox.TabIndex = 16;
+            // 
+            // lblLogs
+            // 
+            this.lblLogs.AutoSize = true;
+            this.lblLogs.Location = new System.Drawing.Point(525, 54);
+            this.lblLogs.Name = "lblLogs";
+            this.lblLogs.Size = new System.Drawing.Size(30, 13);
+            this.lblLogs.TabIndex = 17;
+            this.lblLogs.Text = "Logs";
             // 
             // frm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(814, 798);
+            this.Controls.Add(this.lblLogs);
             this.Controls.Add(this.logListBox);
             this.Controls.Add(this.lblLoadingSettings);
             this.Controls.Add(this.progressBar1);
@@ -4870,6 +4881,7 @@
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label lblLoadingSettings;
         private System.Windows.Forms.ListBox logListBox;
+        private System.Windows.Forms.Label lblLogs;
     }
 }
 

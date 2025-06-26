@@ -393,6 +393,7 @@
             this.toolTipAutoBuff = new System.Windows.Forms.ToolTip(this.components);
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.lblLoadingSettings = new System.Windows.Forms.Label();
+            this.logListBox = new System.Windows.Forms.ListBox();
             this.tabControlAutopot.SuspendLayout();
             this.tabPageAutopot.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtAutopotDelay)).BeginInit();
@@ -4298,11 +4299,21 @@
             this.lblLoadingSettings.Text = "Loading settings......";
             this.lblLoadingSettings.Visible = false;
             // 
+            // logListBox
+            // 
+            this.logListBox.FormattingEnabled = true;
+            this.logListBox.HorizontalScrollbar = true;
+            this.logListBox.Location = new System.Drawing.Point(528, 36);
+            this.logListBox.Name = "logListBox";
+            this.logListBox.Size = new System.Drawing.Size(268, 251);
+            this.logListBox.TabIndex = 16;
+            // 
             // frm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(814, 798);
+            this.Controls.Add(this.logListBox);
             this.Controls.Add(this.lblLoadingSettings);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.btnRefresh);
@@ -4858,6 +4869,7 @@
         private System.Windows.Forms.Label label35;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Label lblLoadingSettings;
+        private System.Windows.Forms.ListBox logListBox;
     }
 }
 

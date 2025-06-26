@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using RagnarokHotKeyInWinforms;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -21,7 +22,9 @@ namespace ApplicationLayer.Forms
             _getUserInfo = getUserInfo;
             _signIn = signIn;
             _storedCredentialService = storedCredentialService;
+
         }
+
 
         private async void btnSignIn_Click(object sender, EventArgs e)
         {
@@ -43,8 +46,8 @@ namespace ApplicationLayer.Forms
             var lastLoginTime = searchCredential.LastLoginTime;
             var storedAccessToken = searchCredential.AccessToken;
 
-            //If the logged in time is less than 2 minutes then restore session else delete the existing login creds and sign in again.
-            if (!string.IsNullOrEmpty(storedAccessToken) && (DateTime.Now - lastLoginTime).TotalMinutes <= 30)  // Check if within 2 minutes
+            //If the logged in time is less than 30 minutes then restore session else delete the existing login creds and sign in again.
+            if (!string.IsNullOrEmpty(storedAccessToken) && (DateTime.Now - lastLoginTime).TotalMinutes <= 30)  // Check if within 30 minutes
             {
                 // Token is still valid, proceed to MainMenuForm
                 OpenMainMenuForm();
@@ -112,7 +115,7 @@ namespace ApplicationLayer.Forms
         }
         private void SignInForm_Load(object sender, EventArgs e)
         {
-         
+
         }
         private void OpenMainMenuForm()
         {

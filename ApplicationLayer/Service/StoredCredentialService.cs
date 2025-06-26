@@ -1,7 +1,10 @@
 ﻿using ApplicationLayer.Interface;
+using Domain.ErrorMessages;
 using Domain.Model.DataModels;
 using Infrastructure.Repositories.Interface;
+using Infrastructure.Service;
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ApplicationLayer.Service
@@ -15,25 +18,60 @@ namespace ApplicationLayer.Service
         }
         public async Task<StoredCredential> FindCredential(string accessToken)
         {
-            var findCredential = await _storedCredentialRepository.FindUserCredential(accessToken);
-            return findCredential;
+            try
+            {
+                var findCredential = await _storedCredentialRepository.FindUserCredential(accessToken);
+                return findCredential;
+            }
+            catch (Exception ex)
+            {
+                LoggerService.LogError(ex, $"{ErrorCodes.ProcessFailed}");
+                return null;
+            }
+
         }
 
         public async Task SaveCredentials(StoredCredential credential)
         {
-            _storedCredentialRepository.Add(credential);
-            await _storedCredentialRepository.SaveChangesAsync();
+            try
+            {
+                _storedCredentialRepository.Add(credential);
+                await _storedCredentialRepository.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                LoggerService.LogError(ex, $"{ErrorCodes.ProcessFailed}");
+            }
+
         }
 
         public async Task<StoredCredential> SearchUser(string userEmail)
         {
-            var searchUserEmail = await _storedCredentialRepository.SearchUser(userEmail);
-            return searchUserEmail;
+            try
+            {
+                var searchUserEmail = await _storedCredentialRepository.SearchUser(userEmail);
+                return searchUserEmail;
+            }
+            catch (Exception ex)
+            {
+                LoggerService.LogError(ex, $"{ErrorCodes.ProcessFailed}");
+                return null;
+            }
+
         }
 
         public async Task SaveChangesAsync()
         {
-            await _storedCredentialRepository.SaveChangesAsync();
+            try
+            {
+                await _storedCredentialRepository.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                LoggerService.LogError(ex, $"{ErrorCodes.ProcessFailed}");
+            }
+
         }
+
     }
 }

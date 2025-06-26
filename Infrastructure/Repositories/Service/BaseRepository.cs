@@ -1,6 +1,4 @@
-﻿using Infrastructure.Repositories.Interface;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories.Service
 {

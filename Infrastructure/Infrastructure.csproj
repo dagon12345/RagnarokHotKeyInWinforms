@@ -213,6 +213,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationDbContext.cs" />
+    <Compile Include="Model\LogEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\Interface\IBaseTableRepository.cs" />
     <Compile Include="Repositories\Interface\IStoredCredentialRepository.cs" />
@@ -221,6 +222,8 @@
     <Compile Include="Repositories\Service\BaseTableRepository.cs" />
     <Compile Include="Repositories\Service\StoredCredentialRepository.cs" />
     <Compile Include="Repositories\Service\UserSettingRepository.cs" />
+    <Compile Include="Service\LoggerService.cs" />
+    <Compile Include="Service\LogStore.cs" />
     <Compile Include="SshTunnelManager.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,12 +1,14 @@
 ﻿using ApplicationLayer.Interface;
 using Domain.Constants;
+using Domain.ErrorMessages;
 using Domain.Model.DataModels;
 using Infrastructure.Repositories.Interface;
+using Infrastructure.Service;
 using Newtonsoft.Json;
 using RagnarokHotKeyInWinforms;
-using RagnarokHotKeyInWinforms.Model;
 using System;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using static RagnarokHotKeyInWinforms.Model.ProfileSingleton;
 
@@ -31,49 +33,82 @@ namespace ApplicationLayer.Service
 
         public async Task<UserSettings> SearchByReferenceCode(Guid referenceCode)
         {
-            var searchedUser = await _userSettingRepository.FindUserReferenceCode(referenceCode);
-            return searchedUser;
+            try
+            {
+                var searchedUser = await _userSettingRepository.FindUserReferenceCode(referenceCode);
+                return searchedUser;
+            }
+            catch (Exception ex)
+            {
+                LoggerService.LogError(ex, $"{ErrorCodes.ProcessFailed}");
+                return null;
+            }
+
         }
 
         public async Task UpsertUser(Guid referenceCode, string Name)
         {
-            //This File is located into directory bin/Debug/Profile/Default.json
-            string json = File.ReadAllText(AppConfig.ProfileFolder + RagnarokConstants.DefaultJson);
-            dynamic jsonData = JsonConvert.DeserializeObject<dynamic>(json);
-
-            var userSettings = await _userSettingRepository.FindUserReferenceCode(referenceCode);
-            //If none is search then create a new user setting
-            if(userSettings == null)
+            try
             {
-                userSettings = new UserSettings
+                //This File is located into directory bin/Debug/Profile/Default.json
+                string json = File.ReadAllText(AppConfig.ProfileFolder + RagnarokConstants.DefaultJson);
+                dynamic jsonData = JsonConvert.DeserializeObject<dynamic>(json);
+
+                var userSettings = await _userSettingRepository.FindUserReferenceCode(referenceCode);
+                //If none is search then create a new user setting
+                if (userSettings == null)
                 {
-                    ReferenceCode = referenceCode,
-                    Name = Name,
-                    UserPreferences = JsonConvert.SerializeObject(profileConfiguration.UserPreferences),
-                    Ahk = JsonConvert.SerializeObject(profileConfiguration.AHK),
-                    Autopot = JsonConvert.SerializeObject(profileConfiguration.Autopot),
-                    AutopotYgg = JsonConvert.SerializeObject(profileConfiguration.AutopotYgg),
-                    StatusRecovery = JsonConvert.SerializeObject(profileConfiguration.StatusRecovery),
-                    AutoRefreshSpammer = JsonConvert.SerializeObject(profileConfiguration.AutoRefreshSpammer),
-                    Autobuff = JsonConvert.SerializeObject(profileConfiguration.AutoBuff),
-                    SongMacro = JsonConvert.SerializeObject(profileConfiguration.SongMacro),
-                    MacroSwitch = JsonConvert.SerializeObject(profileConfiguration.MacroSwitch),
-                    AtkDefMode = JsonConvert.SerializeObject(profileConfiguration.AtkDefMode),
-                };
-                _userSettingRepository.Add(userSettings);
-                await _userSettingRepository.SaveChangesAsync();
+                    userSettings = new UserSettings
+                    {
+                        ReferenceCode = referenceCode,
+                        Name = Name,
+                        UserPreferences = JsonConvert.SerializeObject(profileConfiguration.UserPreferences),
+                        Ahk = JsonConvert.SerializeObject(profileConfiguration.AHK),
+                        Autopot = JsonConvert.SerializeObject(profileConfiguration.Autopot),
+                        AutopotYgg = JsonConvert.SerializeObject(profileConfiguration.AutopotYgg),
+                        StatusRecovery = JsonConvert.SerializeObject(profileConfiguration.StatusRecovery),
+                        AutoRefreshSpammer = JsonConvert.SerializeObject(profileConfiguration.AutoRefreshSpammer),
+                        Autobuff = JsonConvert.SerializeObject(profileConfiguration.AutoBuff),
+                        SongMacro = JsonConvert.SerializeObject(profileConfiguration.SongMacro),
+                        MacroSwitch = JsonConvert.SerializeObject(profileConfiguration.MacroSwitch),
+                        AtkDefMode = JsonConvert.SerializeObject(profileConfiguration.AtkDefMode),
+                    };
+                    _userSettingRepository.Add(userSettings);
+                    await _userSettingRepository.SaveChangesAsync();
+                }
             }
+            catch (Exception ex)
+            {
+                LoggerService.LogError(ex, $"{ErrorCodes.ProcessFailed}");
+            }
+           
         }
 
         public async Task<UserSettings> SelectUserPreference(Guid referenceCode)
         {
-            var userPreference = await _userSettingRepository.SelectUserPreference(referenceCode);
-            return userPreference;
+            try
+            {
+                var userPreference = await _userSettingRepository.SelectUserPreference(referenceCode);
+                return userPreference;
+            }
+            catch (Exception ex)
+            {
+                LoggerService.LogError(ex, $"{ErrorCodes.ProcessFailed}");
+                return null;
+            }
+
         }
 
         public async Task SaveChangesAsync()
         {
-            await _userSettingRepository.SaveChangesAsync();
+            try
+            {
+                await _userSettingRepository.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                LoggerService.LogError(ex, $"{ErrorCodes.ProcessFailed}");
+            }
         }
     }
 }

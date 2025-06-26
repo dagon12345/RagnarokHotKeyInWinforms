@@ -1,6 +1,10 @@
 ﻿using ApplicationLayer.Interface;
+using Domain.ErrorMessages;
 using Domain.Model.DataModels;
 using Infrastructure.Repositories.Interface;
+using Infrastructure.Service;
+using System;
+using System.Net.NetworkInformation;
 using System.Threading.Tasks;
 
 namespace ApplicationLayer.Service
@@ -14,8 +18,18 @@ namespace ApplicationLayer.Service
         }
         public async Task<BaseTable> SearchUser(string email)
         {
-            var baseTable = await _baseTableRepository.SearchUsers(email);
-            return baseTable;
+            try
+            {
+                var baseTable = await _baseTableRepository.SearchUsers(email);
+                return baseTable;
+            }
+            catch (Exception ex)
+            {
+
+                LoggerService.LogError(ex, $"{ErrorCodes.ProcessFailed}");
+                return null;
+            }
+
         }
     }
 }

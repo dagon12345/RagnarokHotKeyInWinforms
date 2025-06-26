@@ -1,9 +1,11 @@
 ﻿using ApplicationLayer.Forms;
 using ApplicationLayer.Interface;
 using ApplicationLayer.Service;
+using ApplicationLayer.Utilities;
 using Infrastructure;
 using Infrastructure.Repositories.Interface;
 using Infrastructure.Repositories.Service;
+using Infrastructure.Service;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,6 +17,8 @@ namespace RagnarokHotKeyInWinforms
 {
     static class Program
     {
+        public class LoggingAnchor { }
+
 
         /// <summary>
         /// The main entry point for the application.
@@ -25,31 +29,68 @@ namespace RagnarokHotKeyInWinforms
         [STAThread]
         static void Main()
         {
-
-            AppConfig.Load();
-            using (var tunnel = new SshTunnelManager(AppConfig.SshSettings, AppConfig.DatabaseSettings))
+            bool alreadyRunning = false;
+            using (var mutex = new System.Threading.Mutex(true, "MyUniqueAppNameMutex", out alreadyRunning))
             {
-                tunnel.Start();
+                if (!alreadyRunning)
+                {
+                    MessageBox.Show("The program is already running.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
 
-                var connStr = $"Server=127.0.0.1;Port={AppConfig.DatabaseSettings.LocalPort};Database={AppConfig.DatabaseSettings.Name};" +
-                      $"Uid={AppConfig.DatabaseSettings.User};Pwd={AppConfig.DatabaseSettings.Password};";
+                AppConfig.Load();
+                using (var tunnel = new SshTunnelManager(AppConfig.SshSettings, AppConfig.DatabaseSettings))
+                {
+                    try
+                    {
+                        tunnel.Start();
+                    }
+                    catch (Exception ex)
+                    {
+                        LoggerService.LogError(ex, "Failed to start SSH tunnel.");
+                        MessageBox.Show("Unable to establish connection. Another instance may be running.", "Startup Error");
+                        return;
+                    }
 
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
 
-                // Create the host
-                var host = CreateHostBuilder(connStr).Build();
-                ServiceProvider = host.Services;
+                    var connStr = $"Server=127.0.0.1;Port={AppConfig.DatabaseSettings.LocalPort};Database={AppConfig.DatabaseSettings.Name};" +
+                          $"Uid={AppConfig.DatabaseSettings.User};Pwd={AppConfig.DatabaseSettings.Password};";
 
-                // Resolve the IGetUserInfo service
-                var getUserInfo = ServiceProvider.GetRequiredService<IGetUserInfo>();
-                var userSignIn = ServiceProvider.GetRequiredService<ISignIn>();
-                var userCredentials = ServiceProvider.GetRequiredService<IStoredCredentialService>();
-                // Run the form
-                Application.Run(new SignInForm(getUserInfo, userSignIn, userCredentials));
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
 
+                    // Create the host
+                    var host = CreateHostBuilder(connStr).Build();
+                    ServiceProvider = host.Services;
+
+                    #region Error Handling
+                    // Configure the logger globally
+                    var logger = ServiceProvider.GetRequiredService<ILogger<LoggingAnchor>>();
+                    LoggerService.Configure(logger);
+
+                    // Optional: hook global exception handling
+                    Application.ThreadException += (s, e) =>
+                        LoggerService.LogError(e.Exception, "Unhandled UI exception");
+
+                    AppDomain.CurrentDomain.UnhandledException += (s, e) =>
+                        LoggerService.LogError(e.ExceptionObject as Exception, "Unhandled non-UI exception");
+                    #endregion
+
+                    // Resolve the IGetUserInfo service
+                    var getUserInfo = ServiceProvider.GetRequiredService<IGetUserInfo>();
+                    var userSignIn = ServiceProvider.GetRequiredService<ISignIn>();
+                    var userCredentials = ServiceProvider.GetRequiredService<IStoredCredentialService>();
+
+
+                    // Run the form
+                    var signIn = new SignInForm(getUserInfo, userSignIn, userCredentials);
+                    FormManager.SignInInstance = signIn;
+                    Application.Run(signIn);
+
+                }
             }
 
+            
 
 
         }

@@ -2,9 +2,9 @@
 using ApplicationLayer.Forms;
 using ApplicationLayer.Interface;
 using Domain.Constants;
-using Domain.ErrorMessages;
 using Domain.Model;
 using Domain.Model.DataModels;
+using Infrastructure.Service;
 using Microsoft.Extensions.DependencyInjection;
 using RagnarokHotKeyInWinforms.Model;
 using RagnarokHotKeyInWinforms.Utilities;
@@ -44,6 +44,12 @@ namespace RagnarokHotKeyInWinforms
             this.subject.Attach(this);
             InitializeComponent();
             KeyboardHook.Enable();
+
+            #region Logger Configuration
+            LogStore.Entries.ListChanged += (s, e) => RefreshLogList();
+            RefreshLogList();
+            #endregion
+
             #region Interfaces
             _storedCredentialService = storedCredentialService;
             _signIn = signIn;
@@ -117,42 +123,28 @@ namespace RagnarokHotKeyInWinforms
         }
         private async Task onStatusToggleKeyChange(object sender, EventArgs e)
         {
-            try
+            var toggleStateValue = await ReturnToggleKey();
+            //Get last key from profile before update it in json
+            Keys currentToggleKey = (Keys)Enum.Parse(typeof(Keys), txtStatusToggleKey.Text);
+            KeyboardHook.Remove(lastKey);
+            KeyboardHook.Add(currentToggleKey, new KeyboardHook.KeyPressed(this.toggleStatus));
+
+
+            // Deserialize JSON to update value
+            var jsonObject = JsonSerializer.Deserialize<UserPreferences>(toggleStateValue.UserPreferences);
+            if (jsonObject != null)
             {
-
-
-                txtStatusToggleKey.Enabled = false;
-                var toggleStateValue = await ReturnToggleKey();
-                //Get last key from profile before update it in json
-                Keys currentToggleKey = (Keys)Enum.Parse(typeof(Keys), txtStatusToggleKey.Text);
-                KeyboardHook.Remove(lastKey);
-                KeyboardHook.Add(currentToggleKey, new KeyboardHook.KeyPressed(this.toggleStatus));
-
-
-                // Deserialize JSON to update value
-                var jsonObject = JsonSerializer.Deserialize<UserPreferences>(toggleStateValue.UserPreferences);
-                if (jsonObject != null)
-                {
-                    jsonObject.toggleStateKey = currentToggleKey.ToString(); // Update key
-                    var updatedJson = JsonSerializer.Serialize(jsonObject);
-                    toggleStateValue.UserPreferences = updatedJson;
-                    // Persist changes
-                    await _userSettingService.SaveChangesAsync();
-                    txtStatusToggleKey.Enabled = true;
-                }
-                else
-                {
-                    return;
-                }
-                lastKey = currentToggleKey; //Refresh lastKey to update 
-
+                jsonObject.toggleStateKey = currentToggleKey.ToString(); // Update key
+                var updatedJson = JsonSerializer.Serialize(jsonObject);
+                toggleStateValue.UserPreferences = updatedJson;
+                // Persist changes
+                await _userSettingService.SaveChangesAsync();
             }
-            catch (Exception)
+            else
             {
-
-                MessageBox.Show(ErrorCodes.UnableToUpdate, ErrorCodes.TryAgain, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                txtStatusToggleKey.Enabled = true;
+                return;
             }
+            lastKey = currentToggleKey; //Refresh lastKey to update 
         }
         #endregion ToggleApplicationStateFunction
         #region AutopotSettings(Triggered with Start() method)
@@ -196,33 +188,22 @@ namespace RagnarokHotKeyInWinforms
         #region HpTexAndPercent Autopot
         private async Task onHpTextChange(object sender, EventArgs e)
         {
-            try
+            var userToggleState = await ReturnToggleKey();
+            var jsonObject = JsonSerializer.Deserialize<Autopot>(userToggleState.Autopot);
+            Key key = (Key)Enum.Parse(typeof(Key), txtHpKey.Text);
+
+            if (jsonObject != null)
             {
-
-                txtHpKey.Enabled = false;
-                var userToggleState = await ReturnToggleKey();
-                var jsonObject = JsonSerializer.Deserialize<Autopot>(userToggleState.Autopot);
-                Key key = (Key)Enum.Parse(typeof(Key), txtHpKey.Text);
-
-                if (jsonObject != null)
-                {
-                    jsonObject.hpKey = key;
-                    jsonObject.GetActionName();
-                    var updatedJson = JsonSerializer.Serialize(jsonObject);
-                    userToggleState.Autopot = updatedJson;
-                    // Persist changes
-                    await _userSettingService.SaveChangesAsync();
-                    txtHpKey.Enabled = true;
-                }
-                else
-                {
-                    return;
-                }
+                jsonObject.hpKey = key;
+                jsonObject.GetActionName();
+                var updatedJson = JsonSerializer.Serialize(jsonObject);
+                userToggleState.Autopot = updatedJson;
+                // Persist changes
+                await _userSettingService.SaveChangesAsync();
             }
-            catch (Exception)
+            else
             {
-                MessageBox.Show(ErrorCodes.UnableToUpdate, ErrorCodes.TryAgain, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                txtHpKey.Enabled = true;
+                return;
             }
         }
         private async Task txtHPpctTextChanged(object sender, EventArgs e)
@@ -292,7 +273,6 @@ namespace RagnarokHotKeyInWinforms
 
         private async Task txtAutopotDelayTextChanged(object sender, EventArgs e)
         {
-            txtAutopotDelay.Enabled = false;
             var userToggleState = await ReturnToggleKey();
             var jsonObject = JsonSerializer.Deserialize<Autopot>(userToggleState.Autopot);
             Key key = (Key)Enum.Parse(typeof(Key), txtAutopotDelay.Text);
@@ -305,7 +285,6 @@ namespace RagnarokHotKeyInWinforms
                 userToggleState.Autopot = updatedJson;
                 // Persist changes
                 await _userSettingService.SaveChangesAsync();
-                txtAutopotDelay.Enabled = true;
             }
             else
             {
@@ -1439,6 +1418,21 @@ namespace RagnarokHotKeyInWinforms
         }
         #endregion
         #region Private Methods
+        private void RefreshLogList()
+        {
+            logListBox.BeginUpdate();
+            logListBox.Items.Clear();
+
+            foreach (var entry in LogStore.SortedDescending)
+            {
+                logListBox.Items.Add(entry.ToString());
+            }
+
+            logListBox.EndUpdate();
+            if (logListBox.Items.Count > 0)
+                logListBox.SelectedIndex = 0;
+        }
+
         private async Task<T> GetDeserializedObject<T>(Func<Task<string>> getJsonData)
         {
             var jsonData = await getJsonData();
@@ -1642,7 +1636,7 @@ namespace RagnarokHotKeyInWinforms
             var credential = await _signIn.GoogleAlgorithm(GoogleConstants.GoogleApis);
             var name = await _storedCredentialService.FindCredential(credential.Token.AccessToken);
             var searchUser = await _storedCredentialService.SearchUser(name.UserEmail);
-            searchUser.LastLoginTime = searchUser.LastLoginTime.AddMinutes(-10);
+            searchUser.LastLoginTime = searchUser.LastLoginTime.AddHours(-1);//Minus One hour so that it will surely go to the google auth again
             await _storedCredentialService.SaveChangesAsync();
 
             this.Hide();//Hide the form then show the signin form

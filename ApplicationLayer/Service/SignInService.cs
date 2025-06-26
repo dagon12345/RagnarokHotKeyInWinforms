@@ -1,9 +1,11 @@
 ﻿using ApplicationLayer.Interface;
 using Domain.Constants;
+using Domain.ErrorMessages;
 using Domain.Model.DataModels;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Util.Store;
 using Infrastructure.Repositories.Interface;
+using Infrastructure.Service;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,35 +22,62 @@ namespace ApplicationLayer.Service
 
         public async Task CreateUser(BaseTable baseTable)
         {
-            _baseTableRepository.Add(baseTable);
-            await _baseTableRepository.SaveChangesAsync();
+            try
+            {
+                _baseTableRepository.Add(baseTable);
+                await _baseTableRepository.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                LoggerService.LogError(ex, $"{ErrorCodes.ProcessFailed}");
+            }
+
         }
 
         public async Task<UserCredential> GoogleAlgorithm(string googleApisFolder)
         {
-            var credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
-          new ClientSecrets
-          {
-              ClientId = GoogleConstants.ClientId,
-              ClientSecret = GoogleConstants.ClientSecret
-          },
-           new[] { "email", "profile" },
-           "user",
-           CancellationToken.None,
-           new FileDataStore(googleApisFolder));
+            try
+            {
+                var credential = await GoogleWebAuthorizationBroker.AuthorizeAsync(
+                new ClientSecrets
+                {
+                    ClientId = GoogleConstants.ClientId,
+                    ClientSecret = GoogleConstants.ClientSecret
+                },
+                 new[] { "email", "profile" },
+                 "user",
+                 CancellationToken.None,
+                 new FileDataStore(googleApisFolder));
 
-            return credential;
+                return credential;
+            }
+            catch (Exception ex)
+            {
+                LoggerService.LogError(ex, $"{ErrorCodes.ProcessFailed}");
+                return null;
+            }
+
         }
 
         public async Task<string> SearchExistingUser(string email)
         {
-            var searchedUser = await _baseTableRepository.SearchUsers(email);
-            if (searchedUser == null)
+            try
             {
+                var searchedUser = await _baseTableRepository.SearchUsers(email);
+                if (searchedUser == null)
+                {
+                    return null;
+                }
+                var userEmail = searchedUser.Email;
+                return userEmail;
+            }
+            catch (Exception ex)
+            {
+                LoggerService.LogError(ex, $"{ErrorCodes.ProcessFailed}");
                 return null;
             }
-            var userEmail = searchedUser.Email;
-            return userEmail;
+
+
         }
 
     }

@@ -1,11 +1,19 @@
-﻿using ApplicationLayer.Interface;
+﻿using ApplicationLayer.Dto;
+using ApplicationLayer.Interface;
+using ApplicationLayer.Service;
+using ApplicationLayer.Validator;
 using Domain.Constants;
 using Domain.Model.DataModels;
 using Domain.Security;
+using FluentResults;
+using Infrastructure.Helpers;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 using RagnarokHotKeyInWinforms;
 using System;
+using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -16,22 +24,24 @@ namespace ApplicationLayer.Forms
         private readonly IGetUserInfo _getUserInfo;
         private readonly ISignIn _signIn;
         private readonly IStoredCredentialService _storedCredentialService;
-        public SignInForm(IGetUserInfo getUserInfo, ISignIn signIn, IStoredCredentialService storedCredentialService)
+        private readonly LoginService _loginService;
+        public SignInForm(IGetUserInfo getUserInfo, ISignIn signIn, IStoredCredentialService storedCredentialService, LoginService loginService)
         {
             InitializeComponent();
             _getUserInfo = getUserInfo;
             _signIn = signIn;
             _storedCredentialService = storedCredentialService;
-
+            _loginService = loginService;
         }
 
 
         private async void btnSignIn_Click(object sender, EventArgs e)
         {
-            await CheckCredentialsAsync();
-            await SignIn();
+            bool fromLogin = false;
+            await CheckCredentialsAsync(fromLogin);
+            await SignIn(fromLogin);
         }
-        private async Task CheckCredentialsAsync()
+        private async Task CheckCredentialsAsync(bool fromLogin)
         {
             // Set the token file path based on your application name
             var tokenFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -47,10 +57,10 @@ namespace ApplicationLayer.Forms
             var storedAccessToken = searchCredential.AccessToken;
 
             //If the logged in time is less than 30 minutes then restore session else delete the existing login creds and sign in again.
-            if (!string.IsNullOrEmpty(storedAccessToken) && (DateTime.UtcNow - lastLoginTime).TotalMinutes <= 30)  // Check if within 30 minutes
+            if (!string.IsNullOrEmpty(storedAccessToken) && (DateTime.UtcNow - lastLoginTime).TotalMinutes <= 10)  // Check if within 30 minutes
             {
                 // Token is still valid, proceed to MainMenuForm
-                OpenMainMenuForm();
+                OpenMainMenuForm(searchCredential.UserEmail);
             }
             // Delete the token response file if it exists
             else if (File.Exists(tokenFilePath))
@@ -66,7 +76,7 @@ namespace ApplicationLayer.Forms
                 }
             }
         }
-        private async Task SignIn()
+        private async Task SignIn(bool fromLogin)
         {
 
             var credential = await _signIn.GoogleAlgorithm(GoogleConstants.GoogleApis);
@@ -89,6 +99,15 @@ namespace ApplicationLayer.Forms
 
                 //save once captured
                 await _storedCredentialService.SaveCredentials(storedCredential);
+                //Open the form once saved
+                await OpenRegisterFormCreatePasswordAsync(storedCredential);
+
+            }
+            //If the search user is not null buts its value salt and password has was null then we open the register form for password creating.
+            else if(searchUser.Salt.IsNullOrEmpty() && searchUser.PasswordHash.IsNullOrEmpty())
+            {
+                await OpenRegisterFormCreatePasswordAsync(searchUser);
+                return;
             }
             else
             {
@@ -111,22 +130,113 @@ namespace ApplicationLayer.Forms
                 await _signIn.CreateUser(baseTable);
             }
             //Open Form
-            OpenMainMenuForm();
+            OpenMainMenuForm(searchUser.UserEmail);
 
             //NOTE: If the user cannot sign in then delete the folder inside the directory C:\Users\(NameOfPc)\AppData\Roaming
         }
+
+        private async Task OpenRegisterFormCreatePasswordAsync(StoredCredential user)
+        {
+            //After registration open the confirmation form
+            using (var signInRegistrationForm = new SignInRegsitrationForm()) // TextBox + OK button
+            {
+                Result result = new Result();
+
+               // registerForm.ShowDialog();
+                signInRegistrationForm.txtName.Text = user.Name;
+                signInRegistrationForm.txtName.ReadOnly = true;
+                signInRegistrationForm.txtEmail.Text = user.UserEmail;
+                signInRegistrationForm.txtEmail.ReadOnly = true;
+
+                if (signInRegistrationForm.ShowDialog() == DialogResult.OK)
+                {
+                   
+                    var salt = SecurityHelper.GenerateSalt();
+                    var hash = SecurityHelper.HashPassword(signInRegistrationForm.txtPassword.Text, salt);
+
+                    //Set the password hashing and salting
+                    user.Salt = salt;
+                    user.PasswordHash = hash;
+                    //Presist changes
+
+                    await _storedCredentialService.SaveChangesAsync();
+
+                    if (result.IsSuccess)
+                    {
+                        MessageBox.Show(result.Successes.FirstOrDefault()?.Message ?? "Registered successfully. Login now or click sign in.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        MessageBox.Show(result.Errors.FirstOrDefault()?.Message ?? "Something went wrong.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+
+                }
+                else
+                {
+                    //If the confirmation cancelled
+                    MessageBox.Show(result.Errors.FirstOrDefault()?.Message ?? "The registration cancelled", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
+        }
+
+        public static class Theme
+        {
+            public static Color BackgroundColor => Color.FromArgb(4, 47, 102);
+            public static Color PrimaryColor => Color.FromArgb(33, 150, 243); 
+            public static Color AccentColor => Color.FromArgb(255, 87, 34);      
+            public static Color TextColor => Color.White;
+            public static Color ButtonBackGroundColor => Color.FromArgb(25, 121, 169);
+
+            //Font element
+            public static Font DefaultFont => new Font("Segoe UI", 10, FontStyle.Regular);
+            public static Font BoldFont => new Font("Segoe UI Semibold", 9, FontStyle.Bold);
+        }
+
+        private void ApplyDarkBlueTheme()
+        {
+            this.BackColor = Color.FromArgb(23, 32, 42); // Deep navy background
+            txtPassword.UseSystemPasswordChar = true;
+            lblHeader.Left = (this.ClientSize.Width - lblHeader.Width) / 2;
+            foreach (Control ctrl in this.Controls)
+            {
+                ctrl.ForeColor = Color.White;
+
+                if (ctrl is TextBox tb)
+                {
+                    tb.BackColor = Color.FromArgb(33, 47, 61);
+                    tb.ForeColor = Color.White;
+                    tb.BorderStyle = BorderStyle.FixedSingle;
+
+                }
+
+                if (ctrl is Button btn)
+                {
+                    btn.BackColor = Color.FromArgb(41, 128, 185);
+                    btn.ForeColor = Color.White;
+                    btn.FlatStyle = FlatStyle.Flat;
+                    btn.FlatAppearance.BorderSize = 0;
+                    btn.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+                }
+            }
+        }
+
+
         private void SignInForm_Load(object sender, EventArgs e)
         {
+            ApplyDarkBlueTheme();
 
         }
-        private void OpenMainMenuForm()
+        private void OpenMainMenuForm(string email)
         {
             this.Hide(); // Hide the LoginForm
             var storedCredential = Program.ServiceProvider.GetRequiredService<IStoredCredentialService>();
             var userSignIn = Program.ServiceProvider.GetRequiredService<ISignIn>();
             var userSettings = Program.ServiceProvider.GetRequiredService<IUserSettingService>();
             var baseTable = Program.ServiceProvider.GetRequiredService<IBaseTableService>();
-            frm_Main mainMenuForm = new frm_Main(storedCredential, userSignIn, userSettings, baseTable);
+            var hashHer = Program.ServiceProvider.GetRequiredService<IHasher>();
+
+            frm_Main mainMenuForm = new frm_Main(storedCredential, userSignIn, userSettings, baseTable, hashHer, email);
             mainMenuForm.ShowDialog();
         }
 
@@ -144,6 +254,33 @@ namespace ApplicationLayer.Forms
 
             RegisterForm registerFormOpen = new RegisterForm(registerService, userCredentialsService, hashHer, emailService);
             registerFormOpen.ShowDialog();
+        }
+
+        private async void btnLogin_Click(object sender, EventArgs e)
+        {
+            var dto = new LoginDto
+            {
+                Email = txtEmail.Text,
+                Password = txtPassword.Text,
+            };
+            // Instantiate validator (or inject via DI)
+            var validator = new LoginDtoValidator();
+            var validationResult = validator.Validate(dto);
+
+            if (!validationResult.IsValid)
+            {
+                var errorMessages = string.Join("\n", validationResult.Errors.Select(err => $"• {err.ErrorMessage}"));
+                MessageBox.Show(errorMessages, "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var login = await _loginService.Login(dto.Email, dto.Password);
+            if(login)
+            {
+                OpenMainMenuForm(dto.Email);
+                return;
+            }
+            MessageBox.Show("Invalid login credentials", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

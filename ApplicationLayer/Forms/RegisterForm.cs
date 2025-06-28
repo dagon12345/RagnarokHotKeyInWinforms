@@ -77,7 +77,7 @@ namespace ApplicationLayer.Forms
         {
             var user =  await _storedCredentialsService.SearchUser(email);
             if (user == null) return null;
-            if (user.UserEmail == email && user.IsEmailConfirmed == true)
+            if (user.UserEmail == email && user.IsEmailConfirmed == true && user.PasswordHash != null && user.Salt != null)
             {
                 MessageBox.Show("This user already registered", "Already exist", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return user;    

@@ -1,11 +1,9 @@
 ﻿using _4RTools.Model;
 using ApplicationLayer.Forms;
 using ApplicationLayer.Interface;
-using ApplicationLayer.Service;
 using Domain.Constants;
 using Domain.Model;
 using Domain.Model.DataModels;
-using Domain.Security;
 using Infrastructure.Service;
 using Microsoft.Extensions.DependencyInjection;
 using RagnarokHotKeyInWinforms.Model;
@@ -39,9 +37,9 @@ namespace RagnarokHotKeyInWinforms
         private readonly ISignIn _signIn;
         private readonly IUserSettingService _userSettingService;
         private readonly IBaseTableService _baseTableService;
-        private string _userEmail;
+
         public frm_Main(IStoredCredentialService storedCredentialService, ISignIn signIn,
-            IUserSettingService userSettingService, IBaseTableService baseTableService, IHasher hasher, string userEmail)
+            IUserSettingService userSettingService, IBaseTableService baseTableService)
         {
             this.subject.Attach(this);
             InitializeComponent();
@@ -59,11 +57,7 @@ namespace RagnarokHotKeyInWinforms
             _baseTableService = baseTableService;
             #endregion
 
-            #region Passed DataTypes
-            _userEmail = userEmail;
-            #endregion
             this.Text = AppConfig.Name + " - " + AppConfig.Version; // Window title
-
         }
 
         #region ToggleApplicationStateFunction (No Start Method)
@@ -109,7 +103,9 @@ namespace RagnarokHotKeyInWinforms
         //Get the reference code of the user
         private async Task<UserSettings> ReturnToggleKey()
         {
-            var getBaseTable = await _baseTableService.SearchUser(_userEmail);
+            var credential = await _signIn.GoogleAlgorithm(GoogleConstants.GoogleApis);
+            var storedCreds = await _storedCredentialService.FindCredential(credential.Token.AccessToken);
+            var getBaseTable = await _baseTableService.SearchUser(storedCreds.UserEmail);
             var toggleStateValue = await _userSettingService.SelectUserPreference(getBaseTable.ReferenceCode);
             return toggleStateValue;
         }
@@ -1491,17 +1487,21 @@ namespace RagnarokHotKeyInWinforms
                 refreshProcessList();
                 progressBar1.Value++;
 
-                var storedCreds = await _storedCredentialService.SearchUser(_userEmail);
+                var credential = await _signIn.GoogleAlgorithm(GoogleConstants.GoogleApis);
                 progressBar1.Value++;
 
-                var getBaseTable = await _baseTableService.SearchUser(_userEmail);
+                var storedCreds = await _storedCredentialService.FindCredential(credential.Token.AccessToken);
+                progressBar1.Value++;
+
+                var getBaseTable = await _baseTableService.SearchUser(storedCreds.UserEmail);
                 progressBar1.Value++;
 
                 //If the user is new to the app automatically created a setting to the user.
                 await _userSettingService.UpsertUser(getBaseTable.ReferenceCode, storedCreds.Name);
                 progressBar1.Value++;
 
-                lblUserName.Text = $"Welcome back, {storedCreds.Name}";
+                var name = await _storedCredentialService.FindCredential(credential.Token.AccessToken);
+                lblUserName.Text = $"Welcome back, {name.Name}";
                 progressBar1.Value++;
 
                 await Retrieve(); progressBar1.Value++;
@@ -1632,7 +1632,9 @@ namespace RagnarokHotKeyInWinforms
         private async void btnLogout_Click(object sender, EventArgs e)
         {
             //Set the LastLoginTime to munis 10 mins so we can trigger the function deleting of google current sign in
-            var searchUser = await _storedCredentialService.SearchUser(_userEmail);
+            var credential = await _signIn.GoogleAlgorithm(GoogleConstants.GoogleApis);
+            var name = await _storedCredentialService.FindCredential(credential.Token.AccessToken);
+            var searchUser = await _storedCredentialService.SearchUser(name.UserEmail);
             searchUser.LastLoginTime = searchUser.LastLoginTime.AddHours(-1);//Minus One hour so that it will surely go to the google auth again
             await _storedCredentialService.SaveChangesAsync();
 
@@ -1640,8 +1642,7 @@ namespace RagnarokHotKeyInWinforms
             var getUserInfoInterface = Program.ServiceProvider.GetRequiredService<IGetUserInfo>();
             var userSignIn = Program.ServiceProvider.GetRequiredService<ISignIn>();
             var storedCredential = Program.ServiceProvider.GetRequiredService<IStoredCredentialService>();
-            var loginService = Program.ServiceProvider.GetRequiredService<LoginService>();
-            SignInForm sf = new SignInForm(getUserInfoInterface, userSignIn, storedCredential, loginService);
+            SignInForm sf = new SignInForm(getUserInfoInterface, userSignIn, storedCredential);
             sf.ShowDialog();
         }
         private void btnRefresh_Click(object sender, EventArgs e)

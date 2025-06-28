@@ -81,7 +81,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppConfig.cs" />
+    <Compile Include="Dto\LoginDto.cs" />
     <Compile Include="Dto\RegisterUserDto.cs" />
+    <Compile Include="Dto\SignInRegistrationDto.cs" />
     <Compile Include="Forms\AtkDefForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -118,6 +120,12 @@
     <Compile Include="Forms\SignInForm.Designer.cs">
       <DependentUpon>SignInForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\SignInRegsitrationForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SignInRegsitrationForm.Designer.cs">
+      <DependentUpon>SignInRegsitrationForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Interface\IBaseTableService.cs" />
     <Compile Include="Interface\IEmailService.cs" />
     <Compile Include="Interface\IGetUserInfo.cs" />
@@ -146,7 +154,9 @@
     <Compile Include="Service\StoredCredentialService.cs" />
     <Compile Include="Service\UserSettingService.cs" />
     <Compile Include="Utilities\FormManager.cs" />
+    <Compile Include="Validator\LoginDtoValidator.cs" />
     <Compile Include="Validator\RegisterUserDtoValidator.cs" />
+    <Compile Include="Validator\SignInRegistrationDtoValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\AtkDefForm.resx">
@@ -167,6 +177,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SignInForm.resx">
       <DependentUpon>SignInForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SignInRegsitrationForm.resx">
+      <DependentUpon>SignInRegsitrationForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

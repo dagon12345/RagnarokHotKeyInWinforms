@@ -44,10 +44,6 @@ namespace ApplicationLayer.Validator
             !string.IsNullOrEmpty(password) && password.Any(char.IsDigit);
 
         private bool ContainSpecial(string password) =>
-            !string.IsNullOrEmpty(password) && Regex.IsMatch(password, @"[!@#\$%\^&\*\(\)_\+\-=
-
-\[\]
-
-{};':"".,<>\/?\\|`~]");
+            !string.IsNullOrEmpty(password) && Regex.IsMatch(password, @"[!@#\$%\^&\*\(\)_\+\-=\[\]{};':"".,<>\/?\\|`~]");
     }
 }

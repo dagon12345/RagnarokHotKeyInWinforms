@@ -24,10 +24,7 @@ namespace ApplicationLayer.Forms
             _registerServices = registeredServices;
             _storedCredentialsService = storedCredentialService;
 
-            txtEmail.Text = "lanceandreiespina@yahoo.com";
-            txtPassword.Text = "@September30";
-            txtConfirmPassword.Text = "@September30";
-
+            //Set the Password and Confirm password to password characters
             txtPassword.UseSystemPasswordChar = true;
             txtConfirmPassword.UseSystemPasswordChar = true;
 

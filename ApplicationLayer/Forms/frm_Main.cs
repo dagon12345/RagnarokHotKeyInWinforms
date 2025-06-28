@@ -1479,8 +1479,6 @@ namespace RagnarokHotKeyInWinforms
         {
             try
             {
-
-
                 progressBar1.Value = 0;
                 progressBar1.Maximum = 15;
                 lblLoadingSettings.Visible = true;
@@ -1498,6 +1496,7 @@ namespace RagnarokHotKeyInWinforms
                 var getBaseTable = await _baseTableService.SearchUser(storedCreds.UserEmail);
                 progressBar1.Value++;
 
+                //If the user is new to the app automatically created a setting to the user.
                 await _userSettingService.UpsertUser(getBaseTable.ReferenceCode, storedCreds.Name);
                 progressBar1.Value++;
 

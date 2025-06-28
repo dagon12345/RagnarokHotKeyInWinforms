@@ -1,7 +1,11 @@
-﻿using ApplicationLayer.Forms;
+﻿using ApplicationLayer.Dto;
+using ApplicationLayer.Forms;
 using ApplicationLayer.Interface;
 using ApplicationLayer.Service;
 using ApplicationLayer.Utilities;
+using ApplicationLayer.Validator;
+using Domain.Security;
+using FluentValidation;
 using Infrastructure;
 using Infrastructure.Repositories.Interface;
 using Infrastructure.Repositories.Service;
@@ -114,12 +118,21 @@ namespace RagnarokHotKeyInWinforms
                     services.AddScoped<IStoredCredentialService, StoredCredentialService>();
                     services.AddScoped<IUserSettingService, UserSettingService>();
                     services.AddScoped<IBaseTableService, BaseTableService>();
+                    services.AddScoped<IEmailService, SmtpEmailService>();
+                    services.AddScoped<RegistrationService>();
+                    services.AddScoped<LoginService>();
+                    services.AddScoped<PasswordRecoveryService>();
                     #endregion
 
                     #region Infrastructure Layer Services
                     services.AddScoped<IBaseTableRepository, BaseTableRepository>();
                     services.AddScoped<IStoredCredentialRepository, StoredCredentialRepository>();
                     services.AddScoped<IUserSettingRepository, UserSettingRepository>();
+                    services.AddSingleton<IHasher, Pbkdf2Hasher>();
+                    #endregion
+
+                    #region Validator
+                    services.AddSingleton<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
                     #endregion
                 });
         }

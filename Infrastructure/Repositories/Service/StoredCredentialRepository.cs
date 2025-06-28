@@ -19,12 +19,33 @@ namespace Infrastructure.Repositories.Service
                 .FirstOrDefaultAsync(x => x.AccessToken == accessToken);
             return findCredential;
         }
-
         public async Task<StoredCredential> SearchUser(string userEmail)
         {
             var searchUserEmail = await _context.StoredCredentials
                 .FirstOrDefaultAsync(x => x.UserEmail.Equals(userEmail));
             return searchUserEmail;
+        }
+
+        public async Task<StoredCredential> GetByEmail(string email)
+        {
+           var emailRetrieved = await _context.StoredCredentials.FirstOrDefaultAsync(u => u.UserEmail == email);
+           return emailRetrieved;
+        }
+
+        public async Task<StoredCredential> GetByConfirmationToken(string confirmationToken)
+        {
+            var confirmationTokenRetrieved = await _context.StoredCredentials
+                .FirstOrDefaultAsync(u => u.ConfirmationToken == confirmationToken);
+            if (confirmationToken == null) return null;
+            return confirmationTokenRetrieved;
+        }
+
+        public async Task<StoredCredential> GetPasswordResetToken(string passwordResetToken, DateTime passwordResetTokenExpiry)
+        {
+            var passwordResetTokenRetrieve = await _context.StoredCredentials
+                .FirstOrDefaultAsync(x => x.PasswordResetToken == passwordResetToken
+                && x.PasswordResetTokenExpiry > DateTime.Now);
+            return passwordResetTokenRetrieve;
         }
     }
 }

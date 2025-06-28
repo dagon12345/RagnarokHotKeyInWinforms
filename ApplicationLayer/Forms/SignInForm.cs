@@ -1,11 +1,11 @@
 ﻿using ApplicationLayer.Interface;
+using ApplicationLayer.Service;
 using Domain.Constants;
 using Domain.Model.DataModels;
 using Microsoft.Extensions.DependencyInjection;
 using RagnarokHotKeyInWinforms;
 using System;
 using System.IO;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -131,6 +131,13 @@ namespace ApplicationLayer.Forms
         private void SignInForm_FormClosed(object sender, FormClosedEventArgs e)
         {
             Application.Exit();
+        }
+
+        private void btnRegisterForm_Click(object sender, EventArgs e)
+        {
+            var registerForm = Program.ServiceProvider.GetRequiredService<RegistrationService>();
+            RegisterForm registerFormOpen = new RegisterForm(registerForm);
+            registerFormOpen.ShowDialog();
         }
     }
 }

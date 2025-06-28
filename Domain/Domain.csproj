@@ -81,6 +81,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Security\IHasher.cs" />
     <Compile Include="Utilities\Constants.cs" />
     <Compile Include="Utilities\EffectStatusIDs.cs" />
     <Compile Include="Utilities\FormUtils.cs" />

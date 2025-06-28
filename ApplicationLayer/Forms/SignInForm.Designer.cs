@@ -30,11 +30,12 @@
         {
             this.btnSignIn = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
+            this.btnRegisterForm = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnSignIn
             // 
-            this.btnSignIn.Location = new System.Drawing.Point(37, 130);
+            this.btnSignIn.Location = new System.Drawing.Point(39, 102);
             this.btnSignIn.Name = "btnSignIn";
             this.btnSignIn.Size = new System.Drawing.Size(168, 41);
             this.btnSignIn.TabIndex = 0;
@@ -52,11 +53,22 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "SignIn with Google";
             // 
+            // btnRegisterForm
+            // 
+            this.btnRegisterForm.Location = new System.Drawing.Point(39, 149);
+            this.btnRegisterForm.Name = "btnRegisterForm";
+            this.btnRegisterForm.Size = new System.Drawing.Size(168, 22);
+            this.btnRegisterForm.TabIndex = 2;
+            this.btnRegisterForm.Text = "Register";
+            this.btnRegisterForm.UseVisualStyleBackColor = true;
+            this.btnRegisterForm.Click += new System.EventHandler(this.btnRegisterForm_Click);
+            // 
             // SignInForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(247, 183);
+            this.Controls.Add(this.btnRegisterForm);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnSignIn);
             this.Name = "SignInForm";
@@ -73,5 +85,6 @@
 
         private System.Windows.Forms.Button btnSignIn;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Button btnRegisterForm;
     }
 }

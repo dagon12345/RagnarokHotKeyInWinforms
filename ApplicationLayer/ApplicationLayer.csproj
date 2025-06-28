@@ -81,11 +81,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppConfig.cs" />
+    <Compile Include="Dto\RegisterUserDto.cs" />
     <Compile Include="Forms\AtkDefForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\AtkDefForm.Designer.cs">
       <DependentUpon>AtkDefForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ConfirmForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ConfirmForm.Designer.cs">
+      <DependentUpon>ConfirmForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frm_Main.cs">
       <SubType>Form</SubType>
@@ -99,6 +106,12 @@
     <Compile Include="Forms\ProfileForm.Designer.cs">
       <DependentUpon>ProfileForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\RegisterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\RegisterForm.Designer.cs">
+      <DependentUpon>RegisterForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SignInForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -106,6 +119,7 @@
       <DependentUpon>SignInForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Interface\IBaseTableService.cs" />
+    <Compile Include="Interface\IEmailService.cs" />
     <Compile Include="Interface\IGetUserInfo.cs" />
     <Compile Include="Interface\ISignIn.cs" />
     <Compile Include="Interface\IStoredCredentialService.cs" />
@@ -123,14 +137,22 @@
     </Compile>
     <Compile Include="Service\BaseTableService.cs" />
     <Compile Include="Service\GetUserInfoService.cs" />
+    <Compile Include="Service\LoginService.cs" />
+    <Compile Include="Service\PasswordRecoveryService.cs" />
+    <Compile Include="Service\RegistrationService.cs" />
     <Compile Include="Service\SignInService.cs" />
+    <Compile Include="Service\SmtpEmailService.cs" />
     <Compile Include="Service\StoredCredentialService.cs" />
     <Compile Include="Service\UserSettingService.cs" />
     <Compile Include="Utilities\FormManager.cs" />
+    <Compile Include="Validator\RegisterUserDtoValidator.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\AtkDefForm.resx">
       <DependentUpon>AtkDefForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ConfirmForm.resx">
+      <DependentUpon>ConfirmForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frm_Main.resx">
       <DependentUpon>frm_Main.cs</DependentUpon>
@@ -138,6 +160,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ProfileForm.resx">
       <DependentUpon>ProfileForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\RegisterForm.resx">
+      <DependentUpon>RegisterForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SignInForm.resx">
       <DependentUpon>SignInForm.cs</DependentUpon>
@@ -168,6 +193,12 @@
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFramework.6.5.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentResults, Version=3.16.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentResults.3.16.0\lib\netstandard2.0\FluentResults.dll</HintPath>
+    </Reference>
+    <Reference Include="FluentValidation, Version=11.0.0.0, Culture=neutral, PublicKeyToken=7de548da2fbae0f0, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidation.11.5.2\lib\netstandard2.0\FluentValidation.dll</HintPath>
     </Reference>
     <Reference Include="Google.Apis, Version=1.69.0.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Apis.1.69.0\lib\net462\Google.Apis.dll</HintPath>
@@ -345,6 +376,9 @@
       <HintPath>..\packages\Pomelo.JsonObject.2.2.1\lib\netstandard2.0\Pomelo.JsonObject.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
+    <Reference Include="SendGrid, Version=9.29.3.0, Culture=neutral, PublicKeyToken=4f047e93159395ca, processorArchitecture=MSIL">
+      <HintPath>..\packages\SendGrid.9.29.3\lib\net452\SendGrid.dll</HintPath>
+    </Reference>
     <Reference Include="SQLitePCLRaw.batteries_v2, Version=2.1.2.1721, Culture=neutral, PublicKeyToken=8226ea5df37bcae9, processorArchitecture=MSIL">
       <HintPath>..\packages\SQLitePCLRaw.bundle_e_sqlite3.2.1.2\lib\net461\SQLitePCLRaw.batteries_v2.dll</HintPath>
     </Reference>
@@ -353,6 +387,9 @@
     </Reference>
     <Reference Include="SQLitePCLRaw.provider.dynamic_cdecl, Version=2.1.2.1721, Culture=neutral, PublicKeyToken=b68184102cba0b3b, processorArchitecture=MSIL">
       <HintPath>..\packages\SQLitePCLRaw.provider.dynamic_cdecl.2.1.2\lib\netstandard2.0\SQLitePCLRaw.provider.dynamic_cdecl.dll</HintPath>
+    </Reference>
+    <Reference Include="StarkbankEcdsa, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b2e6337a5d77bfbc, processorArchitecture=MSIL">
+      <HintPath>..\packages\starkbank-ecdsa.1.3.3\lib\net452\StarkbankEcdsa.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
@@ -420,6 +457,7 @@
       <Private>True</Private>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Security.AccessControl, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.AccessControl.5.0.0\lib\net461\System.Security.AccessControl.dll</HintPath>

@@ -11,7 +11,7 @@ namespace ApplicationLayer.Validator
             RuleFor(x => x.Email)
                 .NotEmpty()
                 .NotNull()
-                .EmailAddress().WithMessage("Invalid email address format."); ;
+                .EmailAddress().WithMessage("Invalid email address format.");
             RuleFor(x => x.Password)
                 .NotEmpty()
                 .NotNull();  

@@ -6,6 +6,7 @@ using Domain.Constants;
 using Domain.Model.DataModels;
 using Domain.Security;
 using FluentResults;
+using FluentValidation;
 using Infrastructure.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -25,13 +26,16 @@ namespace ApplicationLayer.Forms
         private readonly ISignIn _signIn;
         private readonly IStoredCredentialService _storedCredentialService;
         private readonly LoginService _loginService;
-        public SignInForm(IGetUserInfo getUserInfo, ISignIn signIn, IStoredCredentialService storedCredentialService, LoginService loginService)
+        private readonly PasswordRecoveryService _passwordRecoveryService;
+        public SignInForm(IGetUserInfo getUserInfo, ISignIn signIn, IStoredCredentialService storedCredentialService, LoginService loginService,
+            PasswordRecoveryService passwordRecoveryService)
         {
             InitializeComponent();
             _getUserInfo = getUserInfo;
             _signIn = signIn;
             _storedCredentialService = storedCredentialService;
             _loginService = loginService;
+            _passwordRecoveryService = passwordRecoveryService;
         }
 
 
@@ -281,6 +285,67 @@ namespace ApplicationLayer.Forms
                 return;
             }
             MessageBox.Show("Invalid login credentials", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
+        private async void lblForgotPassword_Click(object sender, EventArgs e)
+        {
+            var dto = new EmailDto
+            {
+                Email = txtEmail.Text.Trim(),
+            };
+
+            // Instantiate validator (or inject via DI)
+            var validator = new EmailDtoValidator();
+            var validationResult = validator.Validate(dto);
+
+            if (!validationResult.IsValid)
+            {
+                var errorMessages = string.Join("\n", validationResult.Errors.Select(err => $"• {err.ErrorMessage}"));
+                MessageBox.Show(errorMessages, "Validation Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var user = await _passwordRecoveryService.SendResetLink(dto.Email);
+            await OpenConfirmationAsync(user);
+           
+        }
+        private async Task OpenConfirmationAsync(StoredCredential credential)
+        {
+            //Same confirmation form for registration
+            using (var confirmForm = new ConfirmForm()) // TextBox + OK button
+            {
+                Result result = new Result();
+                if (confirmForm.ShowDialog() == DialogResult.OK)
+                {
+                    var inputToken = confirmForm.txtTokenInput.Text;
+                    var retrievedUser = await _passwordRecoveryService.ConfirmationOfToken(credential.UserEmail, inputToken);
+
+                    if (retrievedUser != null)
+                    {
+                        using(var resetPassword = new ResetPasswordForm())
+                        {
+                            if(resetPassword.ShowDialog() == DialogResult.OK)
+                            {
+                                var reset = await _passwordRecoveryService.ResetPassword(retrievedUser.UserEmail, resetPassword.txtConfirmPassword.Text);
+                                if(reset.IsSuccess)
+                                {
+                                    MessageBox.Show(result.Successes.FirstOrDefault()?.Message ?? "Password reseted successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                }
+                                else
+                                {
+                                    MessageBox.Show(result.Errors.FirstOrDefault()?.Message ?? "Something went wrong.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                                }
+                            }
+                        }
+                    }
+
+                }
+                else
+                {
+                    //If the confirmation cancelled
+                    MessageBox.Show(result.Errors.FirstOrDefault()?.Message ?? "Cancelled the confirmation", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
         }
     }
 }

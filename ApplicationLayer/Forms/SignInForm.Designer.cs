@@ -36,12 +36,13 @@
             this.txtEmail = new System.Windows.Forms.TextBox();
             this.btnLogin = new System.Windows.Forms.Button();
             this.lblHeader = new System.Windows.Forms.Label();
+            this.lblForgotPassword = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnRegister
             // 
             this.btnRegister.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnRegister.Location = new System.Drawing.Point(311, 105);
+            this.btnRegister.Location = new System.Drawing.Point(311, 108);
             this.btnRegister.Name = "btnRegister";
             this.btnRegister.Size = new System.Drawing.Size(120, 44);
             this.btnRegister.TabIndex = 4;
@@ -54,7 +55,7 @@
             this.btnSignIn.Cursor = System.Windows.Forms.Cursors.Hand;
             this.btnSignIn.Image = global::ApplicationLayer.Properties.Resources.google_icon_icons_com_62736;
             this.btnSignIn.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            this.btnSignIn.Location = new System.Drawing.Point(185, 105);
+            this.btnSignIn.Location = new System.Drawing.Point(185, 108);
             this.btnSignIn.Name = "btnSignIn";
             this.btnSignIn.Size = new System.Drawing.Size(120, 44);
             this.btnSignIn.TabIndex = 3;
@@ -97,7 +98,7 @@
             // btnLogin
             // 
             this.btnLogin.Cursor = System.Windows.Forms.Cursors.Hand;
-            this.btnLogin.Location = new System.Drawing.Point(59, 105);
+            this.btnLogin.Location = new System.Drawing.Point(59, 108);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(120, 44);
             this.btnLogin.TabIndex = 2;
@@ -115,12 +116,25 @@
             this.lblHeader.TabIndex = 9;
             this.lblHeader.Text = "Ferocity Tool";
             // 
+            // lblForgotPassword
+            // 
+            this.lblForgotPassword.AutoSize = true;
+            this.lblForgotPassword.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.lblForgotPassword.Font = new System.Drawing.Font("Arial Narrow", 9.75F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblForgotPassword.Location = new System.Drawing.Point(330, 90);
+            this.lblForgotPassword.Name = "lblForgotPassword";
+            this.lblForgotPassword.Size = new System.Drawing.Size(97, 16);
+            this.lblForgotPassword.TabIndex = 10;
+            this.lblForgotPassword.Text = "Forgot password";
+            this.lblForgotPassword.Click += new System.EventHandler(this.lblForgotPassword_Click);
+            // 
             // SignInForm
             // 
             this.AcceptButton = this.btnLogin;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(461, 161);
+            this.ClientSize = new System.Drawing.Size(461, 162);
+            this.Controls.Add(this.lblForgotPassword);
             this.Controls.Add(this.lblHeader);
             this.Controls.Add(this.btnLogin);
             this.Controls.Add(this.lblPassword);
@@ -150,5 +164,6 @@
         private System.Windows.Forms.TextBox txtEmail;
         private System.Windows.Forms.Button btnLogin;
         private System.Windows.Forms.Label lblHeader;
+        private System.Windows.Forms.Label lblForgotPassword;
     }
 }

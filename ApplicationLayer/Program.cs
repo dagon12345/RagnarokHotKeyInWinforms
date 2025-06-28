@@ -85,10 +85,10 @@ namespace RagnarokHotKeyInWinforms
                     var userSignIn = ServiceProvider.GetRequiredService<ISignIn>();
                     var userCredentials = ServiceProvider.GetRequiredService<IStoredCredentialService>();
                     var loginService = Program.ServiceProvider.GetRequiredService<LoginService>();
-
+                    var password = Program.ServiceProvider.GetRequiredService<PasswordRecoveryService>();
 
                     // Run the form
-                    var signIn = new SignInForm(getUserInfo, userSignIn, userCredentials, loginService);
+                    var signIn = new SignInForm(getUserInfo, userSignIn, userCredentials, loginService, password);
                     FormManager.SignInInstance = signIn;
                     Application.Run(signIn);
 
@@ -136,6 +136,7 @@ namespace RagnarokHotKeyInWinforms
                     services.AddSingleton<IValidator<RegisterUserDto>, RegisterUserDtoValidator>();
                     services.AddSingleton<IValidator<SignInRegistrationDto>, SignInRegistrationDtoValidator>();
                     services.AddSingleton<IValidator<LoginDto>, LoginDtoValidator>();
+                    services.AddSingleton<IValidator<EmailDto>, EmailDtoValidator>();
                     #endregion
                 });
         }

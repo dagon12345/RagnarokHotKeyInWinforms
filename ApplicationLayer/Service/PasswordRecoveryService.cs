@@ -1,35 +1,52 @@
 ﻿using ApplicationLayer.Interface;
+using Domain.Model.DataModels;
+using Domain.Security;
+using FluentResults;
 using Infrastructure.Helpers;
 using Infrastructure.Repositories.Interface;
 using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 using System.Threading.Tasks;
+using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace ApplicationLayer.Service
 {
     public class PasswordRecoveryService
     {
-        private readonly IStoredCredentialRepository _credentialRepository;
+        private readonly IStoredCredentialService _storedCredentialService;
         private readonly IEmailService _emailService;
-        public PasswordRecoveryService(IStoredCredentialRepository credentialRepository, IEmailService emailService)
+        private readonly IHasher _hasHer;
+        public PasswordRecoveryService(IStoredCredentialRepository credentialRepository, IEmailService emailService, 
+            IStoredCredentialService storedCredentialService, IHasher hasHer)
         {
-           _credentialRepository = credentialRepository;
-           _emailService = emailService;
+            _storedCredentialService = storedCredentialService;
+            _emailService = emailService;
+            _hasHer = hasHer;
         }
 
-        public async void SendResetLink(string email)
+        public async Task<StoredCredential> SendResetLink(string email)
         {
-            var user = await _credentialRepository.GetByEmail(email);
-            if (user == null) return;
+            var searchUser = await _storedCredentialService.SearchUser(email);
+            if (searchUser == null) return null;
 
-            user.PasswordResetToken = Guid.NewGuid().ToString();
-            user.PasswordResetTokenExpiry = DateTime.UtcNow.AddMinutes(30);
-            await _credentialRepository.SaveChangesAsync();
-            await _emailService.Send(email, "Reset your password", "Link sent!");
+
+            searchUser.PasswordResetToken = Guid.NewGuid().ToString();
+            searchUser.PasswordResetTokenExpiry = DateTime.UtcNow.AddMinutes(30);
+
+            await _storedCredentialService.SaveChangesAsync();
+
+            string rawGuid = Guid.NewGuid().ToString("N"); // 32-character hex without dashes
+            string confirmationCode = rawGuid.Substring(0, 6).ToUpper(); // E.g., "A2C9FD"
+
+            searchUser.SetConfirmationCode(confirmationCode, _hasHer, TimeSpan.FromMinutes(30));
+
+            await _emailService.SendPasswordResetLinkAsync(email, confirmationCode);
+            return searchUser;
         }
-        public async Task<bool> ResetPassword(string token, string newPassword)
+        public async Task<Result> ResetPassword(string email, string newPassword)
         {
-            var user = await _credentialRepository.GetPasswordResetToken(token, DateTime.UtcNow);
-            if (user == null) return false;
+            var user = await _storedCredentialService.SearchUser(email);
 
             var salt = SecurityHelper.GenerateSalt();
             var hash = SecurityHelper.HashPassword(newPassword, salt);
@@ -38,9 +55,24 @@ namespace ApplicationLayer.Service
             user.PasswordHash = hash;
             user.PasswordResetToken = null;
             user.PasswordResetTokenExpiry = null;
-            await _credentialRepository.SaveChangesAsync();
-            return true;
+            await _storedCredentialService.SaveChangesAsync();
+            return Result.Ok().WithSuccess("Password updated.");
 
+        }
+        public async Task<StoredCredential> ConfirmationOfToken(string email, string inputToken)
+        {
+            var user = await _storedCredentialService.SearchUser(email);
+            if (user == null)
+            {
+                MessageBox.Show("Empty list retrieved");
+                return null;
+            }
+            if (!user.IsValidConfirmationCode(inputToken, _hasHer))
+            {
+                MessageBox.Show("Invalid or expired Reset Token");
+                return null;
+            }
+            return user;
         }
     }
 }

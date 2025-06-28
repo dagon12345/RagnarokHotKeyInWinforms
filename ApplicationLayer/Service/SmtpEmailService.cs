@@ -20,7 +20,9 @@ namespace ApplicationLayer.Service
         public async Task SendPasswordResetLinkAsync(string to, string token)
         {
             var subject = "Reset your password";
-            var body = $"Please reset your password, link sent into your email";
+            var body = $"Hi! Please enter this confirmation code into your app to reset your password:\n\n" +
+               $"   {token}\n\n" +
+               $"This code is valid for 30 minutes.";
             await Send(to, subject, body);
         }
         public async Task Send(string to, string subject, string body)

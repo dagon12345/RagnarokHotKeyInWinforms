@@ -1641,7 +1641,8 @@ namespace RagnarokHotKeyInWinforms
             var userSignIn = Program.ServiceProvider.GetRequiredService<ISignIn>();
             var storedCredential = Program.ServiceProvider.GetRequiredService<IStoredCredentialService>();
             var loginService = Program.ServiceProvider.GetRequiredService<LoginService>();
-            SignInForm sf = new SignInForm(getUserInfoInterface, userSignIn, storedCredential, loginService);
+            var password = Program.ServiceProvider.GetRequiredService<PasswordRecoveryService>();
+            SignInForm sf = new SignInForm(getUserInfoInterface, userSignIn, storedCredential, loginService, password);
             sf.ShowDialog();
         }
         private void btnRefresh_Click(object sender, EventArgs e)

@@ -1,8 +1,7 @@
 ﻿using ApplicationLayer.Interface;
 using Domain.Constants;
-using SendGrid;
-using SendGrid.Helpers.Mail;
-using System;
+using System.Net;
+using System.Net.Mail;
 using System.Threading.Tasks;
 
 namespace ApplicationLayer.Service
@@ -27,16 +26,21 @@ namespace ApplicationLayer.Service
         }
         public async Task Send(string to, string subject, string body)
         {
-            var client = new SendGridClient(GoogleConstants.SendGridAPI);
-            var from = new EmailAddress(GoogleConstants.GoogleEmail, GoogleConstants.AppName);
-            var sendTo = new EmailAddress(to);
-            var msg = MailHelper.CreateSingleEmail(from, sendTo, subject, body, null);
-            var response = await client.SendEmailAsync(msg);
-
-            if(!response.IsSuccessStatusCode)
+            var smtpClient = new SmtpClient(YahooConstants.YahooSmtp)
             {
-                Console.WriteLine($"Error message:{response.StatusCode}");
-            }
+                Port = 587, // 465 optional
+                Credentials = new NetworkCredential(YahooConstants.YahooMail, YahooConstants.YahooAppPassword),
+                EnableSsl = true
+            };
+            var mailMessage = new MailMessage
+            {
+                From = new MailAddress(YahooConstants.YahooMail, GoogleConstants.AppName),
+                Subject = subject,
+                Body = body,
+                IsBodyHtml = false
+            };
+            mailMessage.To.Add(to);
+            await smtpClient.SendMailAsync(mailMessage);
         }
     }
 }

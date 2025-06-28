@@ -42,7 +42,7 @@
             this.btnCancel.Location = new System.Drawing.Point(258, 80);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(110, 23);
-            this.btnCancel.TabIndex = 7;
+            this.btnCancel.TabIndex = 3;
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
@@ -51,7 +51,7 @@
             this.btnOk.Location = new System.Drawing.Point(142, 80);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(110, 23);
-            this.btnOk.TabIndex = 6;
+            this.btnOk.TabIndex = 2;
             this.btnOk.Text = "Confirm";
             this.btnOk.UseVisualStyleBackColor = true;
             this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
@@ -61,7 +61,7 @@
             this.txtNewPassword.Location = new System.Drawing.Point(142, 28);
             this.txtNewPassword.Name = "txtNewPassword";
             this.txtNewPassword.Size = new System.Drawing.Size(226, 20);
-            this.txtNewPassword.TabIndex = 5;
+            this.txtNewPassword.TabIndex = 0;
             // 
             // label1
             // 
@@ -101,10 +101,11 @@
             this.txtConfirmPassword.Location = new System.Drawing.Point(142, 54);
             this.txtConfirmPassword.Name = "txtConfirmPassword";
             this.txtConfirmPassword.Size = new System.Drawing.Size(226, 20);
-            this.txtConfirmPassword.TabIndex = 10;
+            this.txtConfirmPassword.TabIndex = 1;
             // 
             // ResetPasswordForm
             // 
+            this.AcceptButton = this.btnOk;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(403, 110);

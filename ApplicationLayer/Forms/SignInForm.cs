@@ -6,7 +6,6 @@ using Domain.Constants;
 using Domain.Model.DataModels;
 using Domain.Security;
 using FluentResults;
-using FluentValidation;
 using Infrastructure.Helpers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -329,7 +328,7 @@ namespace ApplicationLayer.Forms
                                 var reset = await _passwordRecoveryService.ResetPassword(retrievedUser.UserEmail, resetPassword.txtConfirmPassword.Text);
                                 if(reset.IsSuccess)
                                 {
-                                    MessageBox.Show(result.Successes.FirstOrDefault()?.Message ?? "Password reseted successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                    MessageBox.Show(result.Successes.FirstOrDefault()?.Message ?? "Password resetted successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 }
                                 else
                                 {

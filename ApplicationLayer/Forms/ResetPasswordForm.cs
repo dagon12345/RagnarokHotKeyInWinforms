@@ -12,6 +12,8 @@ namespace ApplicationLayer.Forms
             InitializeComponent();
             btnOk.Click += btnOk_Click;
             btnCancel.Click += (s, e) => this.DialogResult = DialogResult.Cancel;
+            txtNewPassword.UseSystemPasswordChar = true;
+            txtConfirmPassword.UseSystemPasswordChar = true;
         }
 
         private void btnOk_Click(object sender, System.EventArgs e)

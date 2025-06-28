@@ -22,13 +22,13 @@ namespace ApplicationLayer.Service
             if (user == null) return;
 
             user.PasswordResetToken = Guid.NewGuid().ToString();
-            user.PasswordResetTokenExpiry = DateTime.Now.AddMinutes(30);
+            user.PasswordResetTokenExpiry = DateTime.UtcNow.AddMinutes(30);
             await _credentialRepository.SaveChangesAsync();
             await _emailService.Send(email, "Reset your password", "Link sent!");
         }
         public async Task<bool> ResetPassword(string token, string newPassword)
         {
-            var user = await _credentialRepository.GetPasswordResetToken(token, DateTime.Now);
+            var user = await _credentialRepository.GetPasswordResetToken(token, DateTime.UtcNow);
             if (user == null) return false;
 
             var salt = SecurityHelper.GenerateSalt();

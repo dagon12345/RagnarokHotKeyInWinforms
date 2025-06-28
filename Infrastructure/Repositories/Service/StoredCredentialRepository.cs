@@ -29,22 +29,14 @@ namespace Infrastructure.Repositories.Service
         public async Task<StoredCredential> GetByEmail(string email)
         {
            var emailRetrieved = await _context.StoredCredentials.FirstOrDefaultAsync(u => u.UserEmail == email);
-           return emailRetrieved;
+            if (emailRetrieved == null) return null;
+            return emailRetrieved;
         }
-
-        public async Task<StoredCredential> GetByConfirmationToken(string confirmationToken)
-        {
-            var confirmationTokenRetrieved = await _context.StoredCredentials
-                .FirstOrDefaultAsync(u => u.ConfirmationToken == confirmationToken);
-            if (confirmationToken == null) return null;
-            return confirmationTokenRetrieved;
-        }
-
         public async Task<StoredCredential> GetPasswordResetToken(string passwordResetToken, DateTime passwordResetTokenExpiry)
         {
             var passwordResetTokenRetrieve = await _context.StoredCredentials
                 .FirstOrDefaultAsync(x => x.PasswordResetToken == passwordResetToken
-                && x.PasswordResetTokenExpiry > DateTime.Now);
+                && x.PasswordResetTokenExpiry > DateTime.UtcNow);
             return passwordResetTokenRetrieve;
         }
     }

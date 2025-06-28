@@ -119,7 +119,7 @@ namespace RagnarokHotKeyInWinforms
                     services.AddScoped<IUserSettingService, UserSettingService>();
                     services.AddScoped<IBaseTableService, BaseTableService>();
                     services.AddScoped<IEmailService, SmtpEmailService>();
-                    services.AddScoped<RegistrationService>();
+                    services.AddScoped<IRegistrationService, RegistrationService>();
                     services.AddScoped<LoginService>();
                     services.AddScoped<PasswordRecoveryService>();
                     #endregion

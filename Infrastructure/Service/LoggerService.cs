@@ -19,7 +19,7 @@ namespace Infrastructure.Service
             _logger?.LogError(ex, message ?? ex.Message);
             LogStore.Entries.Add(new LogEntry 
             {
-                TimeStamp = DateTime.Now,
+                TimeStamp = DateTime.UtcNow,
                 Level = "Error",
                 Message = fullMessage
             });
@@ -29,7 +29,7 @@ namespace Infrastructure.Service
             _logger?.LogInformation(message);
             LogStore.Entries.Add(new LogEntry
             {
-                TimeStamp = DateTime.Now,
+                TimeStamp = DateTime.UtcNow,
                 Level = "Info",
                 Message = message
             });

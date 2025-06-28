@@ -12,9 +12,6 @@ namespace Infrastructure.Repositories.Interface
         Task<StoredCredential> SearchUser(string userEmail);
 
         Task <StoredCredential> GetByEmail(string email);
-
-        Task<StoredCredential> GetByConfirmationToken(string confirmationToken);
-
         Task<StoredCredential> GetPasswordResetToken(string passwordResetToken, DateTime passwordResetTokenExpiry);
     }
 }

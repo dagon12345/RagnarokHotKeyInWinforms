@@ -121,6 +121,7 @@
     <Compile Include="Interface\IBaseTableService.cs" />
     <Compile Include="Interface\IEmailService.cs" />
     <Compile Include="Interface\IGetUserInfo.cs" />
+    <Compile Include="Interface\IRegistrationService.cs" />
     <Compile Include="Interface\ISignIn.cs" />
     <Compile Include="Interface\IStoredCredentialService.cs" />
     <Compile Include="Interface\IUserSettingService.cs" />
@@ -506,6 +507,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\arrowup.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\google_icon-icons.com_62736.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Data.SqlClient.SNI.1.1.0\build\net46\Microsoft.Data.SqlClient.SNI.targets" Condition="Exists('..\packages\Microsoft.Data.SqlClient.SNI.1.1.0\build\net46\Microsoft.Data.SqlClient.SNI.targets')" />

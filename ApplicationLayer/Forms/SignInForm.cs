@@ -1,7 +1,7 @@
 ﻿using ApplicationLayer.Interface;
-using ApplicationLayer.Service;
 using Domain.Constants;
 using Domain.Model.DataModels;
+using Domain.Security;
 using Microsoft.Extensions.DependencyInjection;
 using RagnarokHotKeyInWinforms;
 using System;
@@ -47,7 +47,7 @@ namespace ApplicationLayer.Forms
             var storedAccessToken = searchCredential.AccessToken;
 
             //If the logged in time is less than 30 minutes then restore session else delete the existing login creds and sign in again.
-            if (!string.IsNullOrEmpty(storedAccessToken) && (DateTime.Now - lastLoginTime).TotalMinutes <= 30)  // Check if within 30 minutes
+            if (!string.IsNullOrEmpty(storedAccessToken) && (DateTime.UtcNow - lastLoginTime).TotalMinutes <= 30)  // Check if within 30 minutes
             {
                 // Token is still valid, proceed to MainMenuForm
                 OpenMainMenuForm();
@@ -75,14 +75,16 @@ namespace ApplicationLayer.Forms
             //Search through stored credential database
             var searchUser = await _storedCredentialService.SearchUser(userInfo.Email);
             var accessToken = credential.Token.AccessToken; 
+            //Add new registered user if null
             if (searchUser == null)
             {
                 var storedCredential = new StoredCredential
                 {
                     AccessToken = accessToken,
-                    LastLoginTime = DateTime.Now,
+                    LastLoginTime = DateTime.UtcNow,
                     Name = userInfo.Name,
                     UserEmail = userInfo.Email,
+                    IsEmailConfirmed = true
                 };
 
                 //save once captured
@@ -91,7 +93,7 @@ namespace ApplicationLayer.Forms
             else
             {
                 //Update the stored credential for new lastlogin and accesstoken
-                searchUser.LastLoginTime = DateTime.Now;
+                searchUser.LastLoginTime = DateTime.UtcNow;
                 searchUser.AccessToken = credential.Token.AccessToken;
                 await _storedCredentialService.SaveChangesAsync();
             }
@@ -135,8 +137,12 @@ namespace ApplicationLayer.Forms
 
         private void btnRegisterForm_Click(object sender, EventArgs e)
         {
-            var registerForm = Program.ServiceProvider.GetRequiredService<RegistrationService>();
-            RegisterForm registerFormOpen = new RegisterForm(registerForm);
+            var registerService = Program.ServiceProvider.GetRequiredService<IRegistrationService>();
+            var userCredentialsService = Program.ServiceProvider.GetRequiredService<IStoredCredentialService>();
+            var hashHer = Program.ServiceProvider.GetRequiredService<IHasher>();
+            var emailService = Program.ServiceProvider.GetRequiredService<IEmailService>();
+
+            RegisterForm registerFormOpen = new RegisterForm(registerService, userCredentialsService, hashHer, emailService);
             registerFormOpen.ShowDialog();
         }
     }

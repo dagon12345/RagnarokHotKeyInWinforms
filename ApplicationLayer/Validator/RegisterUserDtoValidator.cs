@@ -1,5 +1,6 @@
 ﻿using ApplicationLayer.Dto;
 using FluentValidation;
+using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -9,6 +10,12 @@ namespace ApplicationLayer.Validator
     {
         public RegisterUserDtoValidator()
         {
+
+            RuleFor(x => x.Name)
+                .NotEmpty()
+                .NotNull()
+                .MinimumLength(3).WithMessage("Name characters minimum of 3.");
+
             RuleFor(x => x.Email)
            .NotEmpty().WithMessage("Email is required.")
            .MaximumLength(254).WithMessage("Email must not exceed 254 characters.")
@@ -25,6 +32,7 @@ namespace ApplicationLayer.Validator
 
             RuleFor(x => x.ConfirmPassword)
                 .Equal(x => x.Password).WithMessage("Passwords do not match.");
+
         }
         private bool ContainUppercase(string password) =>
       !string.IsNullOrEmpty(password) && password.Any(char.IsUpper);

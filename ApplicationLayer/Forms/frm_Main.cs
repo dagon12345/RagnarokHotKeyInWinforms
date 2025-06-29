@@ -1,15 +1,18 @@
-﻿using _4RTools.Model;
+﻿using ApplicationLayer.ChildForms;
+using ApplicationLayer.Dto.RagnarokDto;
 using ApplicationLayer.Forms;
 using ApplicationLayer.Interface;
+using ApplicationLayer.Interface.RagnarokInterface;
+using ApplicationLayer.Models.RagnarokModels;
 using ApplicationLayer.Service;
+using ApplicationLayer.Service.RagnarokService;
+using ApplicationLayer.Singleton.RagnarokSingleton;
 using Domain.Constants;
-using Domain.Model;
 using Domain.Model.DataModels;
 using Domain.Security;
 using Infrastructure.Service;
+using Infrastructure.Utilities;
 using Microsoft.Extensions.DependencyInjection;
-using RagnarokHotKeyInWinforms.Model;
-using RagnarokHotKeyInWinforms.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -20,28 +23,28 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
+using MessageCode = Domain.Constants.MessageCode;
 namespace RagnarokHotKeyInWinforms
 {
-    public partial class frm_Main : Form, IObserver
+    public partial class frm_Main : Form, IObserverService
     {
-        private Subject subject = new Subject();//subject triggers the Update() method inside notify function
+        private SubjectService subject = new SubjectService();//subject triggers the Update() method inside notify function
         private System.Windows.Forms.Timer progressTimer;
         private int progressIncrement; // Increment value for each tick
         private int targetProgress; // Target progress value
-        List<ClientDTO> clients = new List<ClientDTO>(); // list of clients with address initiated
+        List<ClientDto> clients = new List<ClientDto>(); // list of clients with address initiated
         private List<BuffContainer> stuffBuffContainers = new List<BuffContainer>();
         private List<BuffContainer> skillBuffContainers = new List<BuffContainer>();
         private Keys lastKey;
-        private _4RThread mainThread;
+        private ThreadUtility ThreadUtility;
 
+        private readonly ToggleApplicationForm _toggleApplicationForm;
 
         private readonly IStoredCredentialService _storedCredentialService;
-        private readonly ISignIn _signIn;
         private readonly IUserSettingService _userSettingService;
         private readonly IBaseTableService _baseTableService;
         private string _userEmail;
-        public frm_Main(IStoredCredentialService storedCredentialService, ISignIn signIn,
-            IUserSettingService userSettingService, IBaseTableService baseTableService, IHasher hasher, string userEmail)
+        public frm_Main(IStoredCredentialService storedCredentialService, IUserSettingService userSettingService, IBaseTableService baseTableService, IHasher hasher, string userEmail, ToggleApplicationForm toggleApplicationForm)
         {
             this.subject.Attach(this);
             InitializeComponent();
@@ -54,7 +57,6 @@ namespace RagnarokHotKeyInWinforms
 
             #region Interfaces
             _storedCredentialService = storedCredentialService;
-            _signIn = signIn;
             _userSettingService = userSettingService;
             _baseTableService = baseTableService;
             #endregion
@@ -64,93 +66,13 @@ namespace RagnarokHotKeyInWinforms
             #endregion
             this.Text = AppConfig.Name + " - " + AppConfig.Version; // Window title
 
-        }
-
-        #region ToggleApplicationStateFunction (No Start Method)
-        private bool toggleStatus()
-        {
-            bool isOn = this.btnStatusToggle.Text == "On";
-            if (isOn)
-            {
-                this.btnStatusToggle.BackColor = Color.Crimson;
-                this.btnStatusToggle.Text = "Off";
-                //this.notifyIconTray.Icon = Resources._4RTools.ETCResource.logo_4rtools_off;
-                this.subject.Notify(new Utilities.Message(MessageCode.TURN_OFF, null));
-                this.lblStatusToggle.Text = "Press the button to start!";
-                //new SoundPlayer(Resources._4RTools.ETCResource.Speech_Off).Play();
-            }
-            else
-            {
-                Client client = ClientSingleton.GetClient();
-                if (client != null)
-                {
-                    this.btnStatusToggle.BackColor = Color.Green;
-                    this.btnStatusToggle.Text = "On";
-                    //this.notifyIconTray.Icon = Resources._4RTools.ETCResource.logo_4rtools_on;
-                    this.subject.Notify(new Utilities.Message(MessageCode.TURN_ON, null));
-                    this.lblStatusToggle.Text = "Press the button to stop!";
-                    this.lblStatusToggle.ForeColor = Color.Black;
-                    //new SoundPlayer(Resources._4RTools.ETCResource.Speech_On).Play();
-                }
-                else
-                {
-                    this.lblStatusToggle.Text = "Please select a valid Ragnarok Client!";
-                    this.lblStatusToggle.ForeColor = Color.Red;
-                }
-            }
-            return true;
-        }
-
-        private void btnStatusToggle_Click(object sender, EventArgs e)
-        {
-            this.toggleStatus();
-        }
-
-        //Get the reference code of the user
-        private async Task<UserSettings> ReturnToggleKey()
-        {
-            var getBaseTable = await _baseTableService.SearchUser(_userEmail);
-            var toggleStateValue = await _userSettingService.SelectUserPreference(getBaseTable.ReferenceCode);
-            return toggleStateValue;
-        }
-
-        private async Task Retrieve()
-        {
-            var toggleStateValue = await ReturnToggleKey();
-            // Parse JSON and extract toggleStateKey
-            var jsonObject = JsonSerializer.Deserialize<UserPreferences>(toggleStateValue.UserPreferences);
-            this.txtStatusToggleKey.Text = jsonObject.toggleStateKey;
-            txtStatusToggleKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
-            this.txtStatusToggleKey.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
-            this.txtStatusToggleKey.TextChanged += async (sender, e) => await onStatusToggleKeyChange(sender, e);
+            _toggleApplicationForm = toggleApplicationForm;
 
         }
-        private async Task onStatusToggleKeyChange(object sender, EventArgs e)
-        {
-            var toggleStateValue = await ReturnToggleKey();
-            //Get last key from profile before update it in json
-            Keys currentToggleKey = (Keys)Enum.Parse(typeof(Keys), txtStatusToggleKey.Text);
-            KeyboardHook.Remove(lastKey);
-            KeyboardHook.Add(currentToggleKey, new KeyboardHook.KeyPressed(this.toggleStatus));
 
 
-            // Deserialize JSON to update value
-            var jsonObject = JsonSerializer.Deserialize<UserPreferences>(toggleStateValue.UserPreferences);
-            if (jsonObject != null)
-            {
-                jsonObject.toggleStateKey = currentToggleKey.ToString(); // Update key
-                var updatedJson = JsonSerializer.Serialize(jsonObject);
-                toggleStateValue.UserPreferences = updatedJson;
-                // Persist changes
-                await _userSettingService.SaveChangesAsync();
-            }
-            else
-            {
-                return;
-            }
-            lastKey = currentToggleKey; //Refresh lastKey to update 
-        }
-        #endregion ToggleApplicationStateFunction
+
+      
         #region AutopotSettings(Triggered with Start() method)
         private async Task RetrieveAutopot()
         {
@@ -164,29 +86,29 @@ namespace RagnarokHotKeyInWinforms
             txtAutopotDelay.Text = jsonObject.delay.ToString() ?? "0";
 
             //HPkey Controls
-            txtHpKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
-            txtHpKey.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
+            txtHpKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
+            txtHpKey.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
             txtHpKey.TextChanged += async (sender, e) => await onHpTextChange(sender, e);
 
             //HPPercent Controls
-            txtHPpct.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
-            txtHPpct.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
+            txtHPpct.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
+            txtHPpct.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
             txtHPpct.TextChanged += async (sender, e) => await txtHPpctTextChanged(sender, e);
 
             //SPKey controls
-            txtSpKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
-            txtSpKey.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
+            txtSpKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
+            txtSpKey.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
             txtSpKey.TextChanged += async (sender, e) => await onSpTextChange(sender, e);
 
             //SpPercent Controls
-            txtSPpct.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
-            txtSPpct.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
+            txtSPpct.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
+            txtSPpct.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
             txtSPpct.TextChanged += async (sender, e) => await txtSPpctTextChanged(sender, e);
 
 
             //Delay
-            txtAutopotDelay.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
-            txtAutopotDelay.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
+            txtAutopotDelay.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
+            txtAutopotDelay.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
             txtAutopotDelay.TextChanged += async (sender, e) => await txtAutopotDelayTextChanged(sender, e);
         }
         #region HpTexAndPercent Autopot
@@ -307,8 +229,8 @@ namespace RagnarokHotKeyInWinforms
             txtSkillTimerKey.Text = jsonObject.refreshKey.ToString() ?? "0";
 
             //Default values from hotkeys
-            this.txtSkillTimerKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
-            this.txtSkillTimerKey.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
+            this.txtSkillTimerKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
+            this.txtSkillTimerKey.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
             this.txtSkillTimerKey.TextChanged += new EventHandler(this.onSkillTimerKeyChange);
             this.txtAutoRefreshDelay.ValueChanged += new EventHandler(this.txtAutoRefreshDelayTextChanged);
         }
@@ -363,14 +285,14 @@ namespace RagnarokHotKeyInWinforms
 
                 if (jsonObject.buffMapping.Count > 0)
                 {
-                    txtStatusKey.Text = jsonObject.buffMapping[EffectStatusIDs.SILENCE].ToString();
+                    txtStatusKey.Text = jsonObject.buffMapping[EffectStatusIdEnum.SILENCE].ToString();
                 }
 
-                this.txtStatusKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
-                this.txtStatusKey.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
+                this.txtStatusKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
+                this.txtStatusKey.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
                 this.txtStatusKey.TextChanged += new EventHandler(onStatusKeyChange);
-                this.txtNewStatusKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
-                this.txtNewStatusKey.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
+                this.txtNewStatusKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
+                this.txtNewStatusKey.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
                 this.txtNewStatusKey.TextChanged += new EventHandler(on3RDStatusKeyChange);
 
             }
@@ -388,17 +310,17 @@ namespace RagnarokHotKeyInWinforms
         {
             var userToggleState = await ReturnToggleKey();
             var jsonObject = JsonSerializer.Deserialize<StatusRecovery>(userToggleState.StatusRecovery);
-            Key key = (Key)Enum.Parse(typeof(Key), txtStatusKey.Text.ToString());
+            Keys key = (Keys)Enum.Parse(typeof(Keys), txtStatusKey.Text.ToString());
 
             if (jsonObject != null)
             {
-                jsonObject.AddKeyToBuff(EffectStatusIDs.POISON, key);
-                jsonObject.AddKeyToBuff(EffectStatusIDs.SILENCE, key);
-                jsonObject.AddKeyToBuff(EffectStatusIDs.BLIND, key);
-                jsonObject.AddKeyToBuff(EffectStatusIDs.CONFUSION, key);
-                jsonObject.AddKeyToBuff(EffectStatusIDs.HALLUCINATIONWALK, key);
-                jsonObject.AddKeyToBuff(EffectStatusIDs.HALLUCINATION, key);
-                jsonObject.AddKeyToBuff(EffectStatusIDs.CURSE, key);
+                jsonObject.AddKeyToBuff(EffectStatusIdEnum.POISON, key);
+                jsonObject.AddKeyToBuff(EffectStatusIdEnum.SILENCE, key);
+                jsonObject.AddKeyToBuff(EffectStatusIdEnum.BLIND, key);
+                jsonObject.AddKeyToBuff(EffectStatusIdEnum.CONFUSION, key);
+                jsonObject.AddKeyToBuff(EffectStatusIdEnum.HALLUCINATIONWALK, key);
+                jsonObject.AddKeyToBuff(EffectStatusIdEnum.HALLUCINATION, key);
+                jsonObject.AddKeyToBuff(EffectStatusIdEnum.CURSE, key);
 
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.StatusRecovery = updatedJson;
@@ -415,15 +337,15 @@ namespace RagnarokHotKeyInWinforms
         {
             var userToggleState = await ReturnToggleKey();
             var jsonObject = JsonSerializer.Deserialize<StatusRecovery>(userToggleState.StatusRecovery);
-            Key key = (Key)Enum.Parse(typeof(Key), txtNewStatusKey.Text.ToString());
+            Keys key = (Keys)Enum.Parse(typeof(Keys), txtNewStatusKey.Text.ToString());
 
             if (jsonObject != null)
             {
-                jsonObject.AddKeyToBuff(EffectStatusIDs.PROPERTYUNDEAD, key);
-                jsonObject.AddKeyToBuff(EffectStatusIDs.BLOODING, key);
-                jsonObject.AddKeyToBuff(EffectStatusIDs.MISTY_FROST, key);
-                jsonObject.AddKeyToBuff(EffectStatusIDs.CRITICALWOUND, key);
-                jsonObject.AddKeyToBuff(EffectStatusIDs.OVERHEAT, key);
+                jsonObject.AddKeyToBuff(EffectStatusIdEnum.PROPERTYUNDEAD, key);
+                jsonObject.AddKeyToBuff(EffectStatusIdEnum.BLOODING, key);
+                jsonObject.AddKeyToBuff(EffectStatusIdEnum.MISTY_FROST, key);
+                jsonObject.AddKeyToBuff(EffectStatusIdEnum.CRITICALWOUND, key);
+                jsonObject.AddKeyToBuff(EffectStatusIdEnum.OVERHEAT, key);
 
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.StatusRecovery = updatedJson;
@@ -459,9 +381,9 @@ namespace RagnarokHotKeyInWinforms
             var jsonObject = JsonSerializer.Deserialize<AutoBuff>(userToggleState.Autobuff);
 
             // Return the dictionary
-            var autoBuffClones = new Dictionary<EffectStatusIDs, Key>(jsonObject.buffMapping);
+            var autoBuffClones = new Dictionary<EffectStatusIdEnum, Key>(jsonObject.buffMapping);
             // Assign key values to corresponding textboxes
-            foreach (KeyValuePair<EffectStatusIDs, Key> config in autoBuffClones)
+            foreach (KeyValuePair<EffectStatusIdEnum, Key> config in autoBuffClones)
             {
                 bool found = false;
 
@@ -510,7 +432,7 @@ namespace RagnarokHotKeyInWinforms
             //trigger the containers and textboxes doRender()
             new BuffRenderer(skillBuffContainers, toolTipAutoBuff).doRender();
             //The retrieving of this from database is from our Stuff Autobuff
-            foreach (KeyValuePair<EffectStatusIDs, Key> config in autoBuffClones)
+            foreach (KeyValuePair<EffectStatusIdEnum, Key> config in autoBuffClones)
             {
                 bool found = false;
 
@@ -553,7 +475,7 @@ namespace RagnarokHotKeyInWinforms
                 TextBox txtBox = (TextBox)sender;
                 if (!string.IsNullOrWhiteSpace(txtBox.Text))
                 {
-                    if (!Enum.TryParse(txtBox.Name, out EffectStatusIDs statusID))
+                    if (!Enum.TryParse(txtBox.Name, out EffectStatusIdEnum statusID))
                     {
                         Console.WriteLine($"Invalid EffectStatusID from TextBox name: {txtBox.Name}");
                         return;
@@ -584,9 +506,9 @@ namespace RagnarokHotKeyInWinforms
         }
         #endregion Stuff and Skill Auto Buff
         #region Ahk Region (Triggered with Start() method)
-        private void DisableControlsIfSpeedBoost(AHK jsonObject)
+        private void DisableControlsIfSpeedBoost(Ahk jsonObject)
         {
-            if (jsonObject.ahkMode == AHK.SPEED_BOOST)
+            if (jsonObject.ahkMode == Ahk.SPEED_BOOST)
             {
                 this.ahkSpeedBoost.Checked = true;
                 this.chkMouseFlick.Enabled = false;
@@ -624,7 +546,7 @@ namespace RagnarokHotKeyInWinforms
             }
 
             var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AHK>(userToggleState.Ahk);
+            var jsonObject = JsonSerializer.Deserialize<Ahk>(userToggleState.Ahk);
             txtSpammerDelay.Text = jsonObject.AhkDelay.ToString() ?? "0";
             DisableControlsIfSpeedBoost(jsonObject);
             #region Keys that have key
@@ -681,14 +603,14 @@ namespace RagnarokHotKeyInWinforms
             #endregion Keys that have no key in keyboard
 
             //SpPercent Controls
-            txtSpammerDelay.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
-            txtSpammerDelay.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
+            txtSpammerDelay.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
+            txtSpammerDelay.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
             txtSpammerDelay.TextChanged += async (sender, e) => await txtSpammerDelayChanged(sender, e);
         }
         private async Task txtSpammerDelayChanged(object sender, EventArgs e)
         {
             var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AHK>(userToggleState.Ahk);
+            var jsonObject = JsonSerializer.Deserialize<Ahk>(userToggleState.Ahk);
             Key key = (Key)Enum.Parse(typeof(Key), txtSpammerDelay.Text);
 
             if (jsonObject != null)
@@ -720,10 +642,10 @@ namespace RagnarokHotKeyInWinforms
 
 
             var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AHK>(userToggleState.Ahk);
+            var jsonObject = JsonSerializer.Deserialize<Ahk>(userToggleState.Ahk);
             if (ahkCompatibility.Checked)
             {
-                jsonObject.ahkMode = AHK.COMPATABILITY;
+                jsonObject.ahkMode = Ahk.COMPATABILITY;
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.Ahk = updatedJson;
 
@@ -732,7 +654,7 @@ namespace RagnarokHotKeyInWinforms
             }
             else
             {
-                jsonObject.ahkMode = AHK.SPEED_BOOST;
+                jsonObject.ahkMode = Ahk.SPEED_BOOST;
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.Ahk = updatedJson;
                 this.chkMouseFlick.Enabled = false;
@@ -776,7 +698,7 @@ namespace RagnarokHotKeyInWinforms
             bool haveMouseClick = checkbox.CheckState == CheckState.Checked ? true : false;
 
             var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AHK>(userToggleState.Ahk);
+            var jsonObject = JsonSerializer.Deserialize<Ahk>(userToggleState.Ahk);
             //If there is a checked key in checkbox then register this to the profile that was selected.
             if (checkbox.CheckState == CheckState.Checked || checkbox.CheckState == CheckState.Indeterminate)
             {
@@ -801,7 +723,7 @@ namespace RagnarokHotKeyInWinforms
             bool haveMouseClick = checkbox.CheckState == CheckState.Checked ? true : false;
 
             var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AHK>(userToggleState.Ahk);
+            var jsonObject = JsonSerializer.Deserialize<Ahk>(userToggleState.Ahk);
             //If there is a checked key in checkbox then register this to the profile that was selected.
             if (checkbox.CheckState == CheckState.Checked)
             {
@@ -933,7 +855,7 @@ namespace RagnarokHotKeyInWinforms
 
                     if (chainConfig != null && chainConfig.macroEntries.ContainsKey(macroEntryKey))
                     {
-                        chainConfig.macroEntries[macroEntryKey].key = Key.None;
+                        chainConfig.macroEntries[macroEntryKey].Key = Key.None;
                     }
                 }
             }
@@ -1026,7 +948,7 @@ namespace RagnarokHotKeyInWinforms
                     if (controls.Length > 0)
                     {
                         TextBox textBox = (TextBox)controls[0];
-                        textBox.Text = chainConfig.macroEntries[cbName].key.ToString();
+                        textBox.Text = chainConfig.macroEntries[cbName].Key.ToString();
                     }
                 }
 
@@ -1064,8 +986,8 @@ namespace RagnarokHotKeyInWinforms
                     if (c is TextBox)
                     {
                         TextBox textBox = (TextBox)c;
-                        textBox.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
-                        textBox.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
+                        textBox.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
+                        textBox.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
                         textBox.TextChanged += new EventHandler(this.onTextChangeMacroSong);
                     }
 
@@ -1219,8 +1141,8 @@ namespace RagnarokHotKeyInWinforms
                     if (c is TextBox)
                     {
                         TextBox textBox = (TextBox)c;
-                        textBox.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
-                        textBox.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
+                        textBox.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
+                        textBox.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
                         textBox.TextChanged += new EventHandler(this.onTextChangeMacroSwitch);
                     }
 
@@ -1239,7 +1161,7 @@ namespace RagnarokHotKeyInWinforms
         {
 
             var toggleStateValue = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<ATKDefMode>(toggleStateValue.AtkDefMode);
+            var jsonObject = JsonSerializer.Deserialize<AttackDefendMode>(toggleStateValue.AtkDefMode);
 
             this.inSpammerKey.Text = jsonObject.keySpammer.ToString();
             this.spammerDelay.Value = jsonObject.ahkDelay;
@@ -1256,8 +1178,8 @@ namespace RagnarokHotKeyInWinforms
                     TextBox tb = (TextBox)control;
                     if (!tb.Tag.ToString().Equals("spammerKey"))
                     {
-                        ATKDEFEnum mode = (ATKDEFEnum)Int16.Parse(tb.Tag.ToString());
-                        if (mode == ATKDEFEnum.DEF)
+                        AttackDefendEnum mode = (AttackDefendEnum)Int16.Parse(tb.Tag.ToString());
+                        if (mode == AttackDefendEnum.DEF)
                         {
                             tb.Text = defKeys.ContainsKey(tb.Name) ? defKeys[tb.Name].ToString() : Keys.None.ToString();
                         }
@@ -1268,8 +1190,8 @@ namespace RagnarokHotKeyInWinforms
                     }
 
                     TextBox textBox = (TextBox)control;
-                    textBox.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
-                    textBox.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
+                    textBox.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
+                    textBox.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
                     textBox.TextChanged += new EventHandler(this.AttackDefendonTextChange);
 
                 }
@@ -1285,24 +1207,24 @@ namespace RagnarokHotKeyInWinforms
             }
 
             //Delay
-            spammerDelay.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
-            spammerDelay.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
+            spammerDelay.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
+            spammerDelay.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
             spammerDelay.TextChanged += async (sender, e) => await txtSpammerDelayTextChanged(sender, e);
 
             //Switch Delay
-            switchDelay.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
-            switchDelay.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
+            switchDelay.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
+            switchDelay.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
             switchDelay.TextChanged += async (sender, e) => await txtSwitchDelayTextChanged(sender, e);
             //
-            inSpammerKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
-            inSpammerKey.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
+            inSpammerKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
+            inSpammerKey.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
             inSpammerKey.TextChanged += async (sender, e) => await txtInSpammerDelayTextChanged(sender, e);
 
         }
         private async Task txtInSpammerDelayTextChanged(object sender, EventArgs e)
         {
             var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<ATKDefMode>(userToggleState.AtkDefMode);
+            var jsonObject = JsonSerializer.Deserialize<AttackDefendMode>(userToggleState.AtkDefMode);
             Key key = (Key)Enum.Parse(typeof(Key), inSpammerKey.Text);
 
             if (jsonObject != null)
@@ -1321,7 +1243,7 @@ namespace RagnarokHotKeyInWinforms
         private async Task txtSpammerDelayTextChanged(object sender, EventArgs e)
         {
             var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<ATKDefMode>(userToggleState.AtkDefMode);
+            var jsonObject = JsonSerializer.Deserialize<AttackDefendMode>(userToggleState.AtkDefMode);
             Key key = (Key)Enum.Parse(typeof(Key), spammerDelay.Text);
 
             if (jsonObject != null)
@@ -1340,7 +1262,7 @@ namespace RagnarokHotKeyInWinforms
         private async Task txtSwitchDelayTextChanged(object sender, EventArgs e)
         {
             var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<ATKDefMode>(userToggleState.AtkDefMode);
+            var jsonObject = JsonSerializer.Deserialize<AttackDefendMode>(userToggleState.AtkDefMode);
             Key key = (Key)Enum.Parse(typeof(Key), switchDelay.Text);
 
             if (jsonObject != null)
@@ -1359,7 +1281,7 @@ namespace RagnarokHotKeyInWinforms
         private async void ChkBox_CheckedChanged(object sender, EventArgs e)
         {
             var toggleStateValue = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<ATKDefMode>(toggleStateValue.AtkDefMode);
+            var jsonObject = JsonSerializer.Deserialize<AttackDefendMode>(toggleStateValue.AtkDefMode);
 
             jsonObject.keySpammerWithClick = this.inSpammerClick.Checked;
             var updatedJson = JsonSerializer.Serialize(jsonObject);
@@ -1370,7 +1292,7 @@ namespace RagnarokHotKeyInWinforms
         private async void AttackDefendonTextChange(object sender, EventArgs e)
         {
             var toggleStateValue = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<ATKDefMode>(toggleStateValue.AtkDefMode);
+            var jsonObject = JsonSerializer.Deserialize<AttackDefendMode>(toggleStateValue.AtkDefMode);
 
             TextBox textBox = (TextBox)sender;
             Key key = (Key)Enum.Parse(typeof(Key), textBox.Text.ToString());
@@ -1382,7 +1304,7 @@ namespace RagnarokHotKeyInWinforms
             }
             else
             {
-                ATKDEFEnum mode = (ATKDEFEnum)Int16.Parse(textBox.Tag.ToString());
+                AttackDefendEnum mode = (AttackDefendEnum)Int16.Parse(textBox.Tag.ToString());
                 jsonObject.AddSwitchItem(textBox.Name, key, mode);
             }
             var updatedJson = JsonSerializer.Serialize(jsonObject);
@@ -1393,9 +1315,9 @@ namespace RagnarokHotKeyInWinforms
         }
         #endregion Attack Defend Form
         #region Public methods
-        public async void Update(ISubject subject)
+        public async void Update(ISubjectService subject)
         {
-            switch ((subject as Subject).Message.code)
+            switch ((subject as SubjectService).Message.code)
             {
                 case MessageCode.TURN_ON:
                     Client client = ClientSingleton.GetClient();
@@ -1422,11 +1344,19 @@ namespace RagnarokHotKeyInWinforms
         }
         #endregion
         #region Private Methods
+        //Get the reference code of the user
+        private async Task<UserSettings> ReturnToggleKey()
+        {
+            var getBaseTable = await _baseTableService.SearchUser(_userEmail);
+            var toggleStateValue = await _userSettingService.SelectUserPreference(getBaseTable.ReferenceCode);
+            return toggleStateValue;
+        }
+
         private void RefreshLogList()
         {
             logListBox.BeginUpdate();
             logListBox.Items.Clear();
-
+            
             foreach (var entry in LogStore.SortedDescending)
             {
                 logListBox.Items.Add(entry.ToString());
@@ -1446,7 +1376,7 @@ namespace RagnarokHotKeyInWinforms
         {
             Client client = ClientSingleton.GetClient();
             //Done
-            var jsonObjectAhk = await GetDeserializedObject<AHK>(async () => (await ReturnToggleKey()).Ahk);
+            var jsonObjectAhk = await GetDeserializedObject<Ahk>(async () => (await ReturnToggleKey()).Ahk);
             //Done
             var jsonObjectAutopot = await GetDeserializedObject<Autopot>(async () => (await ReturnToggleKey()).Autopot);
             //Done
@@ -1460,8 +1390,8 @@ namespace RagnarokHotKeyInWinforms
             //Done
             var jsonObjectMacroSwitch = await GetDeserializedObject<MacroSwitch>(async () => (await ReturnToggleKey()).MacroSwitch);
             //Done
-            var jsonObjectAtkDef = await GetDeserializedObject<ATKDefMode>(async () => (await ReturnToggleKey()).AtkDefMode);
-            mainThread = new _4RThread(_ =>
+            var jsonObjectAtkDef = await GetDeserializedObject<AttackDefendMode>(async () => (await ReturnToggleKey()).AtkDefMode);
+            ThreadUtility = new ThreadUtility(_ =>
             {
                 jsonObjectAhk?.AHKThreadExecution(client);
                 jsonObjectAutopot?.AutopotThreadExecution(client, 0);
@@ -1476,13 +1406,21 @@ namespace RagnarokHotKeyInWinforms
         }
         private void TriggerStopActions()
         {
-            mainThread?.Stop();
+            ThreadUtility?.Stop();
         }
 
         private async void Form1_Load(object sender, EventArgs e)
         {
+            this.IsMdiContainer = true;
             try
             {
+                _toggleApplicationForm.MdiParent = this;
+                _toggleApplicationForm.Show();
+
+                // Manually position the forms
+                _toggleApplicationForm.Location = new Point(0, 0);
+                //_toggleApplicationForm.Size = new Size(this.ClientSize.Width / 2, this.ClientSize.Height);
+
                 progressBar1.Value = 0;
                 progressBar1.Maximum = 15;
                 lblLoadingSettings.Visible = true;
@@ -1504,7 +1442,7 @@ namespace RagnarokHotKeyInWinforms
                 lblUserName.Text = $"Welcome back, {storedCreds.Name}";
                 progressBar1.Value++;
 
-                await Retrieve(); progressBar1.Value++;
+                //await Retrieve(); progressBar1.Value++;
                 await RetrieveAutopot(); progressBar1.Value++;
                 await SkillTimerRetrieve(); progressBar1.Value++;
                 await RetrieveStatusEffect(); progressBar1.Value++;
@@ -1540,7 +1478,7 @@ namespace RagnarokHotKeyInWinforms
                 //path where the supported_server.json was saved \bin\Debug\Resources
                 string localFilePath = Path.Combine(AppConfig.LocalResourcePath, RagnarokConstants.SupportedServerJson);
                 string localServerRaw = File.ReadAllText(localFilePath);
-                clients.AddRange(JsonSerializer.Deserialize<List<ClientDTO>>(localServerRaw));
+                clients.AddRange(JsonSerializer.Deserialize<List<ClientDto>>(localServerRaw));
             }
             catch (Exception ex)
             {
@@ -1578,9 +1516,9 @@ namespace RagnarokHotKeyInWinforms
                 btnLogout.Enabled = true;
             }
         }
-        private void LoadServers(List<ClientDTO> clients)
+        private void LoadServers(List<ClientDto> clients)
         {
-            foreach (ClientDTO clientDto in clients)
+            foreach (ClientDto clientDto in clients)
             {
                 try
                 {
@@ -1611,7 +1549,7 @@ namespace RagnarokHotKeyInWinforms
         private void ShutdownApplication()
         {
             KeyboardHook.Disable();
-            subject.Notify(new Utilities.Message(MessageCode.TURN_OFF, null));
+            subject.Notify(new ApplicationLayer.Utilities.Message(MessageCode.TURN_OFF, null));
             Environment.Exit(0);
         }
 

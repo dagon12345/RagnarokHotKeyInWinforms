@@ -55,7 +55,6 @@
             this.label19 = new System.Windows.Forms.Label();
             this.txtAutoRefreshDelay = new System.Windows.Forms.NumericUpDown();
             this.txtSkillTimerKey = new System.Windows.Forms.TextBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.panel5 = new System.Windows.Forms.Panel();
             this.label20 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
@@ -63,9 +62,6 @@
             this.label21 = new System.Windows.Forms.Label();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.txtStatusKey = new System.Windows.Forms.TextBox();
-            this.lblStatusToggle = new System.Windows.Forms.TextBox();
-            this.btnStatusToggle = new System.Windows.Forms.Button();
-            this.txtStatusToggleKey = new System.Windows.Forms.TextBox();
             this.btnLogout = new System.Windows.Forms.Button();
             this.lblUserName = new System.Windows.Forms.Label();
             this.btnRefresh = new System.Windows.Forms.Button();
@@ -402,7 +398,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.txtHPpct)).BeginInit();
             this.tabPageSkillTimer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtAutoRefreshDelay)).BeginInit();
-            this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabPageMacroSwitch.SuspendLayout();
@@ -779,28 +774,10 @@
             this.txtSkillTimerKey.Size = new System.Drawing.Size(57, 20);
             this.txtSkillTimerKey.TabIndex = 16;
             // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.panel5);
-            this.groupBox1.Controls.Add(this.label20);
-            this.groupBox1.Controls.Add(this.pictureBox2);
-            this.groupBox1.Controls.Add(this.txtNewStatusKey);
-            this.groupBox1.Controls.Add(this.label21);
-            this.groupBox1.Controls.Add(this.pictureBox1);
-            this.groupBox1.Controls.Add(this.txtStatusKey);
-            this.groupBox1.Controls.Add(this.lblStatusToggle);
-            this.groupBox1.Controls.Add(this.btnStatusToggle);
-            this.groupBox1.Controls.Add(this.txtStatusToggleKey);
-            this.groupBox1.Location = new System.Drawing.Point(2, 5);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(263, 183);
-            this.groupBox1.TabIndex = 10;
-            this.groupBox1.TabStop = false;
-            // 
             // panel5
             // 
             this.panel5.BackColor = System.Drawing.Color.Silver;
-            this.panel5.Location = new System.Drawing.Point(132, 147);
+            this.panel5.Location = new System.Drawing.Point(130, 155);
             this.panel5.Name = "panel5";
             this.panel5.Size = new System.Drawing.Size(1, 30);
             this.panel5.TabIndex = 33;
@@ -808,7 +785,7 @@
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(170, 156);
+            this.label20.Location = new System.Drawing.Point(168, 164);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(37, 13);
             this.label20.TabIndex = 32;
@@ -817,7 +794,7 @@
             // pictureBox2
             // 
             this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(144, 150);
+            this.pictureBox2.Location = new System.Drawing.Point(142, 158);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(24, 24);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -827,7 +804,7 @@
             // txtNewStatusKey
             // 
             this.txtNewStatusKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.txtNewStatusKey.Location = new System.Drawing.Point(207, 151);
+            this.txtNewStatusKey.Location = new System.Drawing.Point(205, 159);
             this.txtNewStatusKey.Name = "txtNewStatusKey";
             this.txtNewStatusKey.Size = new System.Drawing.Size(45, 23);
             this.txtNewStatusKey.TabIndex = 30;
@@ -835,7 +812,7 @@
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(39, 156);
+            this.label21.Location = new System.Drawing.Point(37, 164);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(37, 13);
             this.label21.TabIndex = 29;
@@ -844,7 +821,7 @@
             // pictureBox1
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(13, 150);
+            this.pictureBox1.Location = new System.Drawing.Point(11, 158);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(24, 24);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -854,41 +831,10 @@
             // txtStatusKey
             // 
             this.txtStatusKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.txtStatusKey.Location = new System.Drawing.Point(76, 151);
+            this.txtStatusKey.Location = new System.Drawing.Point(74, 159);
             this.txtStatusKey.Name = "txtStatusKey";
             this.txtStatusKey.Size = new System.Drawing.Size(45, 23);
             this.txtStatusKey.TabIndex = 27;
-            // 
-            // lblStatusToggle
-            // 
-            this.lblStatusToggle.BackColor = System.Drawing.SystemColors.Control;
-            this.lblStatusToggle.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.lblStatusToggle.Font = new System.Drawing.Font("Century Gothic", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblStatusToggle.Location = new System.Drawing.Point(4, 110);
-            this.lblStatusToggle.Name = "lblStatusToggle";
-            this.lblStatusToggle.ReadOnly = true;
-            this.lblStatusToggle.Size = new System.Drawing.Size(243, 16);
-            this.lblStatusToggle.TabIndex = 5;
-            this.lblStatusToggle.Text = "Press the button to start!";
-            this.lblStatusToggle.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // btnStatusToggle
-            // 
-            this.btnStatusToggle.Location = new System.Drawing.Point(78, 35);
-            this.btnStatusToggle.Name = "btnStatusToggle";
-            this.btnStatusToggle.Size = new System.Drawing.Size(100, 23);
-            this.btnStatusToggle.TabIndex = 4;
-            this.btnStatusToggle.Text = "Off";
-            this.btnStatusToggle.UseVisualStyleBackColor = true;
-            this.btnStatusToggle.Click += new System.EventHandler(this.btnStatusToggle_Click);
-            // 
-            // txtStatusToggleKey
-            // 
-            this.txtStatusToggleKey.Location = new System.Drawing.Point(78, 64);
-            this.txtStatusToggleKey.Multiline = true;
-            this.txtStatusToggleKey.Name = "txtStatusToggleKey";
-            this.txtStatusToggleKey.Size = new System.Drawing.Size(100, 40);
-            this.txtStatusToggleKey.TabIndex = 3;
             // 
             // btnLogout
             // 
@@ -4323,15 +4269,21 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(814, 798);
+            this.Controls.Add(this.panel5);
             this.Controls.Add(this.lblLogs);
+            this.Controls.Add(this.label20);
             this.Controls.Add(this.logListBox);
+            this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.lblLoadingSettings);
+            this.Controls.Add(this.txtNewStatusKey);
+            this.Controls.Add(this.label21);
             this.Controls.Add(this.progressBar1);
+            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btnRefresh);
+            this.Controls.Add(this.txtStatusKey);
             this.Controls.Add(this.lblUserName);
             this.Controls.Add(this.btnLogout);
             this.Controls.Add(this.tabMain);
-            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.tabControlAutopot);
             this.Controls.Add(this.lblSupportedServer);
             this.Controls.Add(this.pbSupportedServer);
@@ -4353,8 +4305,6 @@
             this.tabPageSkillTimer.ResumeLayout(false);
             this.tabPageSkillTimer.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtAutoRefreshDelay)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabPageMacroSwitch.ResumeLayout(false);
@@ -4526,12 +4476,8 @@
         private System.Windows.Forms.TabControl tabControlAutopot;
         private System.Windows.Forms.TabPage tabPageAutopot;
         private System.Windows.Forms.TabPage tabPageSkillTimer;
-        private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Button btnLogout;
         private System.Windows.Forms.Label lblUserName;
-        private System.Windows.Forms.TextBox lblStatusToggle;
-        private System.Windows.Forms.Button btnStatusToggle;
-        private System.Windows.Forms.TextBox txtStatusToggleKey;
         private System.Windows.Forms.NumericUpDown txtAutopotDelay;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label12;

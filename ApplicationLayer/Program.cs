@@ -1,4 +1,5 @@
-﻿using ApplicationLayer.Dto;
+﻿using ApplicationLayer.ChildForms;
+using ApplicationLayer.Dto;
 using ApplicationLayer.Forms;
 using ApplicationLayer.Interface;
 using ApplicationLayer.Service;
@@ -114,21 +115,23 @@ namespace RagnarokHotKeyInWinforms
 
 
                     #region Application Layer Services
-                    services.AddScoped<IGetUserInfo, GetUserInfoService>();
-                    services.AddScoped<ISignIn, SignInService>();
-                    services.AddScoped<IStoredCredentialService, StoredCredentialService>();
-                    services.AddScoped<IUserSettingService, UserSettingService>();
-                    services.AddScoped<IBaseTableService, BaseTableService>();
-                    services.AddScoped<IEmailService, SmtpEmailService>();
-                    services.AddScoped<IRegistrationService, RegistrationService>();
-                    services.AddScoped<LoginService>();
-                    services.AddScoped<PasswordRecoveryService>();
+                    services.AddTransient<IGetUserInfo, GetUserInfoService>();
+                    services.AddTransient<ISignIn, SignInService>();
+                    services.AddTransient<IStoredCredentialService, StoredCredentialService>();
+                    services.AddTransient<IUserSettingService, UserSettingService>();
+                    services.AddTransient<IBaseTableService, BaseTableService>();
+                    services.AddTransient<IEmailService, SmtpEmailService>();
+                    services.AddTransient<IRegistrationService, RegistrationService>();
+                    services.AddTransient<LoginService>();
+                    services.AddTransient<PasswordRecoveryService>();
+                    services.AddTransient<ToggleApplicationForm>();
+
                     #endregion
 
                     #region Infrastructure Layer Services
-                    services.AddScoped<IBaseTableRepository, BaseTableRepository>();
-                    services.AddScoped<IStoredCredentialRepository, StoredCredentialRepository>();
-                    services.AddScoped<IUserSettingRepository, UserSettingRepository>();
+                    services.AddTransient<IBaseTableRepository, BaseTableRepository>();
+                    services.AddTransient<IStoredCredentialRepository, StoredCredentialRepository>();
+                    services.AddTransient<IUserSettingRepository, UserSettingRepository>();
                     services.AddSingleton<IHasher, Pbkdf2Hasher>();
                     #endregion
 

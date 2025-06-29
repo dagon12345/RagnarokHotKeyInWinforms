@@ -1,4 +1,5 @@
 ﻿using ApplicationLayer.Interface;
+using ApplicationLayer.Models.RagnarokModels;
 using Domain.Constants;
 using Domain.ErrorMessages;
 using Domain.Model.DataModels;
@@ -22,15 +23,6 @@ namespace ApplicationLayer.Service
         {
             _userSettingRepository = userSettingRepository;
         }
-        public static object GetByAction(dynamic obj, RagnarokHotKeyInWinforms.Model.Action action)
-        {
-            if (obj != null & obj[action.GetActionName()] != null)
-            {
-                return obj[action.GetActionName()].ToString();
-            }
-            return action.GetConfiguration();
-        }
-
         public async Task<UserSettings> SearchByReferenceCode(Guid referenceCode)
         {
             try
@@ -63,7 +55,7 @@ namespace ApplicationLayer.Service
                         ReferenceCode = referenceCode,
                         Name = Name,
                         UserPreferences = JsonConvert.SerializeObject(profileConfiguration.UserPreferences),
-                        Ahk = JsonConvert.SerializeObject(profileConfiguration.AHK),
+                        Ahk = JsonConvert.SerializeObject(profileConfiguration.Ahk),
                         Autopot = JsonConvert.SerializeObject(profileConfiguration.Autopot),
                         AutopotYgg = JsonConvert.SerializeObject(profileConfiguration.AutopotYgg),
                         StatusRecovery = JsonConvert.SerializeObject(profileConfiguration.StatusRecovery),
@@ -71,7 +63,7 @@ namespace ApplicationLayer.Service
                         Autobuff = JsonConvert.SerializeObject(profileConfiguration.AutoBuff),
                         SongMacro = JsonConvert.SerializeObject(profileConfiguration.SongMacro),
                         MacroSwitch = JsonConvert.SerializeObject(profileConfiguration.MacroSwitch),
-                        AtkDefMode = JsonConvert.SerializeObject(profileConfiguration.AtkDefMode),
+                        AtkDefMode = JsonConvert.SerializeObject(profileConfiguration.AttackDefendMode),
                     };
                     _userSettingRepository.Add(userSettings);
                     await _userSettingRepository.SaveChangesAsync();

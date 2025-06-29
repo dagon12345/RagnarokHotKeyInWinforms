@@ -230,6 +230,11 @@
     <Compile Include="Service\LogStore.cs" />
     <Compile Include="Security\Pbkdf2Hasher.cs" />
     <Compile Include="SshTunnelManager.cs" />
+    <Compile Include="Utilities\FormUtilities.cs" />
+    <Compile Include="Utilities\InteropUtility.cs" />
+    <Compile Include="Utilities\KeyboardHook.cs" />
+    <Compile Include="Utilities\ProcessMemoryReader.cs" />
+    <Compile Include="Utilities\ThreadUtility.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.csproj">

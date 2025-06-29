@@ -81,16 +81,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppConfig.cs" />
-    <Compile Include="Dto\EmailDto.cs" />
-    <Compile Include="Dto\LoginDto.cs" />
-    <Compile Include="Dto\RegisterUserDto.cs" />
-    <Compile Include="Dto\SignInRegistrationDto.cs" />
-    <Compile Include="Forms\AtkDefForm.cs">
+    <Compile Include="ChildForms\ToggleApplicationForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\AtkDefForm.Designer.cs">
-      <DependentUpon>AtkDefForm.cs</DependentUpon>
+    <Compile Include="ChildForms\ToggleApplicationForm.Designer.cs">
+      <DependentUpon>ToggleApplicationForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dto\EmailDto.cs" />
+    <Compile Include="Dto\LoginDto.cs" />
+    <Compile Include="Dto\RagnarokDto\ClientDto.cs" />
+    <Compile Include="Dto\RegisterUserDto.cs" />
+    <Compile Include="Dto\SignInRegistrationDto.cs" />
     <Compile Include="Forms\ConfirmForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -102,12 +103,6 @@
     </Compile>
     <Compile Include="Forms\frm_Main.Designer.cs">
       <DependentUpon>frm_Main.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Forms\ProfileForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\ProfileForm.Designer.cs">
-      <DependentUpon>ProfileForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\RegisterForm.cs">
       <SubType>Form</SubType>
@@ -140,6 +135,29 @@
     <Compile Include="Interface\ISignIn.cs" />
     <Compile Include="Interface\IStoredCredentialService.cs" />
     <Compile Include="Interface\IUserSettingService.cs" />
+    <Compile Include="Interface\RagnarokInterface\IObserverService.cs" />
+    <Compile Include="Interface\RagnarokInterface\ISubjectService.cs" />
+    <Compile Include="Models\RagnarokModels\Ahk.cs" />
+    <Compile Include="Models\RagnarokModels\AttackDefendMode.cs" />
+    <Compile Include="Models\RagnarokModels\AutoBuff.cs" />
+    <Compile Include="Models\RagnarokModels\Autopot.cs" />
+    <Compile Include="Models\RagnarokModels\AutoRefreshSpammer.cs" />
+    <Compile Include="Models\RagnarokModels\Buff.cs" />
+    <Compile Include="Models\RagnarokModels\BuffContainer.cs" />
+    <Compile Include="Models\RagnarokModels\BuffRenderer.cs" />
+    <Compile Include="Models\RagnarokModels\ChainConfig.cs" />
+    <Compile Include="Models\RagnarokModels\ChainConfigSwitch.cs" />
+    <Compile Include="Models\RagnarokModels\Client.cs" />
+    <Compile Include="Models\RagnarokModels\KeyConfig.cs" />
+    <Compile Include="Models\RagnarokModels\KeyConfigOthers.cs" />
+    <Compile Include="Models\RagnarokModels\LocalServerManager.cs" />
+    <Compile Include="Models\RagnarokModels\Macro.cs" />
+    <Compile Include="Models\RagnarokModels\MacroKey.cs" />
+    <Compile Include="Models\RagnarokModels\MacroKeySwitch.cs" />
+    <Compile Include="Models\RagnarokModels\MacroSwitch.cs" />
+    <Compile Include="Models\RagnarokModels\Profile.cs" />
+    <Compile Include="Models\RagnarokModels\StatusRecovery.cs" />
+    <Compile Include="Models\RagnarokModels\UserPreferences.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -151,24 +169,30 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
+    <Compile Include="RagnarokHotKeyInWinforms\Model.cs" />
     <Compile Include="Service\BaseTableService.cs" />
     <Compile Include="Service\GetUserInfoService.cs" />
     <Compile Include="Service\LoginService.cs" />
     <Compile Include="Service\PasswordRecoveryService.cs" />
+    <Compile Include="Service\RagnarokService\SubjectService.cs" />
     <Compile Include="Service\RegistrationService.cs" />
     <Compile Include="Service\SignInService.cs" />
     <Compile Include="Service\SmtpEmailService.cs" />
     <Compile Include="Service\StoredCredentialService.cs" />
     <Compile Include="Service\UserSettingService.cs" />
+    <Compile Include="Singleton\RagnarokSingleton\ClientListSingleton.cs" />
+    <Compile Include="Singleton\RagnarokSingleton\ClientSingleton.cs" />
+    <Compile Include="Singleton\RagnarokSingleton\ProfileSingleton.cs" />
     <Compile Include="Utilities\FormManager.cs" />
+    <Compile Include="Utilities\Message.cs" />
     <Compile Include="Validator\EmailDtoValidator.cs" />
     <Compile Include="Validator\LoginDtoValidator.cs" />
     <Compile Include="Validator\RegisterUserDtoValidator.cs" />
     <Compile Include="Validator\SignInRegistrationDtoValidator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Forms\AtkDefForm.resx">
-      <DependentUpon>AtkDefForm.cs</DependentUpon>
+    <EmbeddedResource Include="ChildForms\ToggleApplicationForm.resx">
+      <DependentUpon>ToggleApplicationForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ConfirmForm.resx">
       <DependentUpon>ConfirmForm.cs</DependentUpon>
@@ -176,9 +200,6 @@
     <EmbeddedResource Include="Forms\frm_Main.resx">
       <DependentUpon>frm_Main.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\ProfileForm.resx">
-      <DependentUpon>ProfileForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\RegisterForm.resx">
       <DependentUpon>RegisterForm.cs</DependentUpon>
@@ -534,6 +555,534 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\google_icon-icons.com_62736.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\4rtools.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\abrasive.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ac_concentration.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\adjustment.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ads_placeholder_clean.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\agi_3rd_food.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\agi_food.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\al_angelus.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\al_blessing.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\al_blessing.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\al_incagi.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\al_incagi.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\almighty.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\aloevera.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\amplify.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\anodyne.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrow-right-2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrow-right-3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\arrow-right-4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\as_poisonreact.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\asc_edp.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\assumptio.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\awakening_potion.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\berserk_potion.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\blessing_of_tyr.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\blue_herb_activator.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bs_adrenaline.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bs_adrenaline2.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bs_maximize.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bs_overthrust.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\bs_weaponperfect.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cart_boost.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cash_food.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cat_can.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\celermine.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\coldproof.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\combat_manual.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\combat_pill.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\combo-tools.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\concentration_potiongif.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cotton-shirt.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cr_autoguard.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cr_defender.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cr_fullprotection.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cr_reflectshield.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cr_shrink.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cr_spearquicken.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cursed_water.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dex_3rd_food.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\dex_food.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\disc_logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\disc_logo_2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\drowsiness.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\earhproof.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ele_earth_converter.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ele_fire_converter.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ele_water_converter.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ele_wind_converter.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\elvira_candy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\enchant_blade.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\energetic_drink.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\enriched_celermine.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\equip1.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\equip2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\equip3.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\equip4.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\equip5.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\equip6.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\equip7.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\equip8.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fireproof.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\firm_faith.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\friggs_song.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\fury.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\gatling_fever.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\gentle_touch_convert.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\gentle_touch_revitalize.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ghp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\glittering.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\gloom.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Golden X.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\gsp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\guard.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\HAGALAZ.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\he_bubble_gum.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hood.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Ilimitar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\impositio_manus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\increase_accuracy.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\int_3rd_food.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\int_food.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\izayoi.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\knife.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\lg_inspiration.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\lg_prestige.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\lg_shieldspell.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\lk_aurablade.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\lk_berserk.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\lk_concentration.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logo-4rtools.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logo-4rtools-small.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logo-4rtools-small-2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luk_3rd_food.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\luk_food.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\lutie_pancake.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\LUX_AMINA.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\madnesscancel.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mana_plus.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mc_loud.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mec_acceleration.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mega_resist_potion.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mer_quicken.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mg_energycoat.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\mob_transform.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\moonlight_serenade.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ms_parrying.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\nj_nen.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\nj_utsusemi.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\octocat.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\OTHILA.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pf_doublecasting.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pf_memorize.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\poem_of_bragi.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\powerful_faith.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pr_gloria.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\pr_magnificat.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ragnarok-icon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\recognized_spell.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\red_booster.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\red_herb_activator.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\reflect_damage.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\regeneration.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\researchreport.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\resentment.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\rising_dragon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sa_autospell.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\scroll.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\servant_weapon.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\shoes.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sl_soullinker.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sm_autoberserk.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sm_endure.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sn_sight.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sn_windwalk.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\speed.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\speedpotion.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\st_preserve.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\st_rejectsword.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\str_3rd_food.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\strfood.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\strfood.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\strfood2.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sunbox.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\swing_k.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\telecinese.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\thunderproof.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\THURISAZ.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tk_earth.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tk_mild_earth.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tk_mild_fire.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tk_mild_ghost.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tk_mild_holy.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tk_mild_shadow.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tk_mild_water.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tk_mild_wind.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tumbling.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\vanguard_force.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\violin.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\vit_3rd_food.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\vit_food.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\weapon_blocking.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\windmill_rush.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ws_cartboost.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ws_meltdown.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\ws_overthrustmax.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\wz_sightblaster.gif" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Microsoft.Data.SqlClient.SNI.1.1.0\build\net46\Microsoft.Data.SqlClient.SNI.targets" Condition="Exists('..\packages\Microsoft.Data.SqlClient.SNI.1.1.0\build\net46\Microsoft.Data.SqlClient.SNI.targets')" />

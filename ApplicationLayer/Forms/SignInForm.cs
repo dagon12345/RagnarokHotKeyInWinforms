@@ -1,4 +1,5 @@
-﻿using ApplicationLayer.Dto;
+﻿using ApplicationLayer.ChildForms;
+using ApplicationLayer.Dto;
 using ApplicationLayer.Interface;
 using ApplicationLayer.Service;
 using ApplicationLayer.Validator;
@@ -182,20 +183,6 @@ namespace ApplicationLayer.Forms
                 }
             }
         }
-
-        public static class Theme
-        {
-            public static Color BackgroundColor => Color.FromArgb(4, 47, 102);
-            public static Color PrimaryColor => Color.FromArgb(33, 150, 243); 
-            public static Color AccentColor => Color.FromArgb(255, 87, 34);      
-            public static Color TextColor => Color.White;
-            public static Color ButtonBackGroundColor => Color.FromArgb(25, 121, 169);
-
-            //Font element
-            public static Font DefaultFont => new Font("Segoe UI", 10, FontStyle.Regular);
-            public static Font BoldFont => new Font("Segoe UI Semibold", 9, FontStyle.Bold);
-        }
-
         private void ApplyDarkBlueTheme()
         {
             this.BackColor = Color.FromArgb(23, 32, 42); // Deep navy background
@@ -234,12 +221,12 @@ namespace ApplicationLayer.Forms
         {
             this.Hide(); // Hide the LoginForm
             var storedCredential = Program.ServiceProvider.GetRequiredService<IStoredCredentialService>();
-            var userSignIn = Program.ServiceProvider.GetRequiredService<ISignIn>();
             var userSettings = Program.ServiceProvider.GetRequiredService<IUserSettingService>();
             var baseTable = Program.ServiceProvider.GetRequiredService<IBaseTableService>();
             var hashHer = Program.ServiceProvider.GetRequiredService<IHasher>();
+            var toggleForm = Program.ServiceProvider.GetRequiredService<ToggleApplicationForm>();
 
-            frm_Main mainMenuForm = new frm_Main(storedCredential, userSignIn, userSettings, baseTable, hashHer, email);
+            frm_Main mainMenuForm = new frm_Main(storedCredential, userSettings, baseTable, hashHer, email, toggleForm);
             mainMenuForm.ShowDialog();
         }
 

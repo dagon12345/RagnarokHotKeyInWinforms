@@ -542,7 +542,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(272, 118);
+            this.label1.Location = new System.Drawing.Point(279, 183);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(84, 13);
             this.label1.TabIndex = 0;
@@ -551,7 +551,7 @@
             // characterName
             // 
             this.characterName.AutoSize = true;
-            this.characterName.Location = new System.Drawing.Point(272, 142);
+            this.characterName.Location = new System.Drawing.Point(279, 207);
             this.characterName.Name = "characterName";
             this.characterName.Size = new System.Drawing.Size(37, 13);
             this.characterName.TabIndex = 1;
@@ -561,7 +561,7 @@
             // 
             this.processCombobox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.processCombobox.FormattingEnabled = true;
-            this.processCombobox.Location = new System.Drawing.Point(272, 54);
+            this.processCombobox.Location = new System.Drawing.Point(279, 119);
             this.processCombobox.Name = "processCombobox";
             this.processCombobox.Size = new System.Drawing.Size(194, 21);
             this.processCombobox.TabIndex = 2;
@@ -570,7 +570,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(272, 38);
+            this.label2.Location = new System.Drawing.Point(279, 103);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(83, 13);
             this.label2.TabIndex = 3;
@@ -838,7 +838,7 @@
             // 
             // btnLogout
             // 
-            this.btnLogout.Location = new System.Drawing.Point(733, 6);
+            this.btnLogout.Location = new System.Drawing.Point(727, 44);
             this.btnLogout.Name = "btnLogout";
             this.btnLogout.Size = new System.Drawing.Size(75, 23);
             this.btnLogout.TabIndex = 12;
@@ -850,7 +850,7 @@
             // 
             this.lblUserName.AutoSize = true;
             this.lblUserName.Font = new System.Drawing.Font("Century Gothic", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUserName.Location = new System.Drawing.Point(271, 10);
+            this.lblUserName.Location = new System.Drawing.Point(278, 75);
             this.lblUserName.Name = "lblUserName";
             this.lblUserName.Size = new System.Drawing.Size(193, 19);
             this.lblUserName.TabIndex = 12;
@@ -858,7 +858,7 @@
             // 
             // btnRefresh
             // 
-            this.btnRefresh.Location = new System.Drawing.Point(272, 81);
+            this.btnRefresh.Location = new System.Drawing.Point(279, 146);
             this.btnRefresh.Name = "btnRefresh";
             this.btnRefresh.Size = new System.Drawing.Size(121, 23);
             this.btnRefresh.TabIndex = 13;

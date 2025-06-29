@@ -21,9 +21,10 @@ namespace ApplicationLayer.ChildForms
         private Label labelAssigned;
         private Keys lastKey;
         private SubjectService subject = new SubjectService();//subject triggers the Update() method inside notify function
-
         private readonly IBaseTableService _baseTableService;
         private readonly IUserSettingService _userSettingService;
+        public string email;//get the users email from login
+
         public ToggleApplicationForm(IBaseTableService baseTableService,
             IUserSettingService userSettingService)
         {
@@ -34,46 +35,60 @@ namespace ApplicationLayer.ChildForms
             _baseTableService = baseTableService;
             _userSettingService = userSettingService;
         }
+        protected override async void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            await Retrieve();
+           // button.Click += Button_Click;
+        }
+        private void Button_Click(object sender, EventArgs e)
+        {
+            this.toggleStatus();
+        }
+        #region Design Region
         /*
-         * Location = new Point(x, y)
-           x – Horizontal distance in pixels from the left edge of the form.
-           
-           y – Vertical distance in pixels from the top edge of the form.
-           
-           So for new Point(20, 20):
-           
-           The control is placed 20 pixels from the left
-           
-           And 20 pixels down from the top
-           
-           Think of it like a coordinate system with the origin (0,0) at the top-left corner of the form.
-         */
+       * Location = new Point(x, y)
+         x – Horizontal distance in pixels from the left edge of the form.
+
+         y – Vertical distance in pixels from the top edge of the form.
+
+         So for new Point(20, 20):
+
+         The control is placed 20 pixels from the left
+
+         And 20 pixels down from the top
+
+         Think of it like a coordinate system with the origin (0,0) at the top-left corner of the form.
+       */
         private void InitializeCustomComponents()
         {
-            //Label
+            //Label (left, right)
             label = new Label();
             label.Text = "Click to start!";
-            label.Location = new System.Drawing.Point(70, 20);
+            label.Location = new System.Drawing.Point(175, 12);
             label.AutoSize = true;
 
             labelAssigned = new Label();
             labelAssigned.Text = "Key";
-            labelAssigned.Location = new System.Drawing.Point(0, 50);
+            labelAssigned.Location = new System.Drawing.Point(0, 10);
             labelAssigned.AutoSize = true;
 
             // TextBox
             textBox = new TextBox();
-            textBox.Location = new System.Drawing.Point(30, 50);
-            textBox.Width = 150;
-            
+            textBox.Location = new System.Drawing.Point(30, 10);
+            textBox.Width = 50;
+            textBox.Height = 20;
+
 
             // Button
             button = new Button();
             button.Text = "Start";
-            button.Location = new System.Drawing.Point(30, 90);
+            button.Location = new System.Drawing.Point(100, 10);
             button.Cursor = Cursors.Hand;
             button.Click += Button_Click;
-            button.Width = 150;
+            button.Width = 70;
+            button.Height = 20;
+
 
             // Add controls to form
             this.Controls.Add(label);
@@ -82,10 +97,10 @@ namespace ApplicationLayer.ChildForms
             this.Controls.Add(labelAssigned);
 
             // Form properties
-            this.Text = "Toggle Application";
-            this.StartPosition = FormStartPosition.CenterScreen;
-            this.ClientSize = new System.Drawing.Size(200, 150);
-            this.FormBorderStyle = FormBorderStyle.None;
+            //this.Text = "Toggle Application";
+            //this.StartPosition = FormStartPosition.CenterScreen;
+            ////this.ClientSize = new System.Drawing.Size(200, 150);
+            //this.FormBorderStyle = FormBorderStyle.None;
         }
         private void ApplyDarkBlueTheme()
         {
@@ -108,23 +123,24 @@ namespace ApplicationLayer.ChildForms
                     btn.ForeColor = Color.White;
                     btn.FlatStyle = FlatStyle.Flat;
                     btn.FlatAppearance.BorderSize = 0;
-                    btn.Font = new Font("Segoe UI", 10, FontStyle.Bold);
+                    btn.Font = new Font("Segoe UI", 8, FontStyle.Bold);
                 }
 
-                if(ctrl is Label lbl)
+                if (ctrl is Label lbl)
                 {
                     lbl.Font = new Font("Segoe UI", 8, FontStyle.Bold);
                 }
             }
         }
+        #endregion
+
         //Get the reference code of the user
-        private async Task<UserSettings> ReturnToggleKey(string userEmail)
+        private async Task<UserSettings> ReturnToggleKey()
         {
-            var getBaseTable = await _baseTableService.SearchUser(userEmail);
+            var getBaseTable = await _baseTableService.SearchUser(email);
             var toggleStateValue = await _userSettingService.SelectUserPreference(getBaseTable.ReferenceCode);
             return toggleStateValue;
         }
-
 
         #region ToggleApplicationStateFunction (No Start Method)
         private bool toggleStatus()
@@ -160,12 +176,13 @@ namespace ApplicationLayer.ChildForms
             }
             return true;
         }
-        private async Task Retrieve(string userEmail)
+        private async Task Retrieve()
         {
-            var toggleStateValue = await ReturnToggleKey(userEmail);
+            var toggleStateValue = await ReturnToggleKey();
             // Parse JSON and extract toggleStateKey
             var jsonObject = JsonSerializer.Deserialize<UserPreferences>(toggleStateValue.UserPreferences);
             this.textBox.Text = jsonObject.toggleStateKey;
+
             textBox.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
             this.textBox.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
             this.textBox.TextChanged += async (sender, e) => await onStatusToggleKeyChange(sender, e);
@@ -173,8 +190,7 @@ namespace ApplicationLayer.ChildForms
         }
         private async Task onStatusToggleKeyChange(object sender, EventArgs e)
         {
-            var email = "";
-            var toggleStateValue = await ReturnToggleKey(email);
+            var toggleStateValue = await ReturnToggleKey();
             //Get last key from profile before update it in json
             Keys currentToggleKey = (Keys)Enum.Parse(typeof(Keys), textBox.Text);
             KeyboardHook.Remove(lastKey);
@@ -199,10 +215,6 @@ namespace ApplicationLayer.ChildForms
         }
         #endregion ToggleApplicationStateFunction
 
-        private void Button_Click(object sender, EventArgs e)
-        {
-            this.toggleStatus();
-        }
 
     }
 }

@@ -226,7 +226,7 @@ namespace ApplicationLayer.Forms
             var hashHer = Program.ServiceProvider.GetRequiredService<IHasher>();
             var toggleForm = Program.ServiceProvider.GetRequiredService<ToggleApplicationForm>();
 
-            frm_Main mainMenuForm = new frm_Main(storedCredential, userSettings, baseTable, hashHer, email, toggleForm);
+            frm_Main mainMenuForm = new frm_Main(email, toggleForm);
             mainMenuForm.ShowDialog();
         }
 

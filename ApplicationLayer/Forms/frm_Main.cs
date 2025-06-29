@@ -44,10 +44,17 @@ namespace RagnarokHotKeyInWinforms
         private readonly IUserSettingService _userSettingService;
         private readonly IBaseTableService _baseTableService;
         private string _userEmail;
-        public frm_Main(IStoredCredentialService storedCredentialService, IUserSettingService userSettingService, IBaseTableService baseTableService, IHasher hasher, string userEmail, ToggleApplicationForm toggleApplicationForm)
+        public frm_Main(string userEmail,
+            ToggleApplicationForm toggleApplicationForm)
         {
             this.subject.Attach(this);
             InitializeComponent();
+
+
+            #region Child Forms
+            _toggleApplicationForm = toggleApplicationForm;
+            #endregion
+
             KeyboardHook.Enable();
 
             #region Logger Configuration
@@ -56,9 +63,9 @@ namespace RagnarokHotKeyInWinforms
             #endregion
 
             #region Interfaces
-            _storedCredentialService = storedCredentialService;
-            _userSettingService = userSettingService;
-            _baseTableService = baseTableService;
+            //_storedCredentialService = storedCredentialService;
+            //_userSettingService = userSettingService;
+            //_baseTableService = baseTableService;
             #endregion
 
             #region Passed DataTypes
@@ -66,8 +73,7 @@ namespace RagnarokHotKeyInWinforms
             #endregion
             this.Text = AppConfig.Name + " - " + AppConfig.Version; // Window title
 
-            _toggleApplicationForm = toggleApplicationForm;
-
+          
         }
 
 
@@ -1413,12 +1419,16 @@ namespace RagnarokHotKeyInWinforms
         {
             this.IsMdiContainer = true;
             try
-            {
-                _toggleApplicationForm.MdiParent = this;
-                _toggleApplicationForm.Show();
-
+            {  
                 // Manually position the forms
-                _toggleApplicationForm.Location = new Point(0, 0);
+                _toggleApplicationForm.MdiParent = this;
+                _toggleApplicationForm.email = _userEmail;
+                _toggleApplicationForm.TopLevel = false;
+                _toggleApplicationForm.FormBorderStyle = FormBorderStyle.None;
+                _toggleApplicationForm.Dock = DockStyle.Top;
+                _toggleApplicationForm.Show();
+         
+                //_toggleApplicationForm.Location = new Point(0, 0);
                 //_toggleApplicationForm.Size = new Size(this.ClientSize.Width / 2, this.ClientSize.Height);
 
                 progressBar1.Value = 0;
@@ -1427,30 +1437,30 @@ namespace RagnarokHotKeyInWinforms
 
                 StartUpdate();
                 refreshProcessList();
-                progressBar1.Value++;
+                //progressBar1.Value++;
 
-                var storedCreds = await _storedCredentialService.SearchUser(_userEmail);
-                progressBar1.Value++;
+                //var storedCreds = await _storedCredentialService.SearchUser(_userEmail);
+                //progressBar1.Value++;
 
-                var getBaseTable = await _baseTableService.SearchUser(_userEmail);
-                progressBar1.Value++;
+                //var getBaseTable = await _baseTableService.SearchUser(_userEmail);
+                //progressBar1.Value++;
 
-                //If the user is new to the app automatically created a setting to the user.
-                await _userSettingService.UpsertUser(getBaseTable.ReferenceCode, storedCreds.Name);
-                progressBar1.Value++;
+                ////If the user is new to the app automatically created a setting to the user.
+                //await _userSettingService.UpsertUser(getBaseTable.ReferenceCode, storedCreds.Name);
+                //progressBar1.Value++;
 
-                lblUserName.Text = $"Welcome back, {storedCreds.Name}";
-                progressBar1.Value++;
+                //lblUserName.Text = $"Welcome back, {storedCreds.Name}";
+                //progressBar1.Value++;
 
                 //await Retrieve(); progressBar1.Value++;
-                await RetrieveAutopot(); progressBar1.Value++;
-                await SkillTimerRetrieve(); progressBar1.Value++;
-                await RetrieveStatusEffect(); progressBar1.Value++;
-                await AhkRetrieval(); progressBar1.Value++;
-                await RetrieveStuffAutobuffForm(); progressBar1.Value++;
-                await updateUi(); progressBar1.Value++;
-                await DisplayMacroSwitch(); progressBar1.Value++;
-                await DisplayAttackDefendMode(); progressBar1.Value++;
+                //await RetrieveAutopot(); progressBar1.Value++;
+                //await SkillTimerRetrieve(); progressBar1.Value++;
+                //await RetrieveStatusEffect(); progressBar1.Value++;
+                //await AhkRetrieval(); progressBar1.Value++;
+                //await RetrieveStuffAutobuffForm(); progressBar1.Value++;
+                //await updateUi(); progressBar1.Value++;
+                //await DisplayMacroSwitch(); progressBar1.Value++;
+                //await DisplayAttackDefendMode(); progressBar1.Value++;
                 refreshProcessList();
 
                 progressBar1.Value = 0; // Ensure it completes

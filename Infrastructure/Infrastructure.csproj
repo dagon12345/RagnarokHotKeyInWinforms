@@ -216,6 +216,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ApplicationDbContext.cs" />
+    <Compile Include="Factory\DbContextFactory.cs" />
+    <Compile Include="Factory\IDbContextFactory.cs" />
     <Compile Include="Helpers\SecurityHelper.cs" />
     <Compile Include="Model\LogEntry.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

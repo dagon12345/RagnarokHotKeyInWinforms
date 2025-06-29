@@ -9,7 +9,6 @@ using ApplicationLayer.Service.RagnarokService;
 using ApplicationLayer.Singleton.RagnarokSingleton;
 using Domain.Constants;
 using Domain.Model.DataModels;
-using Domain.Security;
 using Infrastructure.Service;
 using Infrastructure.Utilities;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,24 +34,22 @@ namespace RagnarokHotKeyInWinforms
         List<ClientDto> clients = new List<ClientDto>(); // list of clients with address initiated
         private List<BuffContainer> stuffBuffContainers = new List<BuffContainer>();
         private List<BuffContainer> skillBuffContainers = new List<BuffContainer>();
-        private Keys lastKey;
         private ThreadUtility ThreadUtility;
 
-        private readonly ToggleApplicationForm _toggleApplicationForm;
-
+        private readonly IServiceProvider _serviceProvider;
         private readonly IStoredCredentialService _storedCredentialService;
         private readonly IUserSettingService _userSettingService;
         private readonly IBaseTableService _baseTableService;
+
         private string _userEmail;
-        public frm_Main(string userEmail,
-            ToggleApplicationForm toggleApplicationForm)
+        public frm_Main(string userEmail, IServiceProvider serviceProvider, IStoredCredentialService storedCredentialService)
         {
             this.subject.Attach(this);
             InitializeComponent();
 
 
             #region Child Forms
-            _toggleApplicationForm = toggleApplicationForm;
+            _serviceProvider = serviceProvider;
             #endregion
 
             KeyboardHook.Enable();
@@ -63,9 +60,7 @@ namespace RagnarokHotKeyInWinforms
             #endregion
 
             #region Interfaces
-            //_storedCredentialService = storedCredentialService;
-            //_userSettingService = userSettingService;
-            //_baseTableService = baseTableService;
+            _storedCredentialService = storedCredentialService;
             #endregion
 
             #region Passed DataTypes
@@ -73,12 +68,12 @@ namespace RagnarokHotKeyInWinforms
             #endregion
             this.Text = AppConfig.Name + " - " + AppConfig.Version; // Window title
 
-          
+
         }
 
 
 
-      
+
         #region AutopotSettings(Triggered with Start() method)
         private async Task RetrieveAutopot()
         {
@@ -131,7 +126,7 @@ namespace RagnarokHotKeyInWinforms
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.Autopot = updatedJson;
                 // Persist changes
-                await _userSettingService.SaveChangesAsync();
+                await _userSettingService.SaveChangesAsync(userToggleState);
             }
             else
             {
@@ -151,7 +146,7 @@ namespace RagnarokHotKeyInWinforms
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.Autopot = updatedJson;
                 // Persist changes
-                await _userSettingService.SaveChangesAsync();
+                await _userSettingService.SaveChangesAsync(userToggleState);
             }
             else
             {
@@ -174,7 +169,7 @@ namespace RagnarokHotKeyInWinforms
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.Autopot = updatedJson;
                 // Persist changes
-                await _userSettingService.SaveChangesAsync();
+                await _userSettingService.SaveChangesAsync(userToggleState);
             }
             else
             {
@@ -195,7 +190,7 @@ namespace RagnarokHotKeyInWinforms
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.Autopot = updatedJson;
                 // Persist changes
-                await _userSettingService.SaveChangesAsync();
+                await _userSettingService.SaveChangesAsync(userToggleState);
             }
             else
             {
@@ -216,7 +211,7 @@ namespace RagnarokHotKeyInWinforms
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.Autopot = updatedJson;
                 // Persist changes
-                await _userSettingService.SaveChangesAsync();
+                await _userSettingService.SaveChangesAsync(userToggleState);
             }
             else
             {
@@ -253,7 +248,7 @@ namespace RagnarokHotKeyInWinforms
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.AutoRefreshSpammer = updatedJson;
                 // Persist changes
-                await _userSettingService.SaveChangesAsync();
+                await _userSettingService.SaveChangesAsync(userToggleState);
             }
             else
             {
@@ -273,7 +268,7 @@ namespace RagnarokHotKeyInWinforms
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.AutoRefreshSpammer = updatedJson;
                 // Persist changes
-                await _userSettingService.SaveChangesAsync();
+                await _userSettingService.SaveChangesAsync(userToggleState);
             }
             else
             {
@@ -281,91 +276,6 @@ namespace RagnarokHotKeyInWinforms
             }
         }
         #endregion SkillTimer
-        #region Status Recovery Effect Form(Triggered with Start() method)
-        private async Task RetrieveStatusEffect()
-        {
-            try
-            {
-                var userToggleState = await ReturnToggleKey();
-                var jsonObject = JsonSerializer.Deserialize<StatusRecovery>(userToggleState.StatusRecovery);
-
-                if (jsonObject.buffMapping.Count > 0)
-                {
-                    txtStatusKey.Text = jsonObject.buffMapping[EffectStatusIdEnum.SILENCE].ToString();
-                }
-
-                this.txtStatusKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
-                this.txtStatusKey.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
-                this.txtStatusKey.TextChanged += new EventHandler(onStatusKeyChange);
-                this.txtNewStatusKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
-                this.txtNewStatusKey.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
-                this.txtNewStatusKey.TextChanged += new EventHandler(on3RDStatusKeyChange);
-
-            }
-            catch (Exception ex)
-            {
-                Console.Write(ex.Message);
-            }
-            finally
-            {
-            }
-
-        }
-        #region private method
-        private async void onStatusKeyChange(object sender, EventArgs e)
-        {
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<StatusRecovery>(userToggleState.StatusRecovery);
-            Keys key = (Keys)Enum.Parse(typeof(Keys), txtStatusKey.Text.ToString());
-
-            if (jsonObject != null)
-            {
-                jsonObject.AddKeyToBuff(EffectStatusIdEnum.POISON, key);
-                jsonObject.AddKeyToBuff(EffectStatusIdEnum.SILENCE, key);
-                jsonObject.AddKeyToBuff(EffectStatusIdEnum.BLIND, key);
-                jsonObject.AddKeyToBuff(EffectStatusIdEnum.CONFUSION, key);
-                jsonObject.AddKeyToBuff(EffectStatusIdEnum.HALLUCINATIONWALK, key);
-                jsonObject.AddKeyToBuff(EffectStatusIdEnum.HALLUCINATION, key);
-                jsonObject.AddKeyToBuff(EffectStatusIdEnum.CURSE, key);
-
-                var updatedJson = JsonSerializer.Serialize(jsonObject);
-                userToggleState.StatusRecovery = updatedJson;
-                // Persist changes add to the object array in database
-                await _userSettingService.SaveChangesAsync();
-            }
-            else
-            {
-                return;
-
-            }
-        }
-        private async void on3RDStatusKeyChange(object sender, EventArgs e)
-        {
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<StatusRecovery>(userToggleState.StatusRecovery);
-            Keys key = (Keys)Enum.Parse(typeof(Keys), txtNewStatusKey.Text.ToString());
-
-            if (jsonObject != null)
-            {
-                jsonObject.AddKeyToBuff(EffectStatusIdEnum.PROPERTYUNDEAD, key);
-                jsonObject.AddKeyToBuff(EffectStatusIdEnum.BLOODING, key);
-                jsonObject.AddKeyToBuff(EffectStatusIdEnum.MISTY_FROST, key);
-                jsonObject.AddKeyToBuff(EffectStatusIdEnum.CRITICALWOUND, key);
-                jsonObject.AddKeyToBuff(EffectStatusIdEnum.OVERHEAT, key);
-
-                var updatedJson = JsonSerializer.Serialize(jsonObject);
-                userToggleState.StatusRecovery = updatedJson;
-                // Persist changes add to the object array in database
-                await _userSettingService.SaveChangesAsync();
-            }
-            else
-            {
-                return;
-
-            }
-        }
-        #endregion
-        #endregion Status Effect From
         #region Stuff and Skill Auto Buff (Triggered with Start() method)
         private async Task RetrieveStuffAutobuffForm()
         {
@@ -502,7 +412,7 @@ namespace RagnarokHotKeyInWinforms
                     userToggleState.Autobuff = updatedJson;
 
 
-                    await _userSettingService.SaveChangesAsync();
+                    await _userSettingService.SaveChangesAsync(userToggleState);
                 }
             }
             catch (Exception ex)
@@ -626,7 +536,7 @@ namespace RagnarokHotKeyInWinforms
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.Ahk = updatedJson;
                 // Persist changes
-                await _userSettingService.SaveChangesAsync();
+                await _userSettingService.SaveChangesAsync(userToggleState);
             }
             else
             {
@@ -667,7 +577,7 @@ namespace RagnarokHotKeyInWinforms
                 this.chkNoShift.Enabled = false;
             }
             // Persist changes add to the object array in database
-            await _userSettingService.SaveChangesAsync();
+            await _userSettingService.SaveChangesAsync(userToggleState);
 
             //Enable the checkbox again after saving
             foreach (Control c in this.groupAhkConfig.Controls)
@@ -720,7 +630,7 @@ namespace RagnarokHotKeyInWinforms
             var updatedJson = JsonSerializer.Serialize(jsonObject);
             userToggleState.Ahk = updatedJson;
             // Persist changes add to the object array in database
-            await _userSettingService.SaveChangesAsync();
+            await _userSettingService.SaveChangesAsync(userToggleState);
         }
 
         private async void onCheckChangeKeyConfig(object sender, EventArgs e)
@@ -745,7 +655,7 @@ namespace RagnarokHotKeyInWinforms
             var updatedJson = JsonSerializer.Serialize(jsonObject);
             userToggleState.Ahk = updatedJson;
             // Persist changes add to the object array in database
-            await _userSettingService.SaveChangesAsync();
+            await _userSettingService.SaveChangesAsync(userToggleState);
         }
 
         #endregion Ahk Region
@@ -791,7 +701,7 @@ namespace RagnarokHotKeyInWinforms
                 // Update JSON and persist changes
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.SongMacro = updatedJson;
-                await _userSettingService.SaveChangesAsync();
+                await _userSettingService.SaveChangesAsync(userToggleState);
             }
         }
 
@@ -836,7 +746,7 @@ namespace RagnarokHotKeyInWinforms
             var updatedJson = JsonSerializer.Serialize(jsonObject);
             userToggleState.SongMacro = updatedJson;
             //Persist changes add to the object array in database
-            await _userSettingService.SaveChangesAsync();
+            await _userSettingService.SaveChangesAsync(userToggleState);
         }
 
 
@@ -868,7 +778,7 @@ namespace RagnarokHotKeyInWinforms
 
             // **Save changes to database BEFORE updating UI**
             userToggleState.SongMacro = JsonSerializer.Serialize(jsonObject);
-            await _userSettingService.SaveChangesAsync();
+            await _userSettingService.SaveChangesAsync(userToggleState);
 
             // **Update UI AFTER saving**
             foreach (Control c in p.Controls)
@@ -1104,7 +1014,7 @@ namespace RagnarokHotKeyInWinforms
             var updatedJson = JsonSerializer.Serialize(jsonObject);
             userToggleState.MacroSwitch = updatedJson;
             //Persist changes add to the object array in database
-            await _userSettingService.SaveChangesAsync();
+            await _userSettingService.SaveChangesAsync(userToggleState);
 
         }
         private async void DelayMacroSwitch(object sender, EventArgs e)
@@ -1133,7 +1043,7 @@ namespace RagnarokHotKeyInWinforms
             // Update JSON and persist changes
             var updatedJson = JsonSerializer.Serialize(jsonObject);
             userToggleState.MacroSwitch = updatedJson;
-            await _userSettingService.SaveChangesAsync();
+            await _userSettingService.SaveChangesAsync(userToggleState);
 
         }
 
@@ -1239,7 +1149,7 @@ namespace RagnarokHotKeyInWinforms
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.AtkDefMode = updatedJson;
                 // Persist changes
-                await _userSettingService.SaveChangesAsync();
+                await _userSettingService.SaveChangesAsync(userToggleState);
             }
             else
             {
@@ -1258,7 +1168,7 @@ namespace RagnarokHotKeyInWinforms
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.AtkDefMode = updatedJson;
                 // Persist changes
-                await _userSettingService.SaveChangesAsync();
+                await _userSettingService.SaveChangesAsync(userToggleState);
             }
             else
             {
@@ -1277,7 +1187,7 @@ namespace RagnarokHotKeyInWinforms
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 userToggleState.AtkDefMode = updatedJson;
                 // Persist changes
-                await _userSettingService.SaveChangesAsync();
+                await _userSettingService.SaveChangesAsync(userToggleState);
             }
             else
             {
@@ -1293,7 +1203,7 @@ namespace RagnarokHotKeyInWinforms
             var updatedJson = JsonSerializer.Serialize(jsonObject);
             toggleStateValue.AtkDefMode = updatedJson;
             // Persist changes
-            await _userSettingService.SaveChangesAsync();
+            await _userSettingService.SaveChangesAsync(toggleStateValue);
         }
         private async void AttackDefendonTextChange(object sender, EventArgs e)
         {
@@ -1316,7 +1226,7 @@ namespace RagnarokHotKeyInWinforms
             var updatedJson = JsonSerializer.Serialize(jsonObject);
             toggleStateValue.AtkDefMode = updatedJson;
             // Persist changes
-            await _userSettingService.SaveChangesAsync();
+            await _userSettingService.SaveChangesAsync(toggleStateValue);
 
         }
         #endregion Attack Defend Form
@@ -1362,7 +1272,7 @@ namespace RagnarokHotKeyInWinforms
         {
             logListBox.BeginUpdate();
             logListBox.Items.Clear();
-            
+
             foreach (var entry in LogStore.SortedDescending)
             {
                 logListBox.Items.Add(entry.ToString());
@@ -1415,21 +1325,32 @@ namespace RagnarokHotKeyInWinforms
             ThreadUtility?.Stop();
         }
 
-        private async void Form1_Load(object sender, EventArgs e)
+        private void Form1_Load(object sender, EventArgs e)
         {
             this.IsMdiContainer = true;
             try
-            {  
-                // Manually position the forms
-                _toggleApplicationForm.MdiParent = this;
-                _toggleApplicationForm.email = _userEmail;
-                _toggleApplicationForm.TopLevel = false;
-                _toggleApplicationForm.FormBorderStyle = FormBorderStyle.None;
-                _toggleApplicationForm.Dock = DockStyle.Top;
-                _toggleApplicationForm.Show();
-         
-                //_toggleApplicationForm.Location = new Point(0, 0);
-                //_toggleApplicationForm.Size = new Size(this.ClientSize.Width / 2, this.ClientSize.Height);
+            {
+                var toggleForm = Program.ServiceProvider.GetRequiredService<ToggleApplicationForm>();
+                var statusRecoveryForm = Program.ServiceProvider.GetRequiredService<StatusRecoveryForm>();
+
+                // Manually position the forms Location(left, right)Height(width, height)
+                toggleForm.MdiParent = this;
+                toggleForm.Location = new Point(0, 0);
+                toggleForm.Size = new Size(400, 35);
+                toggleForm.email = _userEmail;
+
+
+                statusRecoveryForm.MdiParent = this;
+                statusRecoveryForm.Location = new Point(400, 0);
+                statusRecoveryForm.Size = new Size(300, 35);
+                statusRecoveryForm.email = _userEmail;
+
+
+
+                toggleForm.Show();
+                statusRecoveryForm.Show();
+
+
 
                 progressBar1.Value = 0;
                 progressBar1.Maximum = 15;
@@ -1462,7 +1383,6 @@ namespace RagnarokHotKeyInWinforms
                 //await DisplayMacroSwitch(); progressBar1.Value++;
                 //await DisplayAttackDefendMode(); progressBar1.Value++;
                 refreshProcessList();
-
                 progressBar1.Value = 0; // Ensure it completes
                 lblLoadingSettings.Visible = false;
             }
@@ -1576,22 +1496,26 @@ namespace RagnarokHotKeyInWinforms
         {
             Environment.Exit(0); // Immediately ends all execution
         }
-
-        private async void btnLogout_Click(object sender, EventArgs e)
+        private async Task Logout()
         {
-            //Set the LastLoginTime to munis 10 mins so we can trigger the function deleting of google current sign in
             var searchUser = await _storedCredentialService.SearchUser(_userEmail);
             searchUser.LastLoginTime = searchUser.LastLoginTime.AddHours(-1);//Minus One hour so that it will surely go to the google auth again
-            await _storedCredentialService.SaveChangesAsync();
-
+            await _storedCredentialService.SaveChangesAsync(searchUser);
             this.Hide();//Hide the form then show the signin form
             var getUserInfoInterface = Program.ServiceProvider.GetRequiredService<IGetUserInfo>();
             var userSignIn = Program.ServiceProvider.GetRequiredService<ISignIn>();
             var storedCredential = Program.ServiceProvider.GetRequiredService<IStoredCredentialService>();
             var loginService = Program.ServiceProvider.GetRequiredService<LoginService>();
             var password = Program.ServiceProvider.GetRequiredService<PasswordRecoveryService>();
-            SignInForm sf = new SignInForm(getUserInfoInterface, userSignIn, storedCredential, loginService, password);
+            var userSetting = Program.ServiceProvider.GetRequiredService<IUserSettingService>();
+            var baseTable = Program.ServiceProvider.GetRequiredService<IBaseTableService>();
+            SignInForm sf = new SignInForm(getUserInfoInterface, userSignIn, storedCredential, loginService, password, userSetting, baseTable);
             sf.ShowDialog();
+
+        }
+        private async void btnLogout_Click(object sender, EventArgs e)
+        {
+           await Logout();
         }
         private void btnRefresh_Click(object sender, EventArgs e)
         {

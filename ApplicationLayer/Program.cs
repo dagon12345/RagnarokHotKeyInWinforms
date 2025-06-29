@@ -8,6 +8,7 @@ using ApplicationLayer.Validator;
 using Domain.Security;
 using FluentValidation;
 using Infrastructure;
+using Infrastructure.Factory;
 using Infrastructure.Repositories.Interface;
 using Infrastructure.Repositories.Service;
 using Infrastructure.Service;
@@ -87,9 +88,11 @@ namespace RagnarokHotKeyInWinforms
                     var userCredentials = ServiceProvider.GetRequiredService<IStoredCredentialService>();
                     var loginService = Program.ServiceProvider.GetRequiredService<LoginService>();
                     var password = Program.ServiceProvider.GetRequiredService<PasswordRecoveryService>();
+                    var userSetting = ServiceProvider.GetRequiredService<IUserSettingService>();
+                    var baseTable = ServiceProvider.GetRequiredService<IBaseTableService>();
 
                     // Run the form
-                    var signIn = new SignInForm(getUserInfo, userSignIn, userCredentials, loginService, password);
+                    var signIn = new SignInForm(getUserInfo, userSignIn, userCredentials, loginService, password, userSetting, baseTable);
                     FormManager.SignInInstance = signIn;
                     Application.Run(signIn);
 
@@ -125,7 +128,7 @@ namespace RagnarokHotKeyInWinforms
                     services.AddTransient<LoginService>();
                     services.AddTransient<PasswordRecoveryService>();
                     services.AddTransient<ToggleApplicationForm>();
-
+                    services.AddTransient<StatusRecoveryForm>();
                     #endregion
 
                     #region Infrastructure Layer Services
@@ -133,6 +136,8 @@ namespace RagnarokHotKeyInWinforms
                     services.AddTransient<IStoredCredentialRepository, StoredCredentialRepository>();
                     services.AddTransient<IUserSettingRepository, UserSettingRepository>();
                     services.AddSingleton<IHasher, Pbkdf2Hasher>();
+                    services.AddSingleton(typeof(IDbContextFactory<>), typeof(DbContextFactory<>));
+
                     #endregion
 
                     #region Validator

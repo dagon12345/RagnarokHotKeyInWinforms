@@ -10,6 +10,6 @@ namespace ApplicationLayer.Interface
         Task UpsertUser(Guid referenceCode, string Name);
         Task<UserSettings> SearchByReferenceCode(Guid referenceCode);
         Task<UserSettings> SelectUserPreference(Guid referenceCode);
-        Task SaveChangesAsync();
+        Task SaveChangesAsync(UserSettings userSettings);
     }
 }

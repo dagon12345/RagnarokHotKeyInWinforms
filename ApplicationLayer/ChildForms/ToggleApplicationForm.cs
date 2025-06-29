@@ -1,4 +1,5 @@
-﻿using ApplicationLayer.Interface;
+﻿using ApplicationLayer.Designer;
+using ApplicationLayer.Interface;
 using ApplicationLayer.Models.RagnarokModels;
 using ApplicationLayer.Service.RagnarokService;
 using ApplicationLayer.Singleton.RagnarokSingleton;
@@ -30,36 +31,34 @@ namespace ApplicationLayer.ChildForms
         {
             InitializeComponent();
             InitializeCustomComponents();
-            ApplyDarkBlueTheme();
+
+            //Centralize color
+            DesignerService.ApplyDarkBlueTheme(this);
 
             _baseTableService = baseTableService;
             _userSettingService = userSettingService;
         }
-        protected override async void OnLoad(EventArgs e)
+        protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            await Retrieve();
-           // button.Click += Button_Click;
+            _ = LoadAsync(); // Fire and forget safely
+        }
+        private async Task LoadAsync()
+        {
+            try
+            {
+                await Retrieve();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error: {ex.Message}");
+            }
         }
         private void Button_Click(object sender, EventArgs e)
         {
             this.toggleStatus();
         }
         #region Design Region
-        /*
-       * Location = new Point(x, y)
-         x – Horizontal distance in pixels from the left edge of the form.
-
-         y – Vertical distance in pixels from the top edge of the form.
-
-         So for new Point(20, 20):
-
-         The control is placed 20 pixels from the left
-
-         And 20 pixels down from the top
-
-         Think of it like a coordinate system with the origin (0,0) at the top-left corner of the form.
-       */
         private void InitializeCustomComponents()
         {
             //Label (left, right)
@@ -95,43 +94,8 @@ namespace ApplicationLayer.ChildForms
             this.Controls.Add(textBox);
             this.Controls.Add(button);
             this.Controls.Add(labelAssigned);
-
-            // Form properties
-            //this.Text = "Toggle Application";
-            //this.StartPosition = FormStartPosition.CenterScreen;
-            ////this.ClientSize = new System.Drawing.Size(200, 150);
-            //this.FormBorderStyle = FormBorderStyle.None;
         }
-        private void ApplyDarkBlueTheme()
-        {
-            this.BackColor = Color.FromArgb(23, 32, 42); // Deep navy background
-            foreach (Control ctrl in this.Controls)
-            {
-                ctrl.ForeColor = Color.White;
-
-                if (ctrl is TextBox tb)
-                {
-                    tb.BackColor = Color.FromArgb(33, 47, 61);
-                    tb.ForeColor = Color.White;
-                    tb.BorderStyle = BorderStyle.FixedSingle;
-
-                }
-
-                if (ctrl is Button btn)
-                {
-                    btn.BackColor = Color.FromArgb(41, 128, 185);
-                    btn.ForeColor = Color.White;
-                    btn.FlatStyle = FlatStyle.Flat;
-                    btn.FlatAppearance.BorderSize = 0;
-                    btn.Font = new Font("Segoe UI", 8, FontStyle.Bold);
-                }
-
-                if (ctrl is Label lbl)
-                {
-                    lbl.Font = new Font("Segoe UI", 8, FontStyle.Bold);
-                }
-            }
-        }
+        
         #endregion
 
         //Get the reference code of the user
@@ -204,8 +168,9 @@ namespace ApplicationLayer.ChildForms
                 jsonObject.toggleStateKey = currentToggleKey.ToString(); // Update key
                 var updatedJson = JsonSerializer.Serialize(jsonObject);
                 toggleStateValue.UserPreferences = updatedJson;
+
                 // Persist changes
-                await _userSettingService.SaveChangesAsync();
+                await _userSettingService.SaveChangesAsync(toggleStateValue);
             }
             else
             {

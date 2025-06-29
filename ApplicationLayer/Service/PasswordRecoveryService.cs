@@ -34,7 +34,7 @@ namespace ApplicationLayer.Service
             searchUser.PasswordResetToken = Guid.NewGuid().ToString();
             searchUser.PasswordResetTokenExpiry = DateTime.UtcNow.AddMinutes(30);
 
-            await _storedCredentialService.SaveChangesAsync();
+            await _storedCredentialService.SaveChangesAsync(searchUser);
 
             string rawGuid = Guid.NewGuid().ToString("N"); // 32-character hex without dashes
             string confirmationCode = rawGuid.Substring(0, 6).ToUpper(); // E.g., "A2C9FD"
@@ -55,7 +55,7 @@ namespace ApplicationLayer.Service
             user.PasswordHash = hash;
             user.PasswordResetToken = null;
             user.PasswordResetTokenExpiry = null;
-            await _storedCredentialService.SaveChangesAsync();
+            await _storedCredentialService.SaveChangesAsync(user);
             return Result.Ok().WithSuccess("Password updated.");
 
         }

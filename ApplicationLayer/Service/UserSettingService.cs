@@ -91,10 +91,11 @@ namespace ApplicationLayer.Service
 
         }
 
-        public async Task SaveChangesAsync()
+        public async Task SaveChangesAsync(UserSettings userSettings)
         {
             try
             {
+                _userSettingRepository.Update(userSettings);
                 await _userSettingRepository.SaveChangesAsync();
             }
             catch (Exception ex)

@@ -1,5 +1,6 @@
 ﻿using Domain.Model.DataModels;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace Infrastructure
 {
@@ -10,13 +11,10 @@ namespace Infrastructure
         public DbSet<UserSettings> UserSettings { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options)
+            : base(options ?? throw new ArgumentNullException(nameof(options)))
         {
         }
 
-        public ApplicationDbContext()
-        {
-        }
     }
 
 }

@@ -55,13 +55,6 @@
             this.label19 = new System.Windows.Forms.Label();
             this.txtAutoRefreshDelay = new System.Windows.Forms.NumericUpDown();
             this.txtSkillTimerKey = new System.Windows.Forms.TextBox();
-            this.panel5 = new System.Windows.Forms.Panel();
-            this.label20 = new System.Windows.Forms.Label();
-            this.pictureBox2 = new System.Windows.Forms.PictureBox();
-            this.txtNewStatusKey = new System.Windows.Forms.TextBox();
-            this.label21 = new System.Windows.Forms.Label();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.txtStatusKey = new System.Windows.Forms.TextBox();
             this.btnLogout = new System.Windows.Forms.Button();
             this.lblUserName = new System.Windows.Forms.Label();
             this.btnRefresh = new System.Windows.Forms.Button();
@@ -398,8 +391,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.txtHPpct)).BeginInit();
             this.tabPageSkillTimer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtAutoRefreshDelay)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.tabPageMacroSwitch.SuspendLayout();
             this.chainGroup3.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox47)).BeginInit();
@@ -774,71 +765,9 @@
             this.txtSkillTimerKey.Size = new System.Drawing.Size(57, 20);
             this.txtSkillTimerKey.TabIndex = 16;
             // 
-            // panel5
-            // 
-            this.panel5.BackColor = System.Drawing.Color.Silver;
-            this.panel5.Location = new System.Drawing.Point(130, 155);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(1, 30);
-            this.panel5.TabIndex = 33;
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(168, 164);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(37, 13);
-            this.label20.TabIndex = 32;
-            this.label20.Text = "Status";
-            // 
-            // pictureBox2
-            // 
-            this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(142, 158);
-            this.pictureBox2.Name = "pictureBox2";
-            this.pictureBox2.Size = new System.Drawing.Size(24, 24);
-            this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox2.TabIndex = 31;
-            this.pictureBox2.TabStop = false;
-            // 
-            // txtNewStatusKey
-            // 
-            this.txtNewStatusKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.txtNewStatusKey.Location = new System.Drawing.Point(205, 159);
-            this.txtNewStatusKey.Name = "txtNewStatusKey";
-            this.txtNewStatusKey.Size = new System.Drawing.Size(45, 23);
-            this.txtNewStatusKey.TabIndex = 30;
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(37, 164);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(37, 13);
-            this.label21.TabIndex = 29;
-            this.label21.Text = "Status";
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(11, 158);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(24, 24);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 28;
-            this.pictureBox1.TabStop = false;
-            // 
-            // txtStatusKey
-            // 
-            this.txtStatusKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.txtStatusKey.Location = new System.Drawing.Point(74, 159);
-            this.txtStatusKey.Name = "txtStatusKey";
-            this.txtStatusKey.Size = new System.Drawing.Size(45, 23);
-            this.txtStatusKey.TabIndex = 27;
-            // 
             // btnLogout
             // 
-            this.btnLogout.Location = new System.Drawing.Point(727, 44);
+            this.btnLogout.Location = new System.Drawing.Point(735, 4);
             this.btnLogout.Name = "btnLogout";
             this.btnLogout.Size = new System.Drawing.Size(75, 23);
             this.btnLogout.TabIndex = 12;
@@ -4269,18 +4198,11 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(814, 798);
-            this.Controls.Add(this.panel5);
             this.Controls.Add(this.lblLogs);
-            this.Controls.Add(this.label20);
             this.Controls.Add(this.logListBox);
-            this.Controls.Add(this.pictureBox2);
             this.Controls.Add(this.lblLoadingSettings);
-            this.Controls.Add(this.txtNewStatusKey);
-            this.Controls.Add(this.label21);
             this.Controls.Add(this.progressBar1);
-            this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.btnRefresh);
-            this.Controls.Add(this.txtStatusKey);
             this.Controls.Add(this.lblUserName);
             this.Controls.Add(this.btnLogout);
             this.Controls.Add(this.tabMain);
@@ -4305,8 +4227,6 @@
             this.tabPageSkillTimer.ResumeLayout(false);
             this.tabPageSkillTimer.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.txtAutoRefreshDelay)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.tabPageMacroSwitch.ResumeLayout(false);
             this.chainGroup3.ResumeLayout(false);
             this.chainGroup3.PerformLayout();
@@ -4494,13 +4414,6 @@
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.NumericUpDown txtAutoRefreshDelay;
         private System.Windows.Forms.TextBox txtSkillTimerKey;
-        private System.Windows.Forms.Panel panel5;
-        private System.Windows.Forms.Label label20;
-        private System.Windows.Forms.PictureBox pictureBox2;
-        private System.Windows.Forms.TextBox txtNewStatusKey;
-        private System.Windows.Forms.Label label21;
-        private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.TextBox txtStatusKey;
         private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.TabPage tabPageMacroSwitch;
         private System.Windows.Forms.TabPage tabPageAtkDef;

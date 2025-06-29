@@ -90,6 +90,9 @@ namespace ApplicationLayer.Forms
                     string confirmationCode = rawGuid.Substring(0, 6).ToUpper(); // E.g., "A2C9FD"
 
                     user.SetConfirmationCode(confirmationCode, _hasher, TimeSpan.FromMinutes(15));
+
+                    //Once update it will garbage collect
+                    await _storedCredentialsService.SaveChangesAsync(user);
                     //Send the email
                     await _emailService.SendConfirmationLinkAsync(user.UserEmail, confirmationCode);
 

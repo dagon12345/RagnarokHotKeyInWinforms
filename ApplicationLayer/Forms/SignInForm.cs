@@ -1,4 +1,4 @@
-﻿using ApplicationLayer.ChildForms;
+﻿using ApplicationLayer.Designer;
 using ApplicationLayer.Dto;
 using ApplicationLayer.Interface;
 using ApplicationLayer.Service;
@@ -12,11 +12,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using RagnarokHotKeyInWinforms;
 using System;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Button = System.Windows.Forms.Button;
 
 namespace ApplicationLayer.Forms
 {
@@ -27,25 +27,59 @@ namespace ApplicationLayer.Forms
         private readonly IStoredCredentialService _storedCredentialService;
         private readonly LoginService _loginService;
         private readonly PasswordRecoveryService _passwordRecoveryService;
+        private readonly IUserSettingService _userSettingService;
+        private readonly IBaseTableService _baseTableService;
         public SignInForm(IGetUserInfo getUserInfo, ISignIn signIn, IStoredCredentialService storedCredentialService, LoginService loginService,
-            PasswordRecoveryService passwordRecoveryService)
+            PasswordRecoveryService passwordRecoveryService, IUserSettingService userSettingService, IBaseTableService baseTableService)
         {
             InitializeComponent();
+            InitializeCustomComponents();
             _getUserInfo = getUserInfo;
             _signIn = signIn;
             _storedCredentialService = storedCredentialService;
             _loginService = loginService;
             _passwordRecoveryService = passwordRecoveryService;
+            _userSettingService = userSettingService;
+            _baseTableService = baseTableService;
         }
 
+        private void InitializeCustomComponents()
+        {
+            txtEmail.Location = new System.Drawing.Point(75, 39);
+            txtPassword.Location = new System.Drawing.Point(75, 70);
+            btnLogin.Location = Location = new System.Drawing.Point(75, 110);
+            btnSignIn.Location = Location = new System.Drawing.Point(190, 110);
+            btnRegister.Location = Location = new System.Drawing.Point(305, 110);
+            lblForgotPassword.Location = new System.Drawing.Point(310, 90);
+            txtPassword.UseSystemPasswordChar = true;
+            foreach (Control ctrl in this.Controls)
+            {
+                if(ctrl is Button btn)
+                {
+                    btn.Width = 100;
+                    btn.Height = 35;
 
+                }
+                if (ctrl is TextBox txt)
+                {
+                    txt.Width = 330;
+                    txt.Height = 20;
+                }
+            }
+        }
+
+        private void SignInForm_Load(object sender, EventArgs e)
+        {
+            //Centralize color
+            DesignerService.ApplyDarkBlueTheme(this);
+
+        }
         private async void btnSignIn_Click(object sender, EventArgs e)
         {
-            bool fromLogin = false;
-            await CheckCredentialsAsync(fromLogin);
-            await SignIn(fromLogin);
+            await CheckCredentialsAsync();
+            await SignIn();
         }
-        private async Task CheckCredentialsAsync(bool fromLogin)
+        private async Task CheckCredentialsAsync()
         {
             // Set the token file path based on your application name
             var tokenFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -64,6 +98,7 @@ namespace ApplicationLayer.Forms
             if (!string.IsNullOrEmpty(storedAccessToken) && (DateTime.UtcNow - lastLoginTime).TotalMinutes <= 10)  // Check if within 30 minutes
             {
                 // Token is still valid, proceed to MainMenuForm
+                await CreateUserSettingAsync(searchCredential.UserEmail);
                 OpenMainMenuForm(searchCredential.UserEmail);
             }
             // Delete the token response file if it exists
@@ -80,7 +115,7 @@ namespace ApplicationLayer.Forms
                 }
             }
         }
-        private async Task SignIn(bool fromLogin)
+        private async Task SignIn()
         {
 
             var credential = await _signIn.GoogleAlgorithm(GoogleConstants.GoogleApis);
@@ -118,7 +153,7 @@ namespace ApplicationLayer.Forms
                 //Update the stored credential for new lastlogin and accesstoken
                 searchUser.LastLoginTime = DateTime.UtcNow;
                 searchUser.AccessToken = credential.Token.AccessToken;
-                await _storedCredentialService.SaveChangesAsync();
+                await _storedCredentialService.SaveChangesAsync(searchUser);
             }
 
             //Search existed user
@@ -133,6 +168,9 @@ namespace ApplicationLayer.Forms
                 };
                 await _signIn.CreateUser(baseTable);
             }
+            //Search again because once we updated we got lost track of the user data due to settings.
+            var searchUserAgain = await _storedCredentialService.SearchUser(userInfo.Email);
+            await CreateUserSettingAsync(searchUserAgain.UserEmail);
             //Open Form
             OpenMainMenuForm(searchUser.UserEmail);
 
@@ -163,7 +201,7 @@ namespace ApplicationLayer.Forms
                     user.PasswordHash = hash;
                     //Presist changes
 
-                    await _storedCredentialService.SaveChangesAsync();
+                    await _storedCredentialService.SaveChangesAsync(user);
 
                     if (result.IsSuccess)
                     {
@@ -183,50 +221,12 @@ namespace ApplicationLayer.Forms
                 }
             }
         }
-        private void ApplyDarkBlueTheme()
-        {
-            this.BackColor = Color.FromArgb(23, 32, 42); // Deep navy background
-            txtPassword.UseSystemPasswordChar = true;
-            lblHeader.Left = (this.ClientSize.Width - lblHeader.Width) / 2;
-            foreach (Control ctrl in this.Controls)
-            {
-                ctrl.ForeColor = Color.White;
 
-                if (ctrl is TextBox tb)
-                {
-                    tb.BackColor = Color.FromArgb(33, 47, 61);
-                    tb.ForeColor = Color.White;
-                    tb.BorderStyle = BorderStyle.FixedSingle;
-
-                }
-
-                if (ctrl is Button btn)
-                {
-                    btn.BackColor = Color.FromArgb(41, 128, 185);
-                    btn.ForeColor = Color.White;
-                    btn.FlatStyle = FlatStyle.Flat;
-                    btn.FlatAppearance.BorderSize = 0;
-                    btn.Font = new Font("Segoe UI", 10, FontStyle.Bold);
-                }
-            }
-        }
-
-
-        private void SignInForm_Load(object sender, EventArgs e)
-        {
-            ApplyDarkBlueTheme();
-
-        }
         private void OpenMainMenuForm(string email)
         {
-            this.Hide(); // Hide the LoginForm
-            var storedCredential = Program.ServiceProvider.GetRequiredService<IStoredCredentialService>();
-            var userSettings = Program.ServiceProvider.GetRequiredService<IUserSettingService>();
-            var baseTable = Program.ServiceProvider.GetRequiredService<IBaseTableService>();
-            var hashHer = Program.ServiceProvider.GetRequiredService<IHasher>();
-            var toggleForm = Program.ServiceProvider.GetRequiredService<ToggleApplicationForm>();
-
-            frm_Main mainMenuForm = new frm_Main(email, toggleForm);
+            this.Hide();
+            var userCredentialsService = Program.ServiceProvider.GetRequiredService<IStoredCredentialService>();
+            var mainMenuForm = new frm_Main(email, Program.ServiceProvider, userCredentialsService);
             mainMenuForm.ShowDialog();
         }
 
@@ -245,7 +245,12 @@ namespace ApplicationLayer.Forms
             RegisterForm registerFormOpen = new RegisterForm(registerService, userCredentialsService, hashHer, emailService);
             registerFormOpen.ShowDialog();
         }
-
+        private async Task CreateUserSettingAsync(string userEmail)
+        {
+            var storedCreds = await _storedCredentialService.SearchUser(userEmail);
+            var getBaseTable = await _baseTableService.SearchUser(userEmail);
+            await _userSettingService.UpsertUser(getBaseTable.ReferenceCode, storedCreds.Name);
+        }
         private async void btnLogin_Click(object sender, EventArgs e)
         {
             var dto = new LoginDto
@@ -267,6 +272,7 @@ namespace ApplicationLayer.Forms
             var login = await _loginService.Login(dto.Email, dto.Password);
             if(login)
             {
+                await CreateUserSettingAsync(dto.Email);
                 OpenMainMenuForm(dto.Email);
                 return;
             }

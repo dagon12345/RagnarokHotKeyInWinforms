@@ -81,12 +81,25 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppConfig.cs" />
+    <Compile Include="ChildForms\LogoutForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChildForms\LogoutForm.Designer.cs">
+      <DependentUpon>LogoutForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ChildForms\StatusRecoveryForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChildForms\StatusRecoveryForm.Designer.cs">
+      <DependentUpon>StatusRecoveryForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ChildForms\ToggleApplicationForm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ChildForms\ToggleApplicationForm.Designer.cs">
       <DependentUpon>ToggleApplicationForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Designer\DesignerService.cs" />
     <Compile Include="Dto\EmailDto.cs" />
     <Compile Include="Dto\LoginDto.cs" />
     <Compile Include="Dto\RagnarokDto\ClientDto.cs" />
@@ -191,6 +204,12 @@
     <Compile Include="Validator\SignInRegistrationDtoValidator.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="ChildForms\LogoutForm.resx">
+      <DependentUpon>LogoutForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ChildForms\StatusRecoveryForm.resx">
+      <DependentUpon>StatusRecoveryForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ChildForms\ToggleApplicationForm.resx">
       <DependentUpon>ToggleApplicationForm.cs</DependentUpon>
     </EmbeddedResource>

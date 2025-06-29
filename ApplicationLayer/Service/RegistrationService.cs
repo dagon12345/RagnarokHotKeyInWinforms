@@ -43,13 +43,14 @@ namespace ApplicationLayer.Service
                     LastLoginTime = DateTime.UtcNow,
                 };
 
-                await _storedCredentialService.SaveCredentials(user);
-
 
                 string rawGuid = Guid.NewGuid().ToString("N"); // 32-character hex without dashes
                 string confirmationCode = rawGuid.Substring(0, 6).ToUpper(); // E.g., "A2C9FD"
 
                 user.SetConfirmationCode(confirmationCode, _hasher, TimeSpan.FromMinutes(15));
+
+
+                await _storedCredentialService.SaveCredentials(user);
                 //Send the email
                 await _emailService.SendConfirmationLinkAsync(user.UserEmail, confirmationCode);
             }
@@ -57,7 +58,7 @@ namespace ApplicationLayer.Service
             {
                 //Update the stored credential for new lastlogin and accesstoken
                 searchUser.LastLoginTime = DateTime.UtcNow;
-                await _storedCredentialService.SaveChangesAsync();
+                await _storedCredentialService.SaveChangesAsync(searchUser);
             }
 
 
@@ -73,7 +74,8 @@ namespace ApplicationLayer.Service
                 };
                 await _signIn.CreateUser(baseTable);
             }
-            return searchUser;
+            var searchUserAgain = await _storedCredentialService.SearchUser(email);
+            return searchUserAgain;
         }
         //Email code confirmation sent from the users email.
         public async Task<Result> ConfirmEmail(string email, string inputToken)
@@ -85,7 +87,7 @@ namespace ApplicationLayer.Service
                 return Result.Fail("Invalid or expired confirmation code");
             //Else success
             user.ConfirmEmail();
-            await _storedCredentialService.SaveChangesAsync();
+            await _storedCredentialService.SaveChangesAsync(user);
             return Result.Ok();
         }
     }

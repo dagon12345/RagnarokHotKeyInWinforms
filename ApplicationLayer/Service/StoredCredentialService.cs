@@ -60,10 +60,11 @@ namespace ApplicationLayer.Service
 
         }
 
-        public async Task SaveChangesAsync()
+        public async Task SaveChangesAsync(StoredCredential storedCredentials)
         {
             try
             {
+                _storedCredentialRepository.Update(storedCredentials);
                 await _storedCredentialRepository.SaveChangesAsync();
             }
             catch (Exception ex)

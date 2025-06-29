@@ -1,6 +1,6 @@
 ﻿namespace ApplicationLayer.ChildForms
 {
-    partial class ToggleApplicationForm
+    partial class LogoutForm
     {
         /// <summary>
         /// Required designer variable.
@@ -30,15 +30,15 @@
         {
             this.SuspendLayout();
             // 
-            // ToggleApplicationForm
+            // LogoutForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(482, 40);
+            this.ClientSize = new System.Drawing.Size(197, 38);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "ToggleApplicationForm";
+            this.Name = "LogoutForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "ToggleApplicationForm";
+            this.Text = "LogoutForm";
             this.ResumeLayout(false);
 
         }

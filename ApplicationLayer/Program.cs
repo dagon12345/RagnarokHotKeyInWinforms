@@ -129,6 +129,10 @@ namespace RagnarokHotKeyInWinforms
                     services.AddTransient<PasswordRecoveryService>();
                     services.AddTransient<ToggleApplicationForm>();
                     services.AddTransient<StatusRecoveryForm>();
+                    services.AddTransient<AutopotForm>();
+                    services.AddTransient<SkillSpammerForm>();
+                    services.AddTransient<AttackDefendModeForm>();
+                    services.AddTransient<AutoBuffStuffsForm>();
                     #endregion
 
                     #region Infrastructure Layer Services

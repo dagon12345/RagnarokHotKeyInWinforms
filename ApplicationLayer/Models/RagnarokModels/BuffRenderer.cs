@@ -54,12 +54,13 @@ namespace ApplicationLayer.Models.RagnarokModels
                     textBox.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtils.OnKeyDown);
                     textBox.KeyPress += new KeyPressEventHandler(FormUtils.OnKeyPress);
                     textBox.TextChanged += new EventHandler(onTextChange);
-                    textBox.Size = new Size(55, 20);
+                    textBox.Size = new Size(45, 20);
+                    textBox.Font = new Font("Segoe UI", 8 , FontStyle.Regular);
                     textBox.Tag = ((int)skill.effectStatusID);
 
                     // Change this:
                     textBox.Name = skill.effectStatusID.ToString(); // Ensure exact match with enum
-                    textBox.Location = new Point(pb.Location.X + 35, pb.Location.Y + 3);
+                    textBox.Location = new Point(pb.Location.X + 30, pb.Location.Y + 1);
 
                     bk.container.Controls.Add(textBox);
                     bk.container.Controls.Add(pb);

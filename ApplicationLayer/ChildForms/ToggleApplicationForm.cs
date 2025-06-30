@@ -16,10 +16,7 @@ namespace ApplicationLayer.ChildForms
 {
     public partial class ToggleApplicationForm : Form
     {
-        private Label label;
-        private TextBox textBox;
-        private Button button;
-        private Label labelAssigned;
+       
         private Keys lastKey;
         private SubjectService subject = new SubjectService();//subject triggers the Update() method inside notify function
         private readonly IBaseTableService _baseTableService;
@@ -30,11 +27,9 @@ namespace ApplicationLayer.ChildForms
             IUserSettingService userSettingService)
         {
             InitializeComponent();
-            InitializeCustomComponents();
-
             //Centralize color
             DesignerService.ApplyDarkBlueTheme(this);
-
+            Designer();
             _baseTableService = baseTableService;
             _userSettingService = userSettingService;
         }
@@ -58,46 +53,6 @@ namespace ApplicationLayer.ChildForms
         {
             this.toggleStatus();
         }
-        #region Design Region
-        private void InitializeCustomComponents()
-        {
-            //Label (left, right)
-            label = new Label();
-            label.Text = "Click to start!";
-            label.Location = new System.Drawing.Point(175, 12);
-            label.AutoSize = true;
-
-            labelAssigned = new Label();
-            labelAssigned.Text = "Key";
-            labelAssigned.Location = new System.Drawing.Point(0, 10);
-            labelAssigned.AutoSize = true;
-
-            // TextBox
-            textBox = new TextBox();
-            textBox.Location = new System.Drawing.Point(30, 10);
-            textBox.Width = 50;
-            textBox.Height = 20;
-
-
-            // Button
-            button = new Button();
-            button.Text = "Start";
-            button.Location = new System.Drawing.Point(100, 10);
-            button.Cursor = Cursors.Hand;
-            button.Click += Button_Click;
-            button.Width = 70;
-            button.Height = 20;
-
-
-            // Add controls to form
-            this.Controls.Add(label);
-            this.Controls.Add(textBox);
-            this.Controls.Add(button);
-            this.Controls.Add(labelAssigned);
-        }
-        
-        #endregion
-
         //Get the reference code of the user
         private async Task<UserSettings> ReturnToggleKey()
         {
@@ -105,18 +60,25 @@ namespace ApplicationLayer.ChildForms
             var toggleStateValue = await _userSettingService.SelectUserPreference(getBaseTable.ReferenceCode);
             return toggleStateValue;
         }
-
+        #region Designer
+        private void Designer()
+        {
+            btnStart.Click += Button_Click;
+            txtNotification.ReadOnly = true;
+            txtNotification.BackColor = Color.FromArgb(23, 32, 42); // Deep navy
+        }
+        #endregion
         #region ToggleApplicationStateFunction (No Start Method)
         private bool toggleStatus()
         {
-            bool isOn = this.button.Text == "On";
+            bool isOn = this.btnStart.Text == "On";
             if (isOn)
             {
-                this.label.BackColor = Color.Crimson;
-                this.button.Text = "Off";
+                //this.label.BackColor = Color.Crimson;
+                this.btnStart.Text = "Off";
                 //this.notifyIconTray.Icon = Resources._4RTools.ETCResource.logo_4rtools_off;
                 this.subject.Notify(new Utilities.Message(MessageCode.TURN_OFF, null));
-                this.label.Text = "Press the button to start!";
+                //this.label.Text = "Press the button to start!";
                 //new SoundPlayer(Resources._4RTools.ETCResource.Speech_Off).Play();
             }
             else
@@ -124,18 +86,18 @@ namespace ApplicationLayer.ChildForms
                 Client client = ClientSingleton.GetClient();
                 if (client != null)
                 {
-                    this.button.BackColor = Color.Green;
-                    this.button.Text = "On";
+                    this.btnStart.BackColor = Color.Green;
+                    this.btnStart.Text = "On";
                     //this.notifyIconTray.Icon = Resources._4RTools.ETCResource.logo_4rtools_on;
                     this.subject.Notify(new Utilities.Message(MessageCode.TURN_ON, null));
-                    this.label.Text = "Press the button to stop!";
-                    this.label.ForeColor = Color.Black;
+                    //this.label.Text = "Press the button to stop!";
+                   // this.label.ForeColor = Color.Black;
                     //new SoundPlayer(Resources._4RTools.ETCResource.Speech_On).Play();
                 }
                 else
                 {
-                    this.label.Text = "Please select a valid Ragnarok Client!";
-                    this.label.ForeColor = Color.Red;
+                    this.txtNotification.Text = "Please select a valid Ragnarok Client!";
+                    this.txtNotification.ForeColor = Color.Red;
                 }
             }
             return true;
@@ -145,18 +107,18 @@ namespace ApplicationLayer.ChildForms
             var toggleStateValue = await ReturnToggleKey();
             // Parse JSON and extract toggleStateKey
             var jsonObject = JsonSerializer.Deserialize<UserPreferences>(toggleStateValue.UserPreferences);
-            this.textBox.Text = jsonObject.toggleStateKey;
+            this.txtKey.Text = jsonObject.toggleStateKey;
 
-            textBox.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
-            this.textBox.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
-            this.textBox.TextChanged += async (sender, e) => await onStatusToggleKeyChange(sender, e);
+            txtKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
+            this.txtKey.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
+            this.txtKey.TextChanged += async (sender, e) => await onStatusToggleKeyChange(sender, e);
 
         }
         private async Task onStatusToggleKeyChange(object sender, EventArgs e)
         {
             var toggleStateValue = await ReturnToggleKey();
             //Get last key from profile before update it in json
-            Keys currentToggleKey = (Keys)Enum.Parse(typeof(Keys), textBox.Text);
+            Keys currentToggleKey = (Keys)Enum.Parse(typeof(Keys), txtKey.Text);
             KeyboardHook.Remove(lastKey);
             KeyboardHook.Add(currentToggleKey, new KeyboardHook.KeyPressed(this.toggleStatus));
 

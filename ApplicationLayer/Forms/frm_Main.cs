@@ -1,4 +1,5 @@
 ﻿using ApplicationLayer.ChildForms;
+using ApplicationLayer.Designer;
 using ApplicationLayer.Dto.RagnarokDto;
 using ApplicationLayer.Forms;
 using ApplicationLayer.Interface;
@@ -22,6 +23,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
+using Cursors = System.Windows.Forms.Cursors;
 using MessageCode = Domain.Constants.MessageCode;
 namespace RagnarokHotKeyInWinforms
 {
@@ -32,7 +34,7 @@ namespace RagnarokHotKeyInWinforms
         private int progressIncrement; // Increment value for each tick
         private int targetProgress; // Target progress value
         List<ClientDto> clients = new List<ClientDto>(); // list of clients with address initiated
-        private List<BuffContainer> stuffBuffContainers = new List<BuffContainer>();
+       
         private List<BuffContainer> skillBuffContainers = new List<BuffContainer>();
         private ThreadUtility ThreadUtility;
 
@@ -74,591 +76,152 @@ namespace RagnarokHotKeyInWinforms
 
 
 
-        #region AutopotSettings(Triggered with Start() method)
-        private async Task RetrieveAutopot()
-        {
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<Autopot>(userToggleState.Autopot);
+        //#region Stuff and Skill Auto Buff (Triggered with Start() method)
+        //private async Task RetrieveStuffAutobuffForm()
+        //{
+
+        //    //Load the stuff containers
+        //    stuffBuffContainers.Add(new BuffContainer(this.PotionsGP, Buff.GetPotionsBuffs()));
+        //    stuffBuffContainers.Add(new BuffContainer(this.ElementalsGP, Buff.GetElementalsBuffs()));
+        //    stuffBuffContainers.Add(new BuffContainer(this.BoxesGP, Buff.GetBoxesBuffs()));
+        //    stuffBuffContainers.Add(new BuffContainer(this.FoodsGP, Buff.GetFoodBuffs()));
+        //    stuffBuffContainers.Add(new BuffContainer(this.ScrollBuffsGP, Buff.GetScrollBuffs()));
+        //    stuffBuffContainers.Add(new BuffContainer(this.EtcGP, Buff.GetETCBuffs()));
+
+
+        //    //trigger the containers and textboxes doRender()
+        //    new BuffRenderer(stuffBuffContainers, toolTipAutoBuff).doRender();
+
+        //    // Retrieve the setting
+        //    var userToggleState = await ReturnToggleKey();
+        //    var jsonObject = JsonSerializer.Deserialize<AutoBuff>(userToggleState.Autobuff);
+
+        //    // Return the dictionary
+        //    var autoBuffClones = new Dictionary<EffectStatusIdEnum, Key>(jsonObject.buffMapping);
+        //    // Assign key values to corresponding textboxes
+        //    foreach (KeyValuePair<EffectStatusIdEnum, Key> config in autoBuffClones)
+        //    {
+        //        bool found = false;
+
+        //        foreach (BuffContainer container in stuffBuffContainers) // Iterate over all containers
+        //        {
+        //            Control[] foundControls = container.container.Controls.Find(config.Key.ToString(), true);
+        //            if (foundControls.Length > 0 && foundControls[0] is TextBox textBox)
+        //            {
+        //                textBox.Text = config.Value.ToString(); // Set the assigned key
+        //                found = true;
+
+        //                break; // Stop searching once found
+        //            }
+        //        }
+
+        //        if (!found)
+        //        {
+        //            Console.WriteLine($"Textbox for '{config.Key}' not found in any group!");
+        //        }
+
+        //    }
+        //    // Attach event handlers to textboxes across all GroupBoxes
+        //    foreach (BuffContainer container in stuffBuffContainers)
+        //    {
+        //        foreach (Control c in container.container.Controls)
+        //        {
+        //            if (c is TextBox textBox)
+        //            {
+        //                textBox.TextChanged += onTextChange;
+        //            }
+        //        }
+        //    }
+
+        //    //Skill Auto Buff region
+
+        //    skillBuffContainers.Add(new BuffContainer(this.ArcherSkillsGP, Buff.GetArcherSkills()));
+        //    skillBuffContainers.Add(new BuffContainer(this.SwordmanSkillGP, Buff.GetSwordmanSkill()));
+        //    skillBuffContainers.Add(new BuffContainer(this.MageSkillGP, Buff.GetMageSkills()));
+        //    skillBuffContainers.Add(new BuffContainer(this.MerchantSkillsGP, Buff.GetMerchantSkills()));
+        //    skillBuffContainers.Add(new BuffContainer(this.ThiefSkillsGP, Buff.GetThiefSkills()));
+        //    skillBuffContainers.Add(new BuffContainer(this.AcolyteSkillsGP, Buff.GetAcolyteSkills()));
+        //    skillBuffContainers.Add(new BuffContainer(this.TKSkillGroupBox, Buff.GetTaekwonSkills()));
+        //    skillBuffContainers.Add(new BuffContainer(this.NinjaSkillsGP, Buff.GetNinjaSkills()));
+        //    skillBuffContainers.Add(new BuffContainer(this.GunsSkillsGP, Buff.GetGunsSkills()));
+
+        //    //trigger the containers and textboxes doRender()
+        //    new BuffRenderer(skillBuffContainers, toolTipAutoBuff).doRender();
+        //    //The retrieving of this from database is from our Stuff Autobuff
+        //    foreach (KeyValuePair<EffectStatusIdEnum, Key> config in autoBuffClones)
+        //    {
+        //        bool found = false;
+
+        //        foreach (BuffContainer container in skillBuffContainers) // Iterate over all containers
+        //        {
+        //            Control[] foundControls = container.container.Controls.Find(config.Key.ToString(), true);
+        //            if (foundControls.Length > 0 && foundControls[0] is TextBox textBox)
+        //            {
+        //                textBox.Text = config.Value.ToString(); // Set the assigned key
+        //                found = true;
+
+        //                break; // Stop searching once found
+        //            }
+        //        }
+
+        //        if (!found)
+        //        {
+        //            Console.WriteLine($"Textbox for '{config.Key}' not found in any group!");
+        //        }
+
+        //    }
+        //    // Attach event handlers to textboxes across all GroupBoxes
+        //    foreach (BuffContainer container in skillBuffContainers)
+        //    {
+        //        foreach (Control c in container.container.Controls)
+        //        {
+        //            if (c is TextBox textBox)
+        //            {
+        //                textBox.TextChanged += onTextChange;
+        //            }
+        //        }
+        //    }
+
+        //}
+        ////Updating when text changed.
+        //private async void onTextChange(object sender, EventArgs e)
+        //{
+        //    try
+        //    {
+        //        TextBox txtBox = (TextBox)sender;
+        //        if (!string.IsNullOrWhiteSpace(txtBox.Text))
+        //        {
+        //            if (!Enum.TryParse(txtBox.Name, out EffectStatusIdEnum statusID))
+        //            {
+        //                Console.WriteLine($"Invalid EffectStatusID from TextBox name: {txtBox.Name}");
+        //                return;
+        //            }
+
+        //            if (!Enum.TryParse(txtBox.Text, out Key key))
+        //            {
+        //                Console.WriteLine($"Invalid Key input: {txtBox.Text}");
+        //                return;
+        //            }
+
+        //            var userToggleState = await ReturnToggleKey();
+        //            var jsonObject = JsonSerializer.Deserialize<AutoBuff>(userToggleState.Autobuff);
+
+        //            jsonObject.AddKeyToBuff(statusID, key);
+
+        //            var updatedJson = JsonSerializer.Serialize(jsonObject);
+        //            userToggleState.Autobuff = updatedJson;
+
+
+        //            await _userSettingService.SaveChangesAsync(userToggleState);
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine($"Error in onTextChange: {ex.Message}");
+        //    }
+        //}
+        //#endregion Stuff and Skill Auto Buff
 
-            txtHpKey.Text = jsonObject.hpKey.ToString() ?? "0";
-            txtSpKey.Text = jsonObject.spKey.ToString() ?? "0";
-            txtHPpct.Text = jsonObject.hpPercent.ToString() ?? "0";
-            txtSPpct.Text = jsonObject.spPercent.ToString() ?? "0";
-            txtAutopotDelay.Text = jsonObject.delay.ToString() ?? "0";
-
-            //HPkey Controls
-            txtHpKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
-            txtHpKey.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
-            txtHpKey.TextChanged += async (sender, e) => await onHpTextChange(sender, e);
-
-            //HPPercent Controls
-            txtHPpct.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
-            txtHPpct.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
-            txtHPpct.TextChanged += async (sender, e) => await txtHPpctTextChanged(sender, e);
-
-            //SPKey controls
-            txtSpKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
-            txtSpKey.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
-            txtSpKey.TextChanged += async (sender, e) => await onSpTextChange(sender, e);
-
-            //SpPercent Controls
-            txtSPpct.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
-            txtSPpct.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
-            txtSPpct.TextChanged += async (sender, e) => await txtSPpctTextChanged(sender, e);
-
-
-            //Delay
-            txtAutopotDelay.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
-            txtAutopotDelay.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
-            txtAutopotDelay.TextChanged += async (sender, e) => await txtAutopotDelayTextChanged(sender, e);
-        }
-        #region HpTexAndPercent Autopot
-        private async Task onHpTextChange(object sender, EventArgs e)
-        {
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<Autopot>(userToggleState.Autopot);
-            Key key = (Key)Enum.Parse(typeof(Key), txtHpKey.Text);
-
-            if (jsonObject != null)
-            {
-                jsonObject.hpKey = key;
-                jsonObject.GetActionName();
-                var updatedJson = JsonSerializer.Serialize(jsonObject);
-                userToggleState.Autopot = updatedJson;
-                // Persist changes
-                await _userSettingService.SaveChangesAsync(userToggleState);
-            }
-            else
-            {
-                return;
-            }
-        }
-        private async Task txtHPpctTextChanged(object sender, EventArgs e)
-        {
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<Autopot>(userToggleState.Autopot);
-            Key key = (Key)Enum.Parse(typeof(Key), txtHPpct.Text);
-
-            if (jsonObject != null)
-            {
-                jsonObject.hpPercent = Convert.ToInt32(key);
-                jsonObject.GetActionName();
-                var updatedJson = JsonSerializer.Serialize(jsonObject);
-                userToggleState.Autopot = updatedJson;
-                // Persist changes
-                await _userSettingService.SaveChangesAsync(userToggleState);
-            }
-            else
-            {
-                return;
-            }
-
-        }
-        #endregion
-        #region SpTextAndPercent Autopot
-        private async Task onSpTextChange(object sender, EventArgs e)
-        {
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<Autopot>(userToggleState.Autopot);
-            Key key = (Key)Enum.Parse(typeof(Key), txtSpKey.Text);
-
-            if (jsonObject != null)
-            {
-                jsonObject.spKey = key;
-                jsonObject.GetActionName();
-                var updatedJson = JsonSerializer.Serialize(jsonObject);
-                userToggleState.Autopot = updatedJson;
-                // Persist changes
-                await _userSettingService.SaveChangesAsync(userToggleState);
-            }
-            else
-            {
-                return;
-            }
-        }
-
-        private async Task txtSPpctTextChanged(object sender, EventArgs e)
-        {
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<Autopot>(userToggleState.Autopot);
-            Key key = (Key)Enum.Parse(typeof(Key), txtSPpct.Text);
-
-            if (jsonObject != null)
-            {
-                jsonObject.spPercent = Convert.ToInt32(key);
-                jsonObject.GetActionName();
-                var updatedJson = JsonSerializer.Serialize(jsonObject);
-                userToggleState.Autopot = updatedJson;
-                // Persist changes
-                await _userSettingService.SaveChangesAsync(userToggleState);
-            }
-            else
-            {
-                return;
-            }
-        }
-
-        private async Task txtAutopotDelayTextChanged(object sender, EventArgs e)
-        {
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<Autopot>(userToggleState.Autopot);
-            Key key = (Key)Enum.Parse(typeof(Key), txtAutopotDelay.Text);
-
-            if (jsonObject != null)
-            {
-
-                jsonObject.delay = Convert.ToInt32(key);
-                var updatedJson = JsonSerializer.Serialize(jsonObject);
-                userToggleState.Autopot = updatedJson;
-                // Persist changes
-                await _userSettingService.SaveChangesAsync(userToggleState);
-            }
-            else
-            {
-                return;
-            }
-        }
-        #endregion
-        #endregion AutopotSettings
-        #region SkillTimer(Triggered with Start() method)
-        private async Task SkillTimerRetrieve()
-        {
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AutoRefreshSpammer>(userToggleState.AutoRefreshSpammer);
-
-            txtAutoRefreshDelay.Text = jsonObject.refreshDelay.ToString() ?? "0";
-            txtSkillTimerKey.Text = jsonObject.refreshKey.ToString() ?? "0";
-
-            //Default values from hotkeys
-            this.txtSkillTimerKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
-            this.txtSkillTimerKey.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
-            this.txtSkillTimerKey.TextChanged += new EventHandler(this.onSkillTimerKeyChange);
-            this.txtAutoRefreshDelay.ValueChanged += new EventHandler(this.txtAutoRefreshDelayTextChanged);
-        }
-        private async void onSkillTimerKeyChange(object sender, EventArgs e)
-        {
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AutoRefreshSpammer>(userToggleState.AutoRefreshSpammer);
-
-            Key key = (Key)Enum.Parse(typeof(Key), txtSkillTimerKey.Text.ToString());
-
-            if (jsonObject != null)
-            {
-                jsonObject.refreshKey = key;
-                var updatedJson = JsonSerializer.Serialize(jsonObject);
-                userToggleState.AutoRefreshSpammer = updatedJson;
-                // Persist changes
-                await _userSettingService.SaveChangesAsync(userToggleState);
-            }
-            else
-            {
-                return;
-            }
-        }
-        private async void txtAutoRefreshDelayTextChanged(object sender, EventArgs e)
-        {
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AutoRefreshSpammer>(userToggleState.AutoRefreshSpammer);
-
-            Key key = (Key)Enum.Parse(typeof(Key), txtAutoRefreshDelay.Text.ToString());
-
-            if (jsonObject != null)
-            {
-                jsonObject.refreshDelay = Convert.ToInt32(key);
-                var updatedJson = JsonSerializer.Serialize(jsonObject);
-                userToggleState.AutoRefreshSpammer = updatedJson;
-                // Persist changes
-                await _userSettingService.SaveChangesAsync(userToggleState);
-            }
-            else
-            {
-                return;
-            }
-        }
-        #endregion SkillTimer
-        #region Stuff and Skill Auto Buff (Triggered with Start() method)
-        private async Task RetrieveStuffAutobuffForm()
-        {
-
-            //Load the stuff containers
-            stuffBuffContainers.Add(new BuffContainer(this.PotionsGP, Buff.GetPotionsBuffs()));
-            stuffBuffContainers.Add(new BuffContainer(this.ElementalsGP, Buff.GetElementalsBuffs()));
-            stuffBuffContainers.Add(new BuffContainer(this.BoxesGP, Buff.GetBoxesBuffs()));
-            stuffBuffContainers.Add(new BuffContainer(this.FoodsGP, Buff.GetFoodBuffs()));
-            stuffBuffContainers.Add(new BuffContainer(this.ScrollBuffsGP, Buff.GetScrollBuffs()));
-            stuffBuffContainers.Add(new BuffContainer(this.EtcGP, Buff.GetETCBuffs()));
-
-
-            //trigger the containers and textboxes doRender()
-            new BuffRenderer(stuffBuffContainers, toolTipAutoBuff).doRender();
-
-            // Retrieve the setting
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AutoBuff>(userToggleState.Autobuff);
-
-            // Return the dictionary
-            var autoBuffClones = new Dictionary<EffectStatusIdEnum, Key>(jsonObject.buffMapping);
-            // Assign key values to corresponding textboxes
-            foreach (KeyValuePair<EffectStatusIdEnum, Key> config in autoBuffClones)
-            {
-                bool found = false;
-
-                foreach (BuffContainer container in stuffBuffContainers) // Iterate over all containers
-                {
-                    Control[] foundControls = container.container.Controls.Find(config.Key.ToString(), true);
-                    if (foundControls.Length > 0 && foundControls[0] is TextBox textBox)
-                    {
-                        textBox.Text = config.Value.ToString(); // Set the assigned key
-                        found = true;
-
-                        break; // Stop searching once found
-                    }
-                }
-
-                if (!found)
-                {
-                    Console.WriteLine($"Textbox for '{config.Key}' not found in any group!");
-                }
-
-            }
-            // Attach event handlers to textboxes across all GroupBoxes
-            foreach (BuffContainer container in stuffBuffContainers)
-            {
-                foreach (Control c in container.container.Controls)
-                {
-                    if (c is TextBox textBox)
-                    {
-                        textBox.TextChanged += onTextChange;
-                    }
-                }
-            }
-
-            //Skill Auto Buff region
-
-            skillBuffContainers.Add(new BuffContainer(this.ArcherSkillsGP, Buff.GetArcherSkills()));
-            skillBuffContainers.Add(new BuffContainer(this.SwordmanSkillGP, Buff.GetSwordmanSkill()));
-            skillBuffContainers.Add(new BuffContainer(this.MageSkillGP, Buff.GetMageSkills()));
-            skillBuffContainers.Add(new BuffContainer(this.MerchantSkillsGP, Buff.GetMerchantSkills()));
-            skillBuffContainers.Add(new BuffContainer(this.ThiefSkillsGP, Buff.GetThiefSkills()));
-            skillBuffContainers.Add(new BuffContainer(this.AcolyteSkillsGP, Buff.GetAcolyteSkills()));
-            skillBuffContainers.Add(new BuffContainer(this.TKSkillGroupBox, Buff.GetTaekwonSkills()));
-            skillBuffContainers.Add(new BuffContainer(this.NinjaSkillsGP, Buff.GetNinjaSkills()));
-            skillBuffContainers.Add(new BuffContainer(this.GunsSkillsGP, Buff.GetGunsSkills()));
-
-            //trigger the containers and textboxes doRender()
-            new BuffRenderer(skillBuffContainers, toolTipAutoBuff).doRender();
-            //The retrieving of this from database is from our Stuff Autobuff
-            foreach (KeyValuePair<EffectStatusIdEnum, Key> config in autoBuffClones)
-            {
-                bool found = false;
-
-                foreach (BuffContainer container in skillBuffContainers) // Iterate over all containers
-                {
-                    Control[] foundControls = container.container.Controls.Find(config.Key.ToString(), true);
-                    if (foundControls.Length > 0 && foundControls[0] is TextBox textBox)
-                    {
-                        textBox.Text = config.Value.ToString(); // Set the assigned key
-                        found = true;
-
-                        break; // Stop searching once found
-                    }
-                }
-
-                if (!found)
-                {
-                    Console.WriteLine($"Textbox for '{config.Key}' not found in any group!");
-                }
-
-            }
-            // Attach event handlers to textboxes across all GroupBoxes
-            foreach (BuffContainer container in skillBuffContainers)
-            {
-                foreach (Control c in container.container.Controls)
-                {
-                    if (c is TextBox textBox)
-                    {
-                        textBox.TextChanged += onTextChange;
-                    }
-                }
-            }
-
-        }
-        //Updating when text changed.
-        private async void onTextChange(object sender, EventArgs e)
-        {
-            try
-            {
-                TextBox txtBox = (TextBox)sender;
-                if (!string.IsNullOrWhiteSpace(txtBox.Text))
-                {
-                    if (!Enum.TryParse(txtBox.Name, out EffectStatusIdEnum statusID))
-                    {
-                        Console.WriteLine($"Invalid EffectStatusID from TextBox name: {txtBox.Name}");
-                        return;
-                    }
-
-                    if (!Enum.TryParse(txtBox.Text, out Key key))
-                    {
-                        Console.WriteLine($"Invalid Key input: {txtBox.Text}");
-                        return;
-                    }
-
-                    var userToggleState = await ReturnToggleKey();
-                    var jsonObject = JsonSerializer.Deserialize<AutoBuff>(userToggleState.Autobuff);
-
-                    jsonObject.AddKeyToBuff(statusID, key);
-
-                    var updatedJson = JsonSerializer.Serialize(jsonObject);
-                    userToggleState.Autobuff = updatedJson;
-
-
-                    await _userSettingService.SaveChangesAsync(userToggleState);
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error in onTextChange: {ex.Message}");
-            }
-        }
-        #endregion Stuff and Skill Auto Buff
-        #region Ahk Region (Triggered with Start() method)
-        private void DisableControlsIfSpeedBoost(Ahk jsonObject)
-        {
-            if (jsonObject.ahkMode == Ahk.SPEED_BOOST)
-            {
-                this.ahkSpeedBoost.Checked = true;
-                this.chkMouseFlick.Enabled = false;
-                this.chkNoShift.Enabled = false;
-            }
-            else
-            {
-                this.ahkCompatibility.Checked = true;
-                this.chkMouseFlick.Enabled = true;
-                this.chkNoShift.Enabled = true;
-            }
-        }
-
-        private async Task AhkRetrieval()
-        {
-            //Default values of legend
-            SetLegendDefaultValues();
-
-            //remove handlers so that it wont trigger the onCheckedChange on loop
-            foreach (Control c in this.tabPageSpammer.Controls)
-            {
-                if (c is CheckBox check)
-                {
-                    if (check.Enabled)
-                        check.CheckStateChanged -= onCheckChange; // Remove event handler before modification
-                }
-            }
-            foreach (Control c in this.groupAhkConfig.Controls)
-            {
-                if (c is RadioButton check)
-                {
-                    if (check.Enabled)
-                        check.CheckedChanged -= ahkCompatibility_CheckedChanged; // Remove event handler before modification
-                }
-            }
-
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<Ahk>(userToggleState.Ahk);
-            txtSpammerDelay.Text = jsonObject.AhkDelay.ToString() ?? "0";
-            DisableControlsIfSpeedBoost(jsonObject);
-            #region Keys that have key
-            Dictionary<string, KeyConfig> ahkClones = new Dictionary<string, KeyConfig>(jsonObject.AhkEntries);
-            foreach (KeyValuePair<string, KeyConfig> config in ahkClones)
-            {
-                ToggleCheckboxByName(config.Key, config.Value.ClickActive);
-            }
-
-            //Check the tab spammer for checkboxes. This will be triggered by the method ToggleCheckboxByName on loop.
-            foreach (Control c in this.tabPageSpammer.Controls)
-            {
-                if (c is CheckBox)
-                {
-                    CheckBox check = (CheckBox)c;
-                    if ((check.Name.Split(new[] { "chk" }, StringSplitOptions.None).Length == 2))
-                    {
-                        check.ThreeState = true; // Include the CheckState.Indeterminate three state insted of just true or false
-                    };
-
-                    if (check.Enabled)
-                        check.CheckStateChanged += onCheckChange;
-                }
-            }
-            #endregion  Keys that have key
-            #region Keys that have no key in keyboard
-            Dictionary<string, KeyConfigOthers> ahkCloneKeyConfig = new Dictionary<string, KeyConfigOthers>(jsonObject.AhkEntriesOthers);
-
-            foreach (KeyValuePair<string, KeyConfigOthers> config in ahkCloneKeyConfig)
-            {
-                ToggleCheckboxByName(config.Key, config.Value.ClickActive);
-            }
-
-            foreach (Control c in this.keyConfig.Controls)
-            {
-                if (c is CheckBox)
-                {
-                    CheckBox check = (CheckBox)c;
-                    if (check.Enabled)
-                        check.CheckStateChanged += onCheckChangeKeyConfig;
-                }
-            }
-
-            foreach (Control c in this.groupAhkConfig.Controls)
-            {
-                if (c is RadioButton check)
-                {
-                    if (check.Enabled)
-                        check.CheckedChanged += ahkCompatibility_CheckedChanged; // Remove event handler before modification
-                }
-            }
-
-
-            #endregion Keys that have no key in keyboard
-
-            //SpPercent Controls
-            txtSpammerDelay.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
-            txtSpammerDelay.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
-            txtSpammerDelay.TextChanged += async (sender, e) => await txtSpammerDelayChanged(sender, e);
-        }
-        private async Task txtSpammerDelayChanged(object sender, EventArgs e)
-        {
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<Ahk>(userToggleState.Ahk);
-            Key key = (Key)Enum.Parse(typeof(Key), txtSpammerDelay.Text);
-
-            if (jsonObject != null)
-            {
-                jsonObject.AhkDelay = Convert.ToInt32(key);
-                jsonObject.GetActionName();
-                var updatedJson = JsonSerializer.Serialize(jsonObject);
-                userToggleState.Ahk = updatedJson;
-                // Persist changes
-                await _userSettingService.SaveChangesAsync(userToggleState);
-            }
-            else
-            {
-                return;
-            }
-        }
-
-        private async void ahkCompatibility_CheckedChanged(object sender, EventArgs e)
-        {
-            //Dsiable the radiobutton to avoid threading conflict
-            foreach (Control c in this.groupAhkConfig.Controls)
-            {
-                if (c is RadioButton check)
-                {
-                    if (check.Enabled)
-                        check.CheckedChanged -= ahkCompatibility_CheckedChanged; // Remove event handler before modification
-                }
-            }
-
-
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<Ahk>(userToggleState.Ahk);
-            if (ahkCompatibility.Checked)
-            {
-                jsonObject.ahkMode = Ahk.COMPATABILITY;
-                var updatedJson = JsonSerializer.Serialize(jsonObject);
-                userToggleState.Ahk = updatedJson;
-
-                this.chkMouseFlick.Enabled = true;
-                this.chkNoShift.Enabled = true;
-            }
-            else
-            {
-                jsonObject.ahkMode = Ahk.SPEED_BOOST;
-                var updatedJson = JsonSerializer.Serialize(jsonObject);
-                userToggleState.Ahk = updatedJson;
-                this.chkMouseFlick.Enabled = false;
-                this.chkNoShift.Enabled = false;
-            }
-            // Persist changes add to the object array in database
-            await _userSettingService.SaveChangesAsync(userToggleState);
-
-            //Enable the checkbox again after saving
-            foreach (Control c in this.groupAhkConfig.Controls)
-            {
-                if (c is RadioButton check)
-                {
-                    if (check.Enabled)
-                        check.CheckedChanged += ahkCompatibility_CheckedChanged; // Remove event handler before modification
-                }
-            }
-
-
-        }
-        private void ToggleCheckboxByName(string Name, bool state)
-        {
-            CheckBox checkbox = (CheckBox)this.Controls.Find(Name, true)[0];
-            checkbox.CheckState = state ? CheckState.Checked : CheckState.Indeterminate;
-        }
-        private void SetLegendDefaultValues()
-        {
-            //No mouse click cbWithNoClick
-            this.cbWithNoClick.ThreeState = true;
-            this.cbWithNoClick.CheckState = System.Windows.Forms.CheckState.Indeterminate;
-            this.cbWithNoClick.AutoCheck = false;
-            //With mouse click cbWithClick
-            this.cbWithClick.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbWithClick.ThreeState = true;
-            this.cbWithClick.AutoCheck = false;
-        }
-        private async void onCheckChange(object sender, EventArgs e)
-        {
-            CheckBox checkbox = (CheckBox)sender;
-            Key key = (Key)new KeyConverter().ConvertFromString(checkbox.Text);
-            bool haveMouseClick = checkbox.CheckState == CheckState.Checked ? true : false;
-
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<Ahk>(userToggleState.Ahk);
-            //If there is a checked key in checkbox then register this to the profile that was selected.
-            if (checkbox.CheckState == CheckState.Checked || checkbox.CheckState == CheckState.Indeterminate)
-            {
-                //add every entry that the user changed
-                jsonObject.AddAHKEntry(checkbox.Name, new KeyConfig(key, haveMouseClick));
-            }
-
-            else
-            {
-                //remove the entry if the user click unchecked
-                jsonObject.RemoveAHKEntry(checkbox.Name);
-            }
-            var updatedJson = JsonSerializer.Serialize(jsonObject);
-            userToggleState.Ahk = updatedJson;
-            // Persist changes add to the object array in database
-            await _userSettingService.SaveChangesAsync(userToggleState);
-        }
-
-        private async void onCheckChangeKeyConfig(object sender, EventArgs e)
-        {
-            CheckBox checkbox = (CheckBox)sender;
-            bool haveMouseClick = checkbox.CheckState == CheckState.Checked ? true : false;
-
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<Ahk>(userToggleState.Ahk);
-            //If there is a checked key in checkbox then register this to the profile that was selected.
-            if (checkbox.CheckState == CheckState.Checked)
-            {
-                //add every entry that the user changed
-                jsonObject.AddAHKEntryKeyConfig(checkbox.Name, new KeyConfigOthers(haveMouseClick));
-            }
-
-            else
-            {
-                //remove the entry if the user click unchecked
-                jsonObject.RemoveAHKEntryKeyConfig(checkbox.Name);
-            }
-            var updatedJson = JsonSerializer.Serialize(jsonObject);
-            userToggleState.Ahk = updatedJson;
-            // Persist changes add to the object array in database
-            await _userSettingService.SaveChangesAsync(userToggleState);
-        }
-
-        #endregion Ahk Region
         #region MacroSongForm (Triggered with Start() method)
         private async Task<Macro> ReturnMacro()
         {
@@ -1072,164 +635,7 @@ namespace RagnarokHotKeyInWinforms
             catch { }
         }
         #endregion
-        #region Attack Defend Form (Triggered with start() method)
-        private async Task DisplayAttackDefendMode()
-        {
 
-            var toggleStateValue = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AttackDefendMode>(toggleStateValue.AtkDefMode);
-
-            this.inSpammerKey.Text = jsonObject.keySpammer.ToString();
-            this.spammerDelay.Value = jsonObject.ahkDelay;
-            this.switchDelay.Value = jsonObject.switchDelay;
-            this.inSpammerClick.Checked = jsonObject.keySpammerWithClick;
-            Dictionary<string, Key> atkKeys = new Dictionary<string, Key>(jsonObject.atkKeys);
-            Dictionary<string, Key> defKeys = new Dictionary<string, Key>(jsonObject.defKeys);
-
-            foreach (Control control in this.panelSwitch.Controls)
-            {
-                if (control is TextBox)
-                {
-
-                    TextBox tb = (TextBox)control;
-                    if (!tb.Tag.ToString().Equals("spammerKey"))
-                    {
-                        AttackDefendEnum mode = (AttackDefendEnum)Int16.Parse(tb.Tag.ToString());
-                        if (mode == AttackDefendEnum.DEF)
-                        {
-                            tb.Text = defKeys.ContainsKey(tb.Name) ? defKeys[tb.Name].ToString() : Keys.None.ToString();
-                        }
-                        else
-                        {
-                            tb.Text = atkKeys.ContainsKey(tb.Name) ? atkKeys[tb.Name].ToString() : Keys.None.ToString();
-                        }
-                    }
-
-                    TextBox textBox = (TextBox)control;
-                    textBox.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
-                    textBox.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
-                    textBox.TextChanged += new EventHandler(this.AttackDefendonTextChange);
-
-                }
-            }
-
-            foreach (Control c in this.groupBoxATKxDEFConfig.Controls)
-            {
-                if (c is CheckBox check)
-                {
-                    if (check.Enabled)
-                        check.CheckStateChanged += ChkBox_CheckedChanged;
-                }
-            }
-
-            //Delay
-            spammerDelay.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
-            spammerDelay.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
-            spammerDelay.TextChanged += async (sender, e) => await txtSpammerDelayTextChanged(sender, e);
-
-            //Switch Delay
-            switchDelay.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
-            switchDelay.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
-            switchDelay.TextChanged += async (sender, e) => await txtSwitchDelayTextChanged(sender, e);
-            //
-            inSpammerKey.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
-            inSpammerKey.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
-            inSpammerKey.TextChanged += async (sender, e) => await txtInSpammerDelayTextChanged(sender, e);
-
-        }
-        private async Task txtInSpammerDelayTextChanged(object sender, EventArgs e)
-        {
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AttackDefendMode>(userToggleState.AtkDefMode);
-            Key key = (Key)Enum.Parse(typeof(Key), inSpammerKey.Text);
-
-            if (jsonObject != null)
-            {
-                jsonObject.keySpammer = key;
-                var updatedJson = JsonSerializer.Serialize(jsonObject);
-                userToggleState.AtkDefMode = updatedJson;
-                // Persist changes
-                await _userSettingService.SaveChangesAsync(userToggleState);
-            }
-            else
-            {
-                return;
-            }
-        }
-        private async Task txtSpammerDelayTextChanged(object sender, EventArgs e)
-        {
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AttackDefendMode>(userToggleState.AtkDefMode);
-            Key key = (Key)Enum.Parse(typeof(Key), spammerDelay.Text);
-
-            if (jsonObject != null)
-            {
-                jsonObject.ahkDelay = Convert.ToInt32(key);
-                var updatedJson = JsonSerializer.Serialize(jsonObject);
-                userToggleState.AtkDefMode = updatedJson;
-                // Persist changes
-                await _userSettingService.SaveChangesAsync(userToggleState);
-            }
-            else
-            {
-                return;
-            }
-        }
-        private async Task txtSwitchDelayTextChanged(object sender, EventArgs e)
-        {
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AttackDefendMode>(userToggleState.AtkDefMode);
-            Key key = (Key)Enum.Parse(typeof(Key), switchDelay.Text);
-
-            if (jsonObject != null)
-            {
-                jsonObject.switchDelay = Convert.ToInt32(key);
-                var updatedJson = JsonSerializer.Serialize(jsonObject);
-                userToggleState.AtkDefMode = updatedJson;
-                // Persist changes
-                await _userSettingService.SaveChangesAsync(userToggleState);
-            }
-            else
-            {
-                return;
-            }
-        }
-        private async void ChkBox_CheckedChanged(object sender, EventArgs e)
-        {
-            var toggleStateValue = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AttackDefendMode>(toggleStateValue.AtkDefMode);
-
-            jsonObject.keySpammerWithClick = this.inSpammerClick.Checked;
-            var updatedJson = JsonSerializer.Serialize(jsonObject);
-            toggleStateValue.AtkDefMode = updatedJson;
-            // Persist changes
-            await _userSettingService.SaveChangesAsync(toggleStateValue);
-        }
-        private async void AttackDefendonTextChange(object sender, EventArgs e)
-        {
-            var toggleStateValue = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<AttackDefendMode>(toggleStateValue.AtkDefMode);
-
-            TextBox textBox = (TextBox)sender;
-            Key key = (Key)Enum.Parse(typeof(Key), textBox.Text.ToString());
-
-            //If it's ATK OR DEF
-            if (textBox.Tag.Equals("spammerKey"))
-            {
-                jsonObject.keySpammer = key;
-            }
-            else
-            {
-                AttackDefendEnum mode = (AttackDefendEnum)Int16.Parse(textBox.Tag.ToString());
-                jsonObject.AddSwitchItem(textBox.Name, key, mode);
-            }
-            var updatedJson = JsonSerializer.Serialize(jsonObject);
-            toggleStateValue.AtkDefMode = updatedJson;
-            // Persist changes
-            await _userSettingService.SaveChangesAsync(toggleStateValue);
-
-        }
-        #endregion Attack Defend Form
         #region Public methods
         public async void Update(ISubjectService subject)
         {
@@ -1327,34 +733,74 @@ namespace RagnarokHotKeyInWinforms
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            #region Mdi Container design
+            DesignerService.ApplyDarkBlueTheme(this);
+
+
             this.IsMdiContainer = true;
+
+            foreach (Control ctrl in this.Controls)
+            {
+
+                if (ctrl is MdiClient client)
+                {
+                    client.BackColor = Color.FromArgb(23, 32, 42); // Deep navy
+                    break;
+                }
+            }
+            #endregion
+            //Logout button
+            btnLogout.Location = new Point(359, 4);
+            btnLogout.Cursor = Cursors.Hand;
             try
             {
                 var toggleForm = Program.ServiceProvider.GetRequiredService<ToggleApplicationForm>();
                 var statusRecoveryForm = Program.ServiceProvider.GetRequiredService<StatusRecoveryForm>();
+                var autopotForm = Program.ServiceProvider.GetRequiredService<AutopotForm>();
+                var skillSpammerForm = Program.ServiceProvider.GetRequiredService<SkillSpammerForm>();
+                var attackDefendModeForm = Program.ServiceProvider.GetRequiredService<AttackDefendModeForm>();
+                var autoBuffStuffsForm = Program.ServiceProvider.GetRequiredService<AutoBuffStuffsForm>();
 
                 // Manually position the forms Location(left, right)Height(width, height)
-                toggleForm.MdiParent = this;
-                toggleForm.Location = new Point(0, 0);
-                toggleForm.Size = new Size(400, 35);
-                toggleForm.email = _userEmail;
-
-
+                //Status recovery
                 statusRecoveryForm.MdiParent = this;
-                statusRecoveryForm.Location = new Point(400, 0);
-                statusRecoveryForm.Size = new Size(300, 35);
+                statusRecoveryForm.Location = new Point(199, 57);
+                statusRecoveryForm.Size = new Size(159, 74);
                 statusRecoveryForm.email = _userEmail;
-
-
-
-                toggleForm.Show();
                 statusRecoveryForm.Show();
 
+                //Autopot and skill timer form
+                autopotForm.MdiParent = this;
+                autopotForm.Location = new Point(17, 142);
+                autopotForm.Size = new Size(246, 156);
+                autopotForm.email = _userEmail;
+                autopotForm.Show();
 
 
-                progressBar1.Value = 0;
-                progressBar1.Maximum = 15;
-                lblLoadingSettings.Visible = true;
+                //skillspammer
+                skillSpammerForm.TopLevel = false;
+                skillSpammerForm.email = _userEmail;
+                tabPageSpammer.Controls.Add(skillSpammerForm);
+                skillSpammerForm.Show();
+
+                //Attack defend mode form
+                attackDefendModeForm.TopLevel = false;
+                attackDefendModeForm.email = _userEmail;
+                tabPageAtkDef.Controls.Add(attackDefendModeForm);
+                attackDefendModeForm.Show();
+
+                //Autobuff stuff form
+                autoBuffStuffsForm.TopLevel = false;
+                autoBuffStuffsForm.email = _userEmail;
+                tabAutoBuffStuff.Controls.Add(autoBuffStuffsForm);
+                autoBuffStuffsForm.Show();
+
+                //Toggle which is last
+                toggleForm.MdiParent = this;
+                toggleForm.Location = new Point(18, 4);
+                toggleForm.Size = new Size(340, 52);
+                toggleForm.email = _userEmail;
+                toggleForm.Show();
 
                 StartUpdate();
                 refreshProcessList();
@@ -1383,8 +829,6 @@ namespace RagnarokHotKeyInWinforms
                 //await DisplayMacroSwitch(); progressBar1.Value++;
                 //await DisplayAttackDefendMode(); progressBar1.Value++;
                 refreshProcessList();
-                progressBar1.Value = 0; // Ensure it completes
-                lblLoadingSettings.Visible = false;
             }
             catch (Exception ex)
             {
@@ -1515,7 +959,7 @@ namespace RagnarokHotKeyInWinforms
         }
         private async void btnLogout_Click(object sender, EventArgs e)
         {
-           await Logout();
+            await Logout();
         }
         private void btnRefresh_Click(object sender, EventArgs e)
         {

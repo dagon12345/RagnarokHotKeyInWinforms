@@ -4,11 +4,13 @@ using ApplicationLayer.Interface;
 using ApplicationLayer.Service;
 using ApplicationLayer.Validator;
 using Domain.Constants;
+using Domain.Model;
 using Domain.Model.DataModels;
 using Domain.Security;
 using FluentResults;
 using Infrastructure.Helpers;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
 using Microsoft.IdentityModel.Tokens;
 using RagnarokHotKeyInWinforms;
 using System;
@@ -272,8 +274,14 @@ namespace ApplicationLayer.Forms
             var login = await _loginService.Login(dto.Email, dto.Password);
             if(login)
             {
+                var searchUser = await _storedCredentialService.SearchUser(dto.Email);
+                //Update the stored credential for new lastlogin.
+                searchUser.LastLoginTime = DateTime.UtcNow;
                 await CreateUserSettingAsync(dto.Email);
+                await _storedCredentialService.SaveChangesAsync(searchUser);
+
                 OpenMainMenuForm(dto.Email);
+
                 return;
             }
             MessageBox.Show("Invalid login credentials", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);

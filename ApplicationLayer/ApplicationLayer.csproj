@@ -81,11 +81,29 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppConfig.cs" />
-    <Compile Include="ChildForms\LogoutForm.cs">
+    <Compile Include="ChildForms\AttackDefendModeForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ChildForms\LogoutForm.Designer.cs">
-      <DependentUpon>LogoutForm.cs</DependentUpon>
+    <Compile Include="ChildForms\AttackDefendModeForm.Designer.cs">
+      <DependentUpon>AttackDefendModeForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ChildForms\AutoBuffStuffsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChildForms\AutoBuffStuffsForm.Designer.cs">
+      <DependentUpon>AutoBuffStuffsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ChildForms\AutopotForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChildForms\AutopotForm.Designer.cs">
+      <DependentUpon>AutopotForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ChildForms\SkillSpammerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChildForms\SkillSpammerForm.Designer.cs">
+      <DependentUpon>SkillSpammerForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ChildForms\StatusRecoveryForm.cs">
       <SubType>Form</SubType>
@@ -204,8 +222,17 @@
     <Compile Include="Validator\SignInRegistrationDtoValidator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ChildForms\LogoutForm.resx">
-      <DependentUpon>LogoutForm.cs</DependentUpon>
+    <EmbeddedResource Include="ChildForms\AttackDefendModeForm.resx">
+      <DependentUpon>AttackDefendModeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ChildForms\AutoBuffStuffsForm.resx">
+      <DependentUpon>AutoBuffStuffsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ChildForms\AutopotForm.resx">
+      <DependentUpon>AutopotForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ChildForms\SkillSpammerForm.resx">
+      <DependentUpon>SkillSpammerForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ChildForms\StatusRecoveryForm.resx">
       <DependentUpon>StatusRecoveryForm.cs</DependentUpon>

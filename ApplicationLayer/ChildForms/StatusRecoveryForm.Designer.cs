@@ -35,7 +35,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox2)).BeginInit();
             this.SuspendLayout();
@@ -43,7 +42,7 @@
             // txtNewStatusKey
             // 
             this.txtNewStatusKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.txtNewStatusKey.Location = new System.Drawing.Point(227, 9);
+            this.txtNewStatusKey.Location = new System.Drawing.Point(72, 38);
             this.txtNewStatusKey.Name = "txtNewStatusKey";
             this.txtNewStatusKey.Size = new System.Drawing.Size(45, 23);
             this.txtNewStatusKey.TabIndex = 30;
@@ -51,7 +50,7 @@
             // txtStatusKey
             // 
             this.txtStatusKey.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F);
-            this.txtStatusKey.Location = new System.Drawing.Point(96, 9);
+            this.txtStatusKey.Location = new System.Drawing.Point(72, 9);
             this.txtStatusKey.Name = "txtStatusKey";
             this.txtStatusKey.Size = new System.Drawing.Size(45, 23);
             this.txtStatusKey.TabIndex = 27;
@@ -59,7 +58,7 @@
             // pictureBox1
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(33, 8);
+            this.pictureBox1.Location = new System.Drawing.Point(9, 8);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(24, 24);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -69,7 +68,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(59, 14);
+            this.label1.Location = new System.Drawing.Point(35, 14);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(37, 13);
             this.label1.TabIndex = 29;
@@ -78,7 +77,7 @@
             // pictureBox2
             // 
             this.pictureBox2.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox2.Image")));
-            this.pictureBox2.Location = new System.Drawing.Point(164, 8);
+            this.pictureBox2.Location = new System.Drawing.Point(9, 37);
             this.pictureBox2.Name = "pictureBox2";
             this.pictureBox2.Size = new System.Drawing.Size(24, 24);
             this.pictureBox2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -88,26 +87,17 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(190, 14);
+            this.label2.Location = new System.Drawing.Point(35, 43);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(37, 13);
             this.label2.TabIndex = 32;
             this.label2.Text = "Status";
             // 
-            // panel1
-            // 
-            this.panel1.BackColor = System.Drawing.Color.Silver;
-            this.panel1.Location = new System.Drawing.Point(152, 5);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1, 30);
-            this.panel1.TabIndex = 33;
-            // 
             // StatusRecoveryForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(312, 41);
-            this.Controls.Add(this.panel1);
+            this.ClientSize = new System.Drawing.Size(136, 74);
             this.Controls.Add(this.txtNewStatusKey);
             this.Controls.Add(this.txtStatusKey);
             this.Controls.Add(this.label2);
@@ -133,6 +123,5 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.PictureBox pictureBox2;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Panel panel1;
     }
 }

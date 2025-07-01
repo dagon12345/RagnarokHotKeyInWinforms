@@ -203,7 +203,7 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(120, 14);
+            this.label17.Location = new System.Drawing.Point(118, 19);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(47, 13);
             this.label17.TabIndex = 20;
@@ -212,7 +212,7 @@
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(15, 38);
+            this.label18.Location = new System.Drawing.Point(15, 46);
             this.label18.Name = "label18";
             this.label18.Size = new System.Drawing.Size(25, 13);
             this.label18.TabIndex = 18;
@@ -221,7 +221,7 @@
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(15, 12);
+            this.label19.Location = new System.Drawing.Point(11, 17);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(34, 13);
             this.label19.TabIndex = 19;
@@ -229,7 +229,7 @@
             // 
             // txtAutoRefreshDelay
             // 
-            this.txtAutoRefreshDelay.Location = new System.Drawing.Point(55, 11);
+            this.txtAutoRefreshDelay.Location = new System.Drawing.Point(55, 17);
             this.txtAutoRefreshDelay.Name = "txtAutoRefreshDelay";
             this.txtAutoRefreshDelay.ReadOnly = true;
             this.txtAutoRefreshDelay.Size = new System.Drawing.Size(57, 20);
@@ -237,7 +237,7 @@
             // 
             // txtSkillTimerKey
             // 
-            this.txtSkillTimerKey.Location = new System.Drawing.Point(55, 35);
+            this.txtSkillTimerKey.Location = new System.Drawing.Point(55, 43);
             this.txtSkillTimerKey.Name = "txtSkillTimerKey";
             this.txtSkillTimerKey.Size = new System.Drawing.Size(57, 20);
             this.txtSkillTimerKey.TabIndex = 16;

@@ -9,7 +9,7 @@ namespace ApplicationLayer.Models.RagnarokModels
 {
     public class BuffRenderer
     {
-        private readonly int BUFFS_PER_ROW = 5;
+        private readonly int BUFFS_PER_ROW = 7;
         private readonly int DISTANCE_BETWEEN_CONTAINERS = 10;
         private readonly int DISTANCE_BETWEEN_ROWS = 30;
 

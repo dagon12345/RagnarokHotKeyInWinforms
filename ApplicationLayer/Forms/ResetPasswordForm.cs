@@ -1,4 +1,5 @@
-﻿using ApplicationLayer.Dto;
+﻿using ApplicationLayer.Designer;
+using ApplicationLayer.Dto;
 using ApplicationLayer.Validator;
 using System.Linq;
 using System.Windows.Forms;
@@ -10,6 +11,8 @@ namespace ApplicationLayer.Forms
         public ResetPasswordForm()
         {
             InitializeComponent();
+            //Centralize color
+            DesignerService.ApplyDarkBlueTheme(this);
             btnOk.Click += btnOk_Click;
             btnCancel.Click += (s, e) => this.DialogResult = DialogResult.Cancel;
             txtNewPassword.UseSystemPasswordChar = true;

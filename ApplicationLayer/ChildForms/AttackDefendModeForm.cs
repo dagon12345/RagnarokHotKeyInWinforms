@@ -25,8 +25,10 @@ namespace ApplicationLayer.ChildForms
             InitializeComponent();
             //Centralize color
             DesignerService.ApplyDarkBlueTheme(this);
+            Designer();
             _userSettingService = userSettingService;
             _baseTableService = baseTableService;
+
         }
 
         protected override void OnLoad(EventArgs e)
@@ -44,6 +46,11 @@ namespace ApplicationLayer.ChildForms
             {
                 MessageBox.Show($"Error: {ex.Message}");
             }
+        }
+        private void Designer()
+        {
+            spammerDelay.ReadOnly = true;
+            switchDelay.ReadOnly = true;
         }
         //Get the reference code of the user
         private async Task<UserSettings> ReturnToggleKey()

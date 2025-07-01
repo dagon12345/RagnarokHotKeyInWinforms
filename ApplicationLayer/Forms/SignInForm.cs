@@ -97,7 +97,7 @@ namespace ApplicationLayer.Forms
             var storedAccessToken = searchCredential.AccessToken;
 
             //If the logged in time is less than 30 minutes then restore session else delete the existing login creds and sign in again.
-            if (!string.IsNullOrEmpty(storedAccessToken) && (DateTime.UtcNow - lastLoginTime).TotalMinutes <= 10)  // Check if within 30 minutes
+            if (!string.IsNullOrEmpty(storedAccessToken) && (DateTime.UtcNow - lastLoginTime).TotalMinutes <= 30)  // Check if within 30 minutes
             {
                 // Token is still valid, proceed to MainMenuForm
                 await CreateUserSettingAsync(searchCredential.UserEmail);

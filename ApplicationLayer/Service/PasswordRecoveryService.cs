@@ -34,12 +34,12 @@ namespace ApplicationLayer.Service
             searchUser.PasswordResetToken = Guid.NewGuid().ToString();
             searchUser.PasswordResetTokenExpiry = DateTime.UtcNow.AddMinutes(30);
 
-            await _storedCredentialService.SaveChangesAsync(searchUser);
-
             string rawGuid = Guid.NewGuid().ToString("N"); // 32-character hex without dashes
             string confirmationCode = rawGuid.Substring(0, 6).ToUpper(); // E.g., "A2C9FD"
 
             searchUser.SetConfirmationCode(confirmationCode, _hasHer, TimeSpan.FromMinutes(30));
+
+            await _storedCredentialService.SaveChangesAsync(searchUser);
 
             await _emailService.SendPasswordResetLinkAsync(email, confirmationCode);
             return searchUser;

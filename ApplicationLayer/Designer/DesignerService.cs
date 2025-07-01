@@ -18,7 +18,7 @@ namespace ApplicationLayer.Designer
                     tb.BackColor = Color.FromArgb(33, 47, 61);
                     tb.ForeColor = Color.LightGray;
                     tb.BorderStyle = BorderStyle.None;
-                    tb.Font = new Font("Segoe UI", 11, FontStyle.Regular);
+                    tb.Font = new Font("Segoe UI", 11, FontStyle.Bold);
                 }
 
                 if (ctrl is Button btn)
@@ -60,6 +60,7 @@ namespace ApplicationLayer.Designer
                 if (ctrl is CheckBox chk)
                 {
                     chk.ForeColor = Color.LightGray;
+                    chk.Font = new Font("Segoe UI", 8, FontStyle.Bold);
                 }
                 // Recursively apply to nested controls
                 if (ctrl.HasChildren)

@@ -133,6 +133,7 @@ namespace RagnarokHotKeyInWinforms
                     services.AddTransient<SkillSpammerForm>();
                     services.AddTransient<AttackDefendModeForm>();
                     services.AddTransient<AutoBuffStuffsForm>();
+                    services.AddTransient<AutoBuffSkillsForm>();
                     #endregion
 
                     #region Infrastructure Layer Services

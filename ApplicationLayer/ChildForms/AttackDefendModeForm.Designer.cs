@@ -103,14 +103,14 @@
             this.panelSwitch.Controls.Add(this.pictureBox87);
             this.panelSwitch.Controls.Add(this.pictureBox88);
             this.panelSwitch.Controls.Add(this.groupBoxATKxDEFConfig);
-            this.panelSwitch.Location = new System.Drawing.Point(5, 12);
+            this.panelSwitch.Location = new System.Drawing.Point(5, 3);
             this.panelSwitch.Name = "panelSwitch";
             this.panelSwitch.Size = new System.Drawing.Size(403, 253);
             this.panelSwitch.TabIndex = 30;
             // 
             // inAtk2
             // 
-            this.inAtk2.Location = new System.Drawing.Point(295, 96);
+            this.inAtk2.Location = new System.Drawing.Point(295, 53);
             this.inAtk2.Name = "inAtk2";
             this.inAtk2.Size = new System.Drawing.Size(60, 20);
             this.inAtk2.TabIndex = 9;
@@ -119,7 +119,7 @@
             // lblDef
             // 
             this.lblDef.AutoSize = true;
-            this.lblDef.Location = new System.Drawing.Point(183, 46);
+            this.lblDef.Location = new System.Drawing.Point(183, 3);
             this.lblDef.Name = "lblDef";
             this.lblDef.Size = new System.Drawing.Size(63, 13);
             this.lblDef.TabIndex = 0;
@@ -127,7 +127,7 @@
             // 
             // inDef1
             // 
-            this.inDef1.Location = new System.Drawing.Point(215, 70);
+            this.inDef1.Location = new System.Drawing.Point(215, 27);
             this.inDef1.Name = "inDef1";
             this.inDef1.Size = new System.Drawing.Size(60, 20);
             this.inDef1.TabIndex = 1;
@@ -135,7 +135,7 @@
             // 
             // inDef2
             // 
-            this.inDef2.Location = new System.Drawing.Point(215, 96);
+            this.inDef2.Location = new System.Drawing.Point(215, 53);
             this.inDef2.Name = "inDef2";
             this.inDef2.Size = new System.Drawing.Size(60, 20);
             this.inDef2.TabIndex = 2;
@@ -143,7 +143,7 @@
             // 
             // inDef3
             // 
-            this.inDef3.Location = new System.Drawing.Point(215, 122);
+            this.inDef3.Location = new System.Drawing.Point(215, 79);
             this.inDef3.Name = "inDef3";
             this.inDef3.Size = new System.Drawing.Size(60, 20);
             this.inDef3.TabIndex = 3;
@@ -153,7 +153,7 @@
             // 
             this.pictureBox79.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox79.Image")));
             this.pictureBox79.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox79.InitialImage")));
-            this.pictureBox79.Location = new System.Drawing.Point(359, 118);
+            this.pictureBox79.Location = new System.Drawing.Point(359, 75);
             this.pictureBox79.Name = "pictureBox79";
             this.pictureBox79.Size = new System.Drawing.Size(25, 25);
             this.pictureBox79.TabIndex = 22;
@@ -161,7 +161,7 @@
             // 
             // inDef4
             // 
-            this.inDef4.Location = new System.Drawing.Point(215, 148);
+            this.inDef4.Location = new System.Drawing.Point(215, 105);
             this.inDef4.Name = "inDef4";
             this.inDef4.Size = new System.Drawing.Size(60, 20);
             this.inDef4.TabIndex = 4;
@@ -171,7 +171,7 @@
             // 
             this.pictureBox80.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox80.Image")));
             this.pictureBox80.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox80.InitialImage")));
-            this.pictureBox80.Location = new System.Drawing.Point(359, 172);
+            this.pictureBox80.Location = new System.Drawing.Point(359, 129);
             this.pictureBox80.Name = "pictureBox80";
             this.pictureBox80.Size = new System.Drawing.Size(25, 25);
             this.pictureBox80.TabIndex = 21;
@@ -179,7 +179,7 @@
             // 
             // inDef5
             // 
-            this.inDef5.Location = new System.Drawing.Point(215, 174);
+            this.inDef5.Location = new System.Drawing.Point(215, 131);
             this.inDef5.Name = "inDef5";
             this.inDef5.Size = new System.Drawing.Size(60, 20);
             this.inDef5.TabIndex = 5;
@@ -189,7 +189,7 @@
             // 
             this.pictureBox81.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox81.Image")));
             this.pictureBox81.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox81.InitialImage")));
-            this.pictureBox81.Location = new System.Drawing.Point(359, 146);
+            this.pictureBox81.Location = new System.Drawing.Point(359, 103);
             this.pictureBox81.Name = "pictureBox81";
             this.pictureBox81.Size = new System.Drawing.Size(25, 25);
             this.pictureBox81.TabIndex = 20;
@@ -198,7 +198,7 @@
             // panel14
             // 
             this.panel14.BackColor = System.Drawing.Color.Silver;
-            this.panel14.Location = new System.Drawing.Point(284, 46);
+            this.panel14.Location = new System.Drawing.Point(284, 3);
             this.panel14.Name = "panel14";
             this.panel14.Size = new System.Drawing.Size(1, 150);
             this.panel14.TabIndex = 6;
@@ -207,7 +207,7 @@
             // 
             this.pictureBox82.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox82.Image")));
             this.pictureBox82.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox82.InitialImage")));
-            this.pictureBox82.Location = new System.Drawing.Point(359, 94);
+            this.pictureBox82.Location = new System.Drawing.Point(359, 51);
             this.pictureBox82.Name = "pictureBox82";
             this.pictureBox82.Size = new System.Drawing.Size(25, 25);
             this.pictureBox82.TabIndex = 19;
@@ -216,7 +216,7 @@
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(292, 46);
+            this.label10.Location = new System.Drawing.Point(292, 3);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(63, 13);
             this.label10.TabIndex = 7;
@@ -226,7 +226,7 @@
             // 
             this.pictureBox83.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox83.Image")));
             this.pictureBox83.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox83.InitialImage")));
-            this.pictureBox83.Location = new System.Drawing.Point(359, 68);
+            this.pictureBox83.Location = new System.Drawing.Point(359, 25);
             this.pictureBox83.Name = "pictureBox83";
             this.pictureBox83.Size = new System.Drawing.Size(25, 25);
             this.pictureBox83.TabIndex = 18;
@@ -234,7 +234,7 @@
             // 
             // inAtk1
             // 
-            this.inAtk1.Location = new System.Drawing.Point(295, 70);
+            this.inAtk1.Location = new System.Drawing.Point(295, 27);
             this.inAtk1.Name = "inAtk1";
             this.inAtk1.Size = new System.Drawing.Size(60, 20);
             this.inAtk1.TabIndex = 8;
@@ -244,7 +244,7 @@
             // 
             this.pictureBox84.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox84.Image")));
             this.pictureBox84.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox84.InitialImage")));
-            this.pictureBox84.Location = new System.Drawing.Point(186, 120);
+            this.pictureBox84.Location = new System.Drawing.Point(186, 77);
             this.pictureBox84.Name = "pictureBox84";
             this.pictureBox84.Size = new System.Drawing.Size(25, 25);
             this.pictureBox84.TabIndex = 17;
@@ -252,7 +252,7 @@
             // 
             // inAtk3
             // 
-            this.inAtk3.Location = new System.Drawing.Point(295, 122);
+            this.inAtk3.Location = new System.Drawing.Point(295, 79);
             this.inAtk3.Name = "inAtk3";
             this.inAtk3.Size = new System.Drawing.Size(60, 20);
             this.inAtk3.TabIndex = 10;
@@ -262,7 +262,7 @@
             // 
             this.pictureBox85.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox85.Image")));
             this.pictureBox85.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox85.InitialImage")));
-            this.pictureBox85.Location = new System.Drawing.Point(186, 172);
+            this.pictureBox85.Location = new System.Drawing.Point(186, 129);
             this.pictureBox85.Name = "pictureBox85";
             this.pictureBox85.Size = new System.Drawing.Size(25, 25);
             this.pictureBox85.TabIndex = 16;
@@ -270,7 +270,7 @@
             // 
             // inAtk4
             // 
-            this.inAtk4.Location = new System.Drawing.Point(295, 148);
+            this.inAtk4.Location = new System.Drawing.Point(295, 105);
             this.inAtk4.Name = "inAtk4";
             this.inAtk4.Size = new System.Drawing.Size(60, 20);
             this.inAtk4.TabIndex = 11;
@@ -280,7 +280,7 @@
             // 
             this.pictureBox86.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox86.Image")));
             this.pictureBox86.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox86.InitialImage")));
-            this.pictureBox86.Location = new System.Drawing.Point(186, 146);
+            this.pictureBox86.Location = new System.Drawing.Point(186, 103);
             this.pictureBox86.Name = "pictureBox86";
             this.pictureBox86.Size = new System.Drawing.Size(25, 25);
             this.pictureBox86.TabIndex = 15;
@@ -288,7 +288,7 @@
             // 
             // inAtk5
             // 
-            this.inAtk5.Location = new System.Drawing.Point(295, 174);
+            this.inAtk5.Location = new System.Drawing.Point(295, 131);
             this.inAtk5.Name = "inAtk5";
             this.inAtk5.Size = new System.Drawing.Size(60, 20);
             this.inAtk5.TabIndex = 12;
@@ -298,7 +298,7 @@
             // 
             this.pictureBox87.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox87.Image")));
             this.pictureBox87.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox87.InitialImage")));
-            this.pictureBox87.Location = new System.Drawing.Point(186, 94);
+            this.pictureBox87.Location = new System.Drawing.Point(186, 51);
             this.pictureBox87.Name = "pictureBox87";
             this.pictureBox87.Size = new System.Drawing.Size(25, 25);
             this.pictureBox87.TabIndex = 14;
@@ -308,7 +308,7 @@
             // 
             this.pictureBox88.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox88.Image")));
             this.pictureBox88.InitialImage = ((System.Drawing.Image)(resources.GetObject("pictureBox88.InitialImage")));
-            this.pictureBox88.Location = new System.Drawing.Point(186, 68);
+            this.pictureBox88.Location = new System.Drawing.Point(186, 25);
             this.pictureBox88.Name = "pictureBox88";
             this.pictureBox88.Size = new System.Drawing.Size(25, 25);
             this.pictureBox88.TabIndex = 13;
@@ -323,7 +323,7 @@
             this.groupBoxATKxDEFConfig.Controls.Add(this.label11);
             this.groupBoxATKxDEFConfig.Controls.Add(this.spammerDelay);
             this.groupBoxATKxDEFConfig.Controls.Add(this.label35);
-            this.groupBoxATKxDEFConfig.Location = new System.Drawing.Point(6, 46);
+            this.groupBoxATKxDEFConfig.Location = new System.Drawing.Point(6, 3);
             this.groupBoxATKxDEFConfig.Name = "groupBoxATKxDEFConfig";
             this.groupBoxATKxDEFConfig.Size = new System.Drawing.Size(171, 151);
             this.groupBoxATKxDEFConfig.TabIndex = 33;
@@ -403,14 +403,14 @@
             this.label35.TabIndex = 26;
             this.label35.Text = "Spammer Delay";
             // 
-            // AttackDefendMode
+            // AttackDefendModeForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(412, 273);
             this.Controls.Add(this.panelSwitch);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Name = "AttackDefendMode";
+            this.Name = "AttackDefendModeForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "AttackDefendMode";
             this.panelSwitch.ResumeLayout(false);

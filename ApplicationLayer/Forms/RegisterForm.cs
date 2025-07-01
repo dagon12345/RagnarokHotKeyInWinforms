@@ -1,4 +1,5 @@
-﻿using ApplicationLayer.Dto;
+﻿using ApplicationLayer.Designer;
+using ApplicationLayer.Dto;
 using ApplicationLayer.Interface;
 using ApplicationLayer.Validator;
 using Domain.Model.DataModels;
@@ -21,6 +22,8 @@ namespace ApplicationLayer.Forms
             IHasher hasher, IEmailService emailService)
         {
             InitializeComponent();
+            //Centralize color
+            DesignerService.ApplyDarkBlueTheme(this);
             _registerServices = registeredServices;
             _storedCredentialsService = storedCredentialService;
 

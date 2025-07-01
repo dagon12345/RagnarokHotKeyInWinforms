@@ -34,8 +34,6 @@ namespace RagnarokHotKeyInWinforms
         private int progressIncrement; // Increment value for each tick
         private int targetProgress; // Target progress value
         List<ClientDto> clients = new List<ClientDto>(); // list of clients with address initiated
-       
-        private List<BuffContainer> skillBuffContainers = new List<BuffContainer>();
         private ThreadUtility ThreadUtility;
 
         private readonly IServiceProvider _serviceProvider;
@@ -72,156 +70,6 @@ namespace RagnarokHotKeyInWinforms
 
 
         }
-
-
-
-
-        //#region Stuff and Skill Auto Buff (Triggered with Start() method)
-        //private async Task RetrieveStuffAutobuffForm()
-        //{
-
-        //    //Load the stuff containers
-        //    stuffBuffContainers.Add(new BuffContainer(this.PotionsGP, Buff.GetPotionsBuffs()));
-        //    stuffBuffContainers.Add(new BuffContainer(this.ElementalsGP, Buff.GetElementalsBuffs()));
-        //    stuffBuffContainers.Add(new BuffContainer(this.BoxesGP, Buff.GetBoxesBuffs()));
-        //    stuffBuffContainers.Add(new BuffContainer(this.FoodsGP, Buff.GetFoodBuffs()));
-        //    stuffBuffContainers.Add(new BuffContainer(this.ScrollBuffsGP, Buff.GetScrollBuffs()));
-        //    stuffBuffContainers.Add(new BuffContainer(this.EtcGP, Buff.GetETCBuffs()));
-
-
-        //    //trigger the containers and textboxes doRender()
-        //    new BuffRenderer(stuffBuffContainers, toolTipAutoBuff).doRender();
-
-        //    // Retrieve the setting
-        //    var userToggleState = await ReturnToggleKey();
-        //    var jsonObject = JsonSerializer.Deserialize<AutoBuff>(userToggleState.Autobuff);
-
-        //    // Return the dictionary
-        //    var autoBuffClones = new Dictionary<EffectStatusIdEnum, Key>(jsonObject.buffMapping);
-        //    // Assign key values to corresponding textboxes
-        //    foreach (KeyValuePair<EffectStatusIdEnum, Key> config in autoBuffClones)
-        //    {
-        //        bool found = false;
-
-        //        foreach (BuffContainer container in stuffBuffContainers) // Iterate over all containers
-        //        {
-        //            Control[] foundControls = container.container.Controls.Find(config.Key.ToString(), true);
-        //            if (foundControls.Length > 0 && foundControls[0] is TextBox textBox)
-        //            {
-        //                textBox.Text = config.Value.ToString(); // Set the assigned key
-        //                found = true;
-
-        //                break; // Stop searching once found
-        //            }
-        //        }
-
-        //        if (!found)
-        //        {
-        //            Console.WriteLine($"Textbox for '{config.Key}' not found in any group!");
-        //        }
-
-        //    }
-        //    // Attach event handlers to textboxes across all GroupBoxes
-        //    foreach (BuffContainer container in stuffBuffContainers)
-        //    {
-        //        foreach (Control c in container.container.Controls)
-        //        {
-        //            if (c is TextBox textBox)
-        //            {
-        //                textBox.TextChanged += onTextChange;
-        //            }
-        //        }
-        //    }
-
-        //    //Skill Auto Buff region
-
-        //    skillBuffContainers.Add(new BuffContainer(this.ArcherSkillsGP, Buff.GetArcherSkills()));
-        //    skillBuffContainers.Add(new BuffContainer(this.SwordmanSkillGP, Buff.GetSwordmanSkill()));
-        //    skillBuffContainers.Add(new BuffContainer(this.MageSkillGP, Buff.GetMageSkills()));
-        //    skillBuffContainers.Add(new BuffContainer(this.MerchantSkillsGP, Buff.GetMerchantSkills()));
-        //    skillBuffContainers.Add(new BuffContainer(this.ThiefSkillsGP, Buff.GetThiefSkills()));
-        //    skillBuffContainers.Add(new BuffContainer(this.AcolyteSkillsGP, Buff.GetAcolyteSkills()));
-        //    skillBuffContainers.Add(new BuffContainer(this.TKSkillGroupBox, Buff.GetTaekwonSkills()));
-        //    skillBuffContainers.Add(new BuffContainer(this.NinjaSkillsGP, Buff.GetNinjaSkills()));
-        //    skillBuffContainers.Add(new BuffContainer(this.GunsSkillsGP, Buff.GetGunsSkills()));
-
-        //    //trigger the containers and textboxes doRender()
-        //    new BuffRenderer(skillBuffContainers, toolTipAutoBuff).doRender();
-        //    //The retrieving of this from database is from our Stuff Autobuff
-        //    foreach (KeyValuePair<EffectStatusIdEnum, Key> config in autoBuffClones)
-        //    {
-        //        bool found = false;
-
-        //        foreach (BuffContainer container in skillBuffContainers) // Iterate over all containers
-        //        {
-        //            Control[] foundControls = container.container.Controls.Find(config.Key.ToString(), true);
-        //            if (foundControls.Length > 0 && foundControls[0] is TextBox textBox)
-        //            {
-        //                textBox.Text = config.Value.ToString(); // Set the assigned key
-        //                found = true;
-
-        //                break; // Stop searching once found
-        //            }
-        //        }
-
-        //        if (!found)
-        //        {
-        //            Console.WriteLine($"Textbox for '{config.Key}' not found in any group!");
-        //        }
-
-        //    }
-        //    // Attach event handlers to textboxes across all GroupBoxes
-        //    foreach (BuffContainer container in skillBuffContainers)
-        //    {
-        //        foreach (Control c in container.container.Controls)
-        //        {
-        //            if (c is TextBox textBox)
-        //            {
-        //                textBox.TextChanged += onTextChange;
-        //            }
-        //        }
-        //    }
-
-        //}
-        ////Updating when text changed.
-        //private async void onTextChange(object sender, EventArgs e)
-        //{
-        //    try
-        //    {
-        //        TextBox txtBox = (TextBox)sender;
-        //        if (!string.IsNullOrWhiteSpace(txtBox.Text))
-        //        {
-        //            if (!Enum.TryParse(txtBox.Name, out EffectStatusIdEnum statusID))
-        //            {
-        //                Console.WriteLine($"Invalid EffectStatusID from TextBox name: {txtBox.Name}");
-        //                return;
-        //            }
-
-        //            if (!Enum.TryParse(txtBox.Text, out Key key))
-        //            {
-        //                Console.WriteLine($"Invalid Key input: {txtBox.Text}");
-        //                return;
-        //            }
-
-        //            var userToggleState = await ReturnToggleKey();
-        //            var jsonObject = JsonSerializer.Deserialize<AutoBuff>(userToggleState.Autobuff);
-
-        //            jsonObject.AddKeyToBuff(statusID, key);
-
-        //            var updatedJson = JsonSerializer.Serialize(jsonObject);
-        //            userToggleState.Autobuff = updatedJson;
-
-
-        //            await _userSettingService.SaveChangesAsync(userToggleState);
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        Console.WriteLine($"Error in onTextChange: {ex.Message}");
-        //    }
-        //}
-        //#endregion Stuff and Skill Auto Buff
-
         #region MacroSongForm (Triggered with Start() method)
         private async Task<Macro> ReturnMacro()
         {
@@ -735,7 +583,7 @@ namespace RagnarokHotKeyInWinforms
         {
             #region Mdi Container design
             DesignerService.ApplyDarkBlueTheme(this);
-
+            logListBox.ForeColor = Color.Black;
 
             this.IsMdiContainer = true;
 
@@ -750,7 +598,7 @@ namespace RagnarokHotKeyInWinforms
             }
             #endregion
             //Logout button
-            btnLogout.Location = new Point(359, 4);
+            btnLogout.Location = new Point(789, 7);
             btnLogout.Cursor = Cursors.Hand;
             try
             {
@@ -760,6 +608,7 @@ namespace RagnarokHotKeyInWinforms
                 var skillSpammerForm = Program.ServiceProvider.GetRequiredService<SkillSpammerForm>();
                 var attackDefendModeForm = Program.ServiceProvider.GetRequiredService<AttackDefendModeForm>();
                 var autoBuffStuffsForm = Program.ServiceProvider.GetRequiredService<AutoBuffStuffsForm>();
+                var autoBuffSkillsForm = Program.ServiceProvider.GetRequiredService<AutoBuffSkillsForm>();
 
                 // Manually position the forms Location(left, right)Height(width, height)
                 //Status recovery
@@ -780,13 +629,14 @@ namespace RagnarokHotKeyInWinforms
                 //skillspammer
                 skillSpammerForm.TopLevel = false;
                 skillSpammerForm.email = _userEmail;
-                tabPageSpammer.Controls.Add(skillSpammerForm);
+                tabPageSpammerAndAttack.Controls.Add(skillSpammerForm);
                 skillSpammerForm.Show();
 
                 //Attack defend mode form
                 attackDefendModeForm.TopLevel = false;
                 attackDefendModeForm.email = _userEmail;
-                tabPageAtkDef.Controls.Add(attackDefendModeForm);
+                attackDefendModeForm.Location = new Point(424, 3);
+                tabPageSpammerAndAttack.Controls.Add(attackDefendModeForm);
                 attackDefendModeForm.Show();
 
                 //Autobuff stuff form
@@ -794,6 +644,12 @@ namespace RagnarokHotKeyInWinforms
                 autoBuffStuffsForm.email = _userEmail;
                 tabAutoBuffStuff.Controls.Add(autoBuffStuffsForm);
                 autoBuffStuffsForm.Show();
+
+                //Autobuff skills form
+                autoBuffSkillsForm.TopLevel = false;
+                autoBuffSkillsForm.email = _userEmail;
+                tabAutoBuffSkill.Controls.Add(autoBuffSkillsForm);
+                autoBuffSkillsForm.Show();
 
                 //Toggle which is last
                 toggleForm.MdiParent = this;
@@ -959,7 +815,10 @@ namespace RagnarokHotKeyInWinforms
         }
         private async void btnLogout_Click(object sender, EventArgs e)
         {
-            await Logout();
+            if(MessageBox.Show("Are you sure you want to logout?","Logout", MessageBoxButtons.YesNo, MessageBoxIcon.Question)== DialogResult.Yes)
+            {
+                await Logout();
+            }
         }
         private void btnRefresh_Click(object sender, EventArgs e)
         {

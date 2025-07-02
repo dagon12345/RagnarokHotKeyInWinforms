@@ -8,6 +8,7 @@ using ApplicationLayer.Models.RagnarokModels;
 using ApplicationLayer.Service;
 using ApplicationLayer.Service.RagnarokService;
 using ApplicationLayer.Singleton.RagnarokSingleton;
+using ApplicationLayer.Utilities;
 using Domain.Constants;
 using Domain.Model.DataModels;
 using Infrastructure.Service;
@@ -29,7 +30,7 @@ namespace RagnarokHotKeyInWinforms
 {
     public partial class frm_Main : Form, IObserverService
     {
-        private SubjectService subject = new SubjectService();//subject triggers the Update() method inside notify function
+       // private SubjectService subject = new SubjectService();//subject triggers the Update() method inside notify function
         private System.Windows.Forms.Timer progressTimer;
         private int progressIncrement; // Increment value for each tick
         private int targetProgress; // Target progress value
@@ -40,19 +41,17 @@ namespace RagnarokHotKeyInWinforms
         private readonly IStoredCredentialService _storedCredentialService;
         private readonly IUserSettingService _userSettingService;
         private readonly IBaseTableService _baseTableService;
-
+        private readonly SubjectService _subjectService;
         private string _userEmail;
-        public frm_Main(string userEmail, IServiceProvider serviceProvider, IStoredCredentialService storedCredentialService)
+        public frm_Main(string userEmail, IServiceProvider serviceProvider, IStoredCredentialService storedCredentialService,
+            IBaseTableService baseTableService, IUserSettingService userSettingService, SubjectService subjectService)
         {
-            this.subject.Attach(this);
-            InitializeComponent();
 
+            InitializeComponent();
 
             #region Child Forms
             _serviceProvider = serviceProvider;
             #endregion
-
-            KeyboardHook.Enable();
 
             #region Logger Configuration
             LogStore.Entries.ListChanged += (s, e) => RefreshLogList();
@@ -61,6 +60,9 @@ namespace RagnarokHotKeyInWinforms
 
             #region Interfaces
             _storedCredentialService = storedCredentialService;
+            _userSettingService = userSettingService;
+            _baseTableService = baseTableService;
+            _subjectService = subjectService;
             #endregion
 
             #region Passed DataTypes
@@ -219,7 +221,7 @@ namespace RagnarokHotKeyInWinforms
         #endregion
 
         #region Public methods
-        public async void Update(ISubjectService subject)
+        public void Update(ISubjectService subject)
         {
             switch ((subject as SubjectService).Message.code)
             {
@@ -229,10 +231,6 @@ namespace RagnarokHotKeyInWinforms
                     {
                         characterName.Text = ClientSingleton.GetClient().ReadCharacterName();
                     }
-                    await TriggerStartActions();
-                    break;
-                case MessageCode.TURN_OFF:
-                    TriggerStopActions();
                     break;
                 case MessageCode.SERVER_LIST_CHANGED:
                     this.refreshProcessList();
@@ -242,7 +240,7 @@ namespace RagnarokHotKeyInWinforms
                     this.WindowState = FormWindowState.Normal;
                     break;
                 case MessageCode.SHUTDOWN_APPLICATION:
-                    this.ShutdownApplication();
+                    //this.ShutdownApplication();
                     break;
             }
         }
@@ -270,55 +268,14 @@ namespace RagnarokHotKeyInWinforms
             if (logListBox.Items.Count > 0)
                 logListBox.SelectedIndex = 0;
         }
-
-        private async Task<T> GetDeserializedObject<T>(Func<Task<string>> getJsonData)
-        {
-            var jsonData = await getJsonData();
-            return JsonSerializer.Deserialize<T>(jsonData);
-        }
-        private async Task TriggerStartActions()
-        {
-            Client client = ClientSingleton.GetClient();
-            //Done
-            var jsonObjectAhk = await GetDeserializedObject<Ahk>(async () => (await ReturnToggleKey()).Ahk);
-            //Done
-            var jsonObjectAutopot = await GetDeserializedObject<Autopot>(async () => (await ReturnToggleKey()).Autopot);
-            //Done
-            var jsonObjectAutoRefresh = await GetDeserializedObject<AutoRefreshSpammer>(async () => (await ReturnToggleKey()).AutoRefreshSpammer);
-            //Done
-            var jsonObjectStatusRecovery = await GetDeserializedObject<StatusRecovery>(async () => (await ReturnToggleKey()).StatusRecovery);
-            //Done
-            var jsonObjectAutoBuff = await GetDeserializedObject<AutoBuff>(async () => (await ReturnToggleKey()).Autobuff);
-            //Done
-            var jsonObjectMacroSong = await GetDeserializedObject<Macro>(async () => (await ReturnToggleKey()).SongMacro);
-            //Done
-            var jsonObjectMacroSwitch = await GetDeserializedObject<MacroSwitch>(async () => (await ReturnToggleKey()).MacroSwitch);
-            //Done
-            var jsonObjectAtkDef = await GetDeserializedObject<AttackDefendMode>(async () => (await ReturnToggleKey()).AtkDefMode);
-            ThreadUtility = new ThreadUtility(_ =>
-            {
-                jsonObjectAhk?.AHKThreadExecution(client);
-                jsonObjectAutopot?.AutopotThreadExecution(client, 0);
-                jsonObjectAutoRefresh?.AutorefreshThreadExecution(client);
-                jsonObjectStatusRecovery?.RestoreStatusThread(client);
-                jsonObjectAutoBuff?.AutoBuffThread(client);
-                jsonObjectMacroSong?.MacroExecutionThread(client);
-                jsonObjectMacroSwitch?.MacroExecutionThreadSwitch(client);
-                jsonObjectAtkDef?.AttacKDefAHKThreadExecution(client);
-                Task.Delay(50).Wait(); // Safe exit
-            });
-        }
-        private void TriggerStopActions()
-        {
-            ThreadUtility?.Stop();
-        }
-
         private void Form1_Load(object sender, EventArgs e)
         {
+     
+
             #region Mdi Container design
             DesignerService.ApplyDarkBlueTheme(this);
             logListBox.ForeColor = Color.Black;
-
+            processCombobox.ForeColor = Color.Black;
             this.IsMdiContainer = true;
 
             foreach (Control ctrl in this.Controls)
@@ -331,11 +288,15 @@ namespace RagnarokHotKeyInWinforms
                 }
             }
             #endregion
+            #region Children forms
             //Logout button
             btnLogout.Location = new Point(789, 7);
             btnLogout.Cursor = Cursors.Hand;
             try
             {
+
+                _subjectService.Attach(this);
+
                 var toggleForm = Program.ServiceProvider.GetRequiredService<ToggleApplicationForm>();
                 var statusRecoveryForm = Program.ServiceProvider.GetRequiredService<StatusRecoveryForm>();
                 var autopotForm = Program.ServiceProvider.GetRequiredService<AutopotForm>();
@@ -433,11 +394,12 @@ namespace RagnarokHotKeyInWinforms
 
                 Console.WriteLine(ex.Message);
             }
+            #endregion
+
         }
 
         private void StartUpdate()
         {
-
             pbSupportedServer.Value = 0; // Initialize progress bar
             pbSupportedServer.Maximum = 100; // Set maximum value for progress bar
 
@@ -517,12 +479,6 @@ namespace RagnarokHotKeyInWinforms
                     this.processCombobox.Items.Add(string.Format("{0}.exe - {1}", p.ProcessName, p.Id));
                 }
             }
-        }
-        private void ShutdownApplication()
-        {
-            KeyboardHook.Disable();
-            subject.Notify(new ApplicationLayer.Utilities.Message(MessageCode.TURN_OFF, null));
-            Environment.Exit(0);
         }
 
         private void processCombobox_SelectedIndexChanged(object sender, EventArgs e)

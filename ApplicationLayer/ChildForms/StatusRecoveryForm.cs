@@ -1,6 +1,10 @@
 ﻿using ApplicationLayer.Designer;
 using ApplicationLayer.Interface;
+using ApplicationLayer.Interface.RagnarokInterface;
 using ApplicationLayer.Models.RagnarokModels;
+using ApplicationLayer.Service.RagnarokService;
+using ApplicationLayer.Singleton.RagnarokSingleton;
+using ApplicationLayer.Utilities;
 using Domain.Constants;
 using Domain.Model.DataModels;
 using Infrastructure.Utilities;
@@ -8,19 +12,23 @@ using System;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Windows.Input;
 
 namespace ApplicationLayer.ChildForms
 {
-    public partial class StatusRecoveryForm : Form
+    public partial class StatusRecoveryForm : Form, IObserverService
     {
         private readonly IBaseTableService _baseTableService;
         private readonly IUserSettingService _userSettingService;
-
+        private readonly SubjectService _subjectService;
+        private ThreadUtility ThreadUtility;
         public string email;//get the users email from login
-        public StatusRecoveryForm(IBaseTableService baseTableService, IUserSettingService userSettingService)
+        public StatusRecoveryForm(IBaseTableService baseTableService, IUserSettingService userSettingService, SubjectService subjectService)
         {
+            
             InitializeComponent();
              DesignerService.ApplyDarkBlueTheme(this);
+            _subjectService = subjectService;
             _baseTableService = baseTableService;
             _userSettingService = userSettingService;
         }
@@ -28,7 +36,41 @@ namespace ApplicationLayer.ChildForms
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            _subjectService.Attach(this);
             _ = LoadAsync(); // Fire and forget safely
+
+        }
+
+        public async void Update(ISubjectService subject)
+        {
+            switch ((subject as SubjectService).Message.code)
+            {
+                case MessageCode.TURN_ON:
+                    await TriggerStartActions();
+                    break;
+                case MessageCode.TURN_OFF:
+                    TriggerStopActions();
+                    break;
+            }
+        }
+        private async Task<T> GetDeserializedObject<T>(Func<Task<string>> getJsonData)
+        {
+            var jsonData = await getJsonData();
+            return JsonSerializer.Deserialize<T>(jsonData);
+        }
+        private async Task TriggerStartActions()
+        {
+            Client client = ClientSingleton.GetClient();
+            var jsonObjectStatusRecovery = await GetDeserializedObject<StatusRecovery>(async () => (await ReturnToggleKey()).StatusRecovery);
+            ThreadUtility = new ThreadUtility(_ =>
+            {
+                jsonObjectStatusRecovery?.RestoreStatusThread(client);
+                Task.Delay(50).Wait(); // Safe exit
+            });
+        }
+        private void TriggerStopActions()
+        {
+            ThreadUtility?.Stop();
         }
         private async Task LoadAsync()
         {
@@ -62,11 +104,11 @@ namespace ApplicationLayer.ChildForms
                     if (jsonObject.buffMapping.TryGetValue(EffectStatusIdEnum.PROPERTYUNDEAD, out var value))
                     {
                         string rawText = value.ToString();
-                        Keys parsedKey;
+                        Key parsedKey;
 
-                        if (!Enum.TryParse(rawText, out parsedKey) || !Enum.IsDefined(typeof(Keys), parsedKey))
+                        if (!Enum.TryParse(rawText, out parsedKey) || !Enum.IsDefined(typeof(Key), parsedKey))
                         {
-                            parsedKey = Keys.None;
+                            parsedKey = Key.None;
                         }
 
                         txtNewStatusKey.Text = parsedKey.ToString();
@@ -75,7 +117,7 @@ namespace ApplicationLayer.ChildForms
                     else
                     {
                         // Fallback if the key isn’t present
-                        txtNewStatusKey.Text = Keys.None.ToString();
+                        txtNewStatusKey.Text = Key.None.ToString();
                         // Or log this scenario for debugging
                     }
 
@@ -104,7 +146,7 @@ namespace ApplicationLayer.ChildForms
         {
             var userToggleState = await ReturnToggleKey();
             var jsonObject = JsonSerializer.Deserialize<StatusRecovery>(userToggleState.StatusRecovery);
-            Keys key = (Keys)Enum.Parse(typeof(Keys), txtStatusKey.Text.ToString());
+            Key key = (Key)Enum.Parse(typeof(Key), txtStatusKey.Text.ToString());
 
             if (jsonObject != null)
             {
@@ -131,7 +173,7 @@ namespace ApplicationLayer.ChildForms
         {
             var userToggleState = await ReturnToggleKey();
             var jsonObject = JsonSerializer.Deserialize<StatusRecovery>(userToggleState.StatusRecovery);
-            Keys key = (Keys)Enum.Parse(typeof(Keys), txtNewStatusKey.Text.ToString());
+            Key key = (Key)Enum.Parse(typeof(Key), txtNewStatusKey.Text.ToString());
 
             if (jsonObject != null)
             {
@@ -152,6 +194,7 @@ namespace ApplicationLayer.ChildForms
 
             }
         }
+
         #endregion Status Effect From
 
     }

@@ -2,8 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using System.Windows.Input;
 
-namespace Infrastructure.Utilities
+namespace ApplicationLayer.Utilities
 {
     public class FormUtilities
     {
@@ -12,13 +13,13 @@ namespace Infrastructure.Utilities
             try
             {
                 TextBox textBox = (TextBox)sender;
-                Keys thisk = (Keys)Enum.Parse(typeof(Keys), e.KeyCode.ToString());
+                Key thisk = (Key)Enum.Parse(typeof(Key), e.KeyCode.ToString());
 
                 switch (thisk)
                 {
-                    case Keys.Escape:
-                    case Keys.Back:
-                        textBox.Text = Keys.None.ToString();
+                    case Key.Escape:
+                    case Key.Back:
+                        textBox.Text = Key.None.ToString();
                         break;
                     default:
                         textBox.Text = e.KeyCode.ToString();
@@ -27,15 +28,11 @@ namespace Infrastructure.Utilities
                 textBox.Parent.Focus();
                 e.Handled = true;
             }
-            catch
-            {
-
-                throw;
-            }
+            catch { }
         }
-        public static bool IsValidKey(Keys key)
+        public static bool IsValidKey(Key key)
         {
-            return (key != Keys.Back && key != Keys.Escape && key != Keys.None);
+            return (key != Key.Back && key != Key.Escape && key != Key.None);
         }
         public static void OnKeyPress(object sender, KeyPressEventArgs e)
         {
@@ -58,7 +55,7 @@ namespace Infrastructure.Utilities
             foreach (Control c in texts)
             {
                 TextBox textBox = (TextBox)c;
-                textBox.Text = Keys.None.ToString();
+                textBox.Text = Key.None.ToString();
             }
             foreach (Control c in checks)
             {

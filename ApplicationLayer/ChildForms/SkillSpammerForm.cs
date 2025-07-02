@@ -9,19 +9,29 @@ using System.Text.Json;
 using Domain.Model.DataModels;
 using ApplicationLayer.Interface;
 using ApplicationLayer.Designer;
+using ApplicationLayer.Utilities;
+using ApplicationLayer.Service.RagnarokService;
+using ApplicationLayer.Interface.RagnarokInterface;
+using ApplicationLayer.Singleton.RagnarokSingleton;
+using Domain.Constants;
+using System.Threading;
 
 namespace ApplicationLayer.ChildForms
 {
-    public partial class SkillSpammerForm : Form
+    public partial class SkillSpammerForm : Form, IObserverService
     {
         private readonly IUserSettingService _userSettingService;
         private readonly IBaseTableService _baseTableService;
+        private readonly SubjectService _subjectService;
+        private ThreadUtility ThreadUtility;
+        private CancellationTokenSource _debounceTokenSource;
         public string email;
-        public SkillSpammerForm(IUserSettingService userSettingService, IBaseTableService baseTableService)
+        public SkillSpammerForm(IUserSettingService userSettingService, IBaseTableService baseTableService, SubjectService subjectService)
         {
             InitializeComponent();
             //Centralize color
             DesignerService.ApplyDarkBlueTheme(this);
+            _subjectService = subjectService;
             _userSettingService = userSettingService;
             _baseTableService = baseTableService;
         }
@@ -36,7 +46,41 @@ namespace ApplicationLayer.ChildForms
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            _subjectService.Attach(this);
             _ = LoadAsync();
+        }
+        public async void Update(ISubjectService subject)
+        {
+            switch ((subject as SubjectService).Message.code)
+            {
+                case MessageCode.TURN_ON:
+                    await TriggerStartActions();
+                    break;
+                case MessageCode.TURN_OFF:
+                    TriggerStopActions();
+                    break;
+            }
+        }
+
+
+        private async Task<T> GetDeserializedObject<T>(Func<Task<string>> getJsonData)
+        {
+            var jsonData = await getJsonData();
+            return JsonSerializer.Deserialize<T>(jsonData);
+        }
+        private async Task TriggerStartActions()
+        {
+            Client client = ClientSingleton.GetClient();
+            var jsonObjectAhk = await GetDeserializedObject<Ahk>(async () => (await ReturnToggleKey()).Ahk);
+            ThreadUtility = new ThreadUtility(_ =>
+            {
+                jsonObjectAhk?.AHKThreadExecution(client);
+                Task.Delay(50).Wait(); // Safe exit
+            });
+        }
+        private void TriggerStopActions()
+        {
+            ThreadUtility?.Stop();
         }
 
         private async Task LoadAsync()
@@ -239,6 +283,9 @@ namespace ApplicationLayer.ChildForms
         }
         private async void onCheckChange(object sender, EventArgs e)
         {
+            _debounceTokenSource?.Cancel(); // cancel previous
+            _debounceTokenSource = new CancellationTokenSource();
+
             CheckBox checkbox = (CheckBox)sender;
             Key key = (Key)new KeyConverter().ConvertFromString(checkbox.Text);
             bool haveMouseClick = checkbox.CheckState == CheckState.Checked ? true : false;
@@ -259,8 +306,16 @@ namespace ApplicationLayer.ChildForms
             }
             var updatedJson = JsonSerializer.Serialize(jsonObject);
             userToggleState.Ahk = updatedJson;
-            // Persist changes add to the object array in database
-            await _userSettingService.SaveChangesAsync(userToggleState);
+            var token = _debounceTokenSource.Token;
+            await Task.Delay(500, token) // Wait for user to pause
+                .ContinueWith(async t =>
+                {
+                    if (!t.IsCanceled)
+                    {
+                        // Persist changes add to the object array in database
+                        await _userSettingService.SaveChangesAsync(userToggleState);
+                    }
+                }, TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private async void onCheckChangeKeyConfig(object sender, EventArgs e)
@@ -287,6 +342,7 @@ namespace ApplicationLayer.ChildForms
             // Persist changes add to the object array in database
             await _userSettingService.SaveChangesAsync(userToggleState);
         }
+
 
         #endregion Ahk Region
     }

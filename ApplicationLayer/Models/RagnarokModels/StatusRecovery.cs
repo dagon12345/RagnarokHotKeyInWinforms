@@ -1,4 +1,5 @@
 ﻿using ApplicationLayer.Singleton.RagnarokSingleton;
+using ApplicationLayer.Utilities;
 using Domain.Constants;
 using Domain.Interface;
 using Infrastructure.Utilities;
@@ -16,7 +17,7 @@ namespace ApplicationLayer.Models.RagnarokModels
         public static string ACTION_NAME_STATUS_AUTOBUFF = "StatusAutoBuff";
 
         private ThreadUtility ThreadUtility;
-        public Dictionary<EffectStatusIdEnum, Keys> buffMapping { get; set; } = new Dictionary<EffectStatusIdEnum, Keys>();
+        public Dictionary<EffectStatusIdEnum, Key> buffMapping { get; set; } = new Dictionary<EffectStatusIdEnum, Key>();
         public int delay { get; set; } = 1;
 
         public void RestoreStatusThread(Client client)
@@ -29,10 +30,10 @@ namespace ApplicationLayer.Models.RagnarokModels
                 if (buffMapping.ContainsKey((EffectStatusIdEnum)currentStatus))//IF FOR REMOVE STATUS - CHECK IF STATUS EXISTS IN STATUS LIST AND DO ACTION
                 {
                     //IF CONTAINS CURRENT STATUS ON DICTIONARY
-                    Keys keys = buffMapping[(EffectStatusIdEnum)currentStatus];
+                    Key Key = buffMapping[(EffectStatusIdEnum)currentStatus];
                     if (Enum.IsDefined(typeof(EffectStatusIdEnum), currentStatus))
                     {
-                        this.useStatusRecovery(keys);
+                        this.useStatusRecovery(Key);
                     }
                 }
             }
@@ -68,13 +69,13 @@ namespace ApplicationLayer.Models.RagnarokModels
             return JsonConvert.SerializeObject(this);
         }
 
-        private void useStatusRecovery(Keys key)
+        private void useStatusRecovery(Key key)
         {
-            if ((key != Keys.None) && !Keyboard.IsKeyDown(Key.LeftAlt) && !Keyboard.IsKeyDown(Key.RightAlt))
+            if ((key != Key.None) && !Keyboard.IsKeyDown(Key.LeftAlt) && !Keyboard.IsKeyDown(Key.RightAlt))
                 InteropUtility.PostMessage(ClientSingleton.GetClient().process.MainWindowHandle,
                     Constants.WM_KEYDOWN_MSG_ID, (Keys)Enum.Parse(typeof(Keys), key.ToString()), 0);
         }
-        public void AddKeyToBuff(EffectStatusIdEnum status, Keys key)
+        public void AddKeyToBuff(EffectStatusIdEnum status, Key key)
         {
             if (buffMapping.ContainsKey(status))
             {

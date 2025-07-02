@@ -9,26 +9,69 @@ using System.Text.Json;
 using System.Windows.Input;
 using ApplicationLayer.Interface;
 using ApplicationLayer.Designer;
+using ApplicationLayer.Utilities;
+using ApplicationLayer.Service.RagnarokService;
+using ApplicationLayer.Interface.RagnarokInterface;
+using ApplicationLayer.Singleton.RagnarokSingleton;
+using Domain.Constants;
 
 namespace ApplicationLayer.ChildForms
 {
-    public partial class MacroSongsForm : Form
+    public partial class MacroSongsForm : Form, IObserverService
     {
         public string email;
         private readonly IUserSettingService _userSettingService;
         private readonly IBaseTableService _baseTableService;
-        public MacroSongsForm(IUserSettingService userSettingService, IBaseTableService baseTableService)
+        private readonly SubjectService _subjectService;
+        private ThreadUtility ThreadUtility;
+        public MacroSongsForm(IUserSettingService userSettingService, IBaseTableService baseTableService, SubjectService subjectService)
         {
             InitializeComponent();
             DesignerService.ApplyDarkBlueTheme(this);
+            _subjectService = subjectService;
             _userSettingService = userSettingService;
             _baseTableService = baseTableService;
+
 
         }
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            _subjectService.Attach(this);
             _ = LoadAsync(); // Fire and forget safely
+        }
+        public async void Update(ISubjectService subject)
+        {
+            switch ((subject as SubjectService).Message.code)
+            {
+                case MessageCode.TURN_ON:
+                    await TriggerStartActions();
+                    break;
+                case MessageCode.TURN_OFF:
+                    TriggerStopActions();
+                    break;
+            }
+        }
+
+
+        private async Task<T> GetDeserializedObject<T>(Func<Task<string>> getJsonData)
+        {
+            var jsonData = await getJsonData();
+            return JsonSerializer.Deserialize<T>(jsonData);
+        }
+        private async Task TriggerStartActions()
+        {
+            Client client = ClientSingleton.GetClient();
+            var jsonObjectMacroSong = await GetDeserializedObject<Macro>(async () => (await ReturnToggleKey()).SongMacro);
+            ThreadUtility = new ThreadUtility(_ =>
+            {
+                jsonObjectMacroSong?.MacroExecutionThread(client);
+                Task.Delay(50).Wait(); // Safe exit
+            });
+        }
+        private void TriggerStopActions()
+        {
+            ThreadUtility?.Stop();
         }
         private async Task LoadAsync()
         {

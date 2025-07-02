@@ -2,6 +2,7 @@
 using ApplicationLayer.Dto;
 using ApplicationLayer.Interface;
 using ApplicationLayer.Service;
+using ApplicationLayer.Service.RagnarokService;
 using ApplicationLayer.Validator;
 using Domain.Constants;
 using Domain.Model;
@@ -228,7 +229,11 @@ namespace ApplicationLayer.Forms
         {
             this.Hide();
             var userCredentialsService = Program.ServiceProvider.GetRequiredService<IStoredCredentialService>();
-            var mainMenuForm = new frm_Main(email, Program.ServiceProvider, userCredentialsService);
+            var userSetting = Program.ServiceProvider.GetRequiredService<IUserSettingService>();
+            var basetTable = Program.ServiceProvider.GetRequiredService<IBaseTableService>();
+            var subjectService = Program.ServiceProvider.GetRequiredService<SubjectService>();
+            var mainMenuForm = new frm_Main(email, Program.ServiceProvider, userCredentialsService, basetTable,
+                userSetting, subjectService);
             mainMenuForm.ShowDialog();
         }
 

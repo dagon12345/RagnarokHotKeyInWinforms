@@ -1,6 +1,11 @@
 ﻿using ApplicationLayer.Designer;
 using ApplicationLayer.Interface;
+using ApplicationLayer.Interface.RagnarokInterface;
 using ApplicationLayer.Models.RagnarokModels;
+using ApplicationLayer.Service.RagnarokService;
+using ApplicationLayer.Singleton.RagnarokSingleton;
+using ApplicationLayer.Utilities;
+using Domain.Constants;
 using Domain.Model.DataModels;
 using Infrastructure.Utilities;
 using System;
@@ -11,56 +16,26 @@ using System.Windows.Forms;
 using System.Windows.Input;
 namespace ApplicationLayer.ChildForms
 {
-    public partial class AutopotForm : Form
+    public partial class AutopotForm : Form, IObserverService
     {
         private readonly IUserSettingService _userSettingService;
         private readonly IBaseTableService _baseTableService;
+        private readonly SubjectService _subjectService;
+        private ThreadUtility ThreadUtility;
         public string email;// get the email of the user from login
-        public AutopotForm(IUserSettingService userSettingService, IBaseTableService baseTableService)
+        public AutopotForm(IUserSettingService userSettingService, IBaseTableService baseTableService, SubjectService subjectService)
         {
             InitializeComponent();
-            //InitializeFlatTabControl();
             //Centralize color
             DesignerService.ApplyDarkBlueTheme(this);
-
+            _subjectService = subjectService;
             _userSettingService = userSettingService;
             _baseTableService = baseTableService;
         }
-
-        private void InitializeFlatTabControl()
-        {
-            tabControlAutopot.DrawMode = TabDrawMode.Normal;
-            tabControlAutopot.ItemSize = new Size(100, 35); // Adjust tab size
-            tabControlAutopot.SizeMode = TabSizeMode.Fixed;
-            tabControlAutopot.Appearance = TabAppearance.Normal;
-           // tabControlAutopot.DrawItem += TabControl1_DrawItem;
-           // tabControlAutopot.BackColor = Color.FromArgb(23, 32, 42); // Deep navy background
-        }
-
-        private void TabControl1_DrawItem(object sender, DrawItemEventArgs e)
-        {
-            Graphics g = e.Graphics;
-            TabPage tabPage = tabControlAutopot.TabPages[e.Index];
-            Rectangle bounds = e.Bounds;
-            bool isSelected = (e.State & DrawItemState.Selected) == DrawItemState.Selected;
-
-            Color backgroundColor = isSelected ? Color.FromArgb(33, 97, 140) : Color.FromArgb(23, 32, 42); // Navy tones
-            Color borderColor = Color.Navy;
-            Color textColor = Color.White;
-
-           var backBrush = new SolidBrush(backgroundColor);
-           var borderPen = new Pen(borderColor, 2);
-           var font = new Font("Segoe UI", 9, FontStyle.Regular);
-
-            g.FillRectangle(backBrush, bounds);
-            g.DrawRectangle(borderPen, bounds.X, bounds.Y, bounds.Width - 1, bounds.Height - 1);
-            TextRenderer.DrawText(g, tabPage.Text, font, bounds, textColor, TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter);
-        }
-
-
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            _subjectService.Attach(this);
             _ = LoadAsync();
         }
         private async Task LoadAsync()
@@ -74,6 +49,38 @@ namespace ApplicationLayer.ChildForms
             {
                 MessageBox.Show($"Error: {ex.Message}");
             }
+        }
+        public async void Update(ISubjectService subject)
+        {
+            switch ((subject as SubjectService).Message.code)
+            {
+                case MessageCode.TURN_ON:
+                    await TriggerStartActions();
+                    break;
+                case MessageCode.TURN_OFF:
+                    TriggerStopActions();
+                    break;
+            }
+        }
+
+        private async Task<T> GetDeserializedObject<T>(Func<Task<string>> getJsonData)
+        {
+            var jsonData = await getJsonData();
+            return JsonSerializer.Deserialize<T>(jsonData);
+        }
+        private async Task TriggerStartActions()
+        {
+            Client client = ClientSingleton.GetClient();
+            var jsonObjectAutoPot = await GetDeserializedObject<Autopot>(async () => (await ReturnToggleKey()).Autopot);
+            ThreadUtility = new ThreadUtility(_ =>
+            {
+                jsonObjectAutoPot?.AutopotThreadExecution(client, 0);
+                Task.Delay(50).Wait(); // Safe exit
+            });
+        }
+        private void TriggerStopActions()
+        {
+            ThreadUtility?.Stop();
         }
         //Get the reference code of the user
         private async Task<UserSettings> ReturnToggleKey()
@@ -284,6 +291,7 @@ namespace ApplicationLayer.ChildForms
                 return;
             }
         }
+
         #endregion SkillTimer
 
     }

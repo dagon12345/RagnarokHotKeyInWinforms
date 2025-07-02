@@ -3,6 +3,7 @@ using ApplicationLayer.Dto;
 using ApplicationLayer.Forms;
 using ApplicationLayer.Interface;
 using ApplicationLayer.Service;
+using ApplicationLayer.Service.RagnarokService;
 using ApplicationLayer.Utilities;
 using ApplicationLayer.Validator;
 using Domain.Security;
@@ -135,6 +136,7 @@ namespace RagnarokHotKeyInWinforms
                     services.AddTransient<AutoBuffStuffsForm>();
                     services.AddTransient<AutoBuffSkillsForm>();
                     services.AddTransient<MacroSongsForm>();
+                    services.AddSingleton<SubjectService>(); // Since Subject manages observer list, singleton is ideal
                     #endregion
 
                     #region Infrastructure Layer Services

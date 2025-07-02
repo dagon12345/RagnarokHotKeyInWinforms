@@ -230,6 +230,7 @@
     <Compile Include="Singleton\RagnarokSingleton\ClientSingleton.cs" />
     <Compile Include="Singleton\RagnarokSingleton\ProfileSingleton.cs" />
     <Compile Include="Utilities\FormManager.cs" />
+    <Compile Include="Utilities\FormUtilities.cs" />
     <Compile Include="Utilities\Message.cs" />
     <Compile Include="Validator\EmailDtoValidator.cs" />
     <Compile Include="Validator\LoginDtoValidator.cs" />

@@ -9,9 +9,7 @@ using Newtonsoft.Json;
 using RagnarokHotKeyInWinforms;
 using System;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
-using static RagnarokHotKeyInWinforms.Model.ProfileSingleton;
 
 namespace ApplicationLayer.Service
 {
@@ -73,7 +71,7 @@ namespace ApplicationLayer.Service
             {
                 LoggerService.LogError(ex, $"{ErrorCodes.ProcessFailed}");
             }
-           
+
         }
 
         public async Task<UserSettings> SelectUserPreference(Guid referenceCode)
@@ -100,8 +98,11 @@ namespace ApplicationLayer.Service
             }
             catch (Exception ex)
             {
+
                 LoggerService.LogError(ex, $"{ErrorCodes.ProcessFailed}");
+
             }
         }
     }
+
 }

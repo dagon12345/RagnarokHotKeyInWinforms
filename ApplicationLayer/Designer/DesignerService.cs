@@ -49,14 +49,6 @@ namespace ApplicationLayer.Designer
                     tab.BackColor = Color.FromArgb(23, 32, 42); // Deep navy
                     tab.Font = new Font("Segoe UI", 8, FontStyle.Regular);
                 }
-                if(ctrl is ComboBox cmb)
-                {
-                   cmb.DrawMode = DrawMode.OwnerDrawFixed;
-                   cmb.DropDownStyle = ComboBoxStyle.DropDownList;
-                   cmb.FlatStyle = FlatStyle.Flat;
-                   cmb.BackColor = Color.FromArgb(23, 32, 42); // Deep navy
-                   cmb.ForeColor = Color.White;
-                }
                 if (ctrl is CheckBox chk)
                 {
                     chk.ForeColor = Color.LightGray;

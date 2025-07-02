@@ -53,6 +53,7 @@
     <Compile Include="Constants\AttackDefendEnum.cs" />
     <Compile Include="Constants\Constants.cs" />
     <Compile Include="Constants\EffectStatusIdEnum.cs" />
+    <Compile Include="Constants\GlobalConstants.cs" />
     <Compile Include="Constants\GoogleConstants.cs" />
     <Compile Include="Constants\MessageCode.cs" />
     <Compile Include="Constants\RagnarokConstants.cs" />

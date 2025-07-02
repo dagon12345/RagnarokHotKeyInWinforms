@@ -1,36 +1,76 @@
 ﻿using ApplicationLayer.Designer;
 using ApplicationLayer.Interface;
+using ApplicationLayer.Interface.RagnarokInterface;
 using ApplicationLayer.Models.RagnarokModels;
+using ApplicationLayer.Service.RagnarokService;
+using ApplicationLayer.Singleton.RagnarokSingleton;
 using Domain.Constants;
 using Domain.Model.DataModels;
+using Infrastructure.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace ApplicationLayer.ChildForms
 {
-    public partial class AutoBuffSkillsForm : Form
+    public partial class AutoBuffSkillsForm : Form, IObserverService
     {
         public string email;
         private readonly IBaseTableService _baseTableService;
         private readonly IUserSettingService _userSettingService;
+        private readonly SubjectService _subjectService;
+        private ThreadUtility ThreadUtility;
         private List<BuffContainer> stuffSkillContainers = new List<BuffContainer>();
-        public AutoBuffSkillsForm(IUserSettingService userSettingService, IBaseTableService baseTableService)
+        public AutoBuffSkillsForm(IUserSettingService userSettingService, IBaseTableService baseTableService, SubjectService subjectService)
         {
             InitializeComponent();
             //Centralize color
             DesignerService.ApplyDarkBlueTheme(this);
+            _subjectService = subjectService;
             _userSettingService = userSettingService;
             _baseTableService = baseTableService;
         }
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            _subjectService.Attach(this);
             _ = LoadAsync();
+        }
+        public async void Update(ISubjectService subject)
+        {
+            switch ((subject as SubjectService).Message.code)
+            {
+                case MessageCode.TURN_ON:
+                    await TriggerStartActions();
+                    break;
+                case MessageCode.TURN_OFF:
+                    TriggerStopActions();
+                    break;
+            }
+        }
+
+
+        private async Task<T> GetDeserializedObject<T>(Func<Task<string>> getJsonData)
+        {
+            var jsonData = await getJsonData();
+            return JsonSerializer.Deserialize<T>(jsonData);
+        }
+        private async Task TriggerStartActions()
+        {
+            Client client = ClientSingleton.GetClient();
+            var jsonObjectAutoBuffSkill = await GetDeserializedObject<AutoBuff>(async () => (await ReturnToggleKey()).Autobuff);
+            ThreadUtility = new ThreadUtility(_ =>
+            {
+                jsonObjectAutoBuffSkill?.AutoBuffThread(client);
+                Task.Delay(50).Wait(); // Safe exit
+            });
+        }
+        private void TriggerStopActions()
+        {
+            ThreadUtility?.Stop();
         }
         private async Task LoadAsync()
         {

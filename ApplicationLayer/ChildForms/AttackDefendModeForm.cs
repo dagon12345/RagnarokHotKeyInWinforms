@@ -1,9 +1,12 @@
 ﻿using ApplicationLayer.Designer;
 using ApplicationLayer.Interface;
+using ApplicationLayer.Interface.RagnarokInterface;
 using ApplicationLayer.Models.RagnarokModels;
+using ApplicationLayer.Service.RagnarokService;
+using ApplicationLayer.Singleton.RagnarokSingleton;
+using ApplicationLayer.Utilities;
 using Domain.Constants;
 using Domain.Model.DataModels;
-using Infrastructure.Repositories.Interface;
 using Infrastructure.Utilities;
 using System;
 using System.Collections.Generic;
@@ -11,30 +14,68 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.ListView;
 
 namespace ApplicationLayer.ChildForms
 {
-    public partial class AttackDefendModeForm : Form
+    public partial class AttackDefendModeForm : Form, IObserverService
     {
-        private IBaseTableService _baseTableService;
-        private IUserSettingService _userSettingService;
+        private readonly IBaseTableService _baseTableService;
+        private readonly IUserSettingService _userSettingService;
+        private readonly SubjectService _subjectService;
+        private ThreadUtility ThreadUtility;
         public string email;
-        public AttackDefendModeForm(IUserSettingService userSettingService, IBaseTableService baseTableService)
+        public AttackDefendModeForm(IUserSettingService userSettingService, IBaseTableService baseTableService, SubjectService subject)
         {
+          
             InitializeComponent();
             //Centralize color
             DesignerService.ApplyDarkBlueTheme(this);
             Designer();
+            _subjectService = subject;
             _userSettingService = userSettingService;
             _baseTableService = baseTableService;
+
 
         }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            _subjectService.Attach(this);
             _ = LoadAsync(); // Fire and forget safely
+        }
+        public async void Update(ISubjectService subject)
+        {
+            switch ((subject as SubjectService).Message.code)
+            {
+                case MessageCode.TURN_ON:
+                    await TriggerStartActions();
+                    break;
+                case MessageCode.TURN_OFF:
+                    TriggerStopActions();
+                    break;
+            }
+        }
+
+
+        private async Task<T> GetDeserializedObject<T>(Func<Task<string>> getJsonData)
+        {
+            var jsonData = await getJsonData();
+            return JsonSerializer.Deserialize<T>(jsonData);
+        }
+        private async Task TriggerStartActions()
+        {
+            Client client = ClientSingleton.GetClient();
+            var jsonObjectAtkDef = await GetDeserializedObject<AttackDefendMode>(async () => (await ReturnToggleKey()).AtkDefMode);
+            ThreadUtility = new ThreadUtility(_ =>
+            {
+                jsonObjectAtkDef?.AttacKDefAHKThreadExecution(client);
+                Task.Delay(50).Wait(); // Safe exit
+            });
+        }
+        private void TriggerStopActions()
+        {
+            ThreadUtility?.Stop();
         }
         private async Task LoadAsync()
         {
@@ -216,6 +257,7 @@ namespace ApplicationLayer.ChildForms
             await _userSettingService.SaveChangesAsync(toggleStateValue);
 
         }
+
         #endregion Attack Defend Form
 
     }

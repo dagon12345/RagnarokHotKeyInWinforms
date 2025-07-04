@@ -17,6 +17,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using RagnarokHotKeyInWinforms.RagnarokHotKeyInWinforms;
 using System;
 using System.Diagnostics;
 using System.Security.Principal;
@@ -38,6 +39,7 @@ namespace RagnarokHotKeyInWinforms
         [STAThread]
         static void Main()
         {
+            //Comment this line if you want to test locally because of administrative rights
             try
             {
                 if (!IsRunAsAdmin())

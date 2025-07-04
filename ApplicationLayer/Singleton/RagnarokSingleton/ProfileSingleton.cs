@@ -1,7 +1,7 @@
 ﻿
 using ApplicationLayer.Models.RagnarokModels;
 using Newtonsoft.Json;
-using RagnarokHotKeyInWinforms;
+using RagnarokHotKeyInWinforms.RagnarokHotKeyInWinforms;
 using System;
 using System.IO;
 

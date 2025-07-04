@@ -7,6 +7,7 @@ using Infrastructure.Repositories.Interface;
 using Infrastructure.Service;
 using Newtonsoft.Json;
 using RagnarokHotKeyInWinforms;
+using RagnarokHotKeyInWinforms.RagnarokHotKeyInWinforms;
 using System;
 using System.IO;
 using System.Threading.Tasks;

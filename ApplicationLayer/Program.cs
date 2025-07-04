@@ -10,6 +10,7 @@ using Domain.Security;
 using FluentValidation;
 using Infrastructure;
 using Infrastructure.Factory;
+using Infrastructure.Helpers;
 using Infrastructure.Repositories.Interface;
 using Infrastructure.Repositories.Service;
 using Infrastructure.Service;
@@ -39,29 +40,8 @@ namespace RagnarokHotKeyInWinforms
         [STAThread]
         static void Main()
         {
-            //Comment this line if you want to test locally because of administrative rights
-            try
-            {
-                if (!IsRunAsAdmin())
-                {
-                    var proc = new ProcessStartInfo
-                    {
-                        UseShellExecute = true,
-                        WorkingDirectory = Environment.CurrentDirectory,
-                        FileName = Application.ExecutablePath,
-                        Verb = "runas"
-                    };
-                    Process.Start(proc);
-                    Environment.Exit(0);
-                }
-            }
-            catch (Exception ex)
-            {
-
-                Console.WriteLine(ex.Message);
+            if (!ElevationHelper.EnsureElevated())
                 return;
-            }
-
 
             bool alreadyRunning = false;
             using (var mutex = new System.Threading.Mutex(true, "MyUniqueAppNameMutex", out alreadyRunning))
@@ -119,6 +99,7 @@ namespace RagnarokHotKeyInWinforms
                     var userSetting = ServiceProvider.GetRequiredService<IUserSettingService>();
                     var baseTable = ServiceProvider.GetRequiredService<IBaseTableService>();
 
+            
                     // Run the form
                     var signIn = new SignInForm(getUserInfo, userSignIn, userCredentials, loginService, password, userSetting, baseTable);
                     FormManager.SignInInstance = signIn;

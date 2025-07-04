@@ -34,8 +34,6 @@
             this.characterName = new System.Windows.Forms.Label();
             this.processCombobox = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.lblSupportedServer = new System.Windows.Forms.Label();
-            this.pbSupportedServer = new System.Windows.Forms.ProgressBar();
             this.btnLogout = new System.Windows.Forms.Button();
             this.tabPageMacroSwitch = new System.Windows.Forms.TabPage();
             this.tabPageMacroSongs = new System.Windows.Forms.TabPage();
@@ -86,6 +84,8 @@
             this.pictureBox2 = new System.Windows.Forms.PictureBox();
             this.pictureBox3 = new System.Windows.Forms.PictureBox();
             this.pictureBox79 = new System.Windows.Forms.PictureBox();
+            this.pbSupportedServer = new System.Windows.Forms.ProgressBar();
+            this.lblSupportedServer = new System.Windows.Forms.Label();
             this.tabAutoBuffStuff.SuspendLayout();
             this.tabPageSpammerAndAttack.SuspendLayout();
             this.tabMain.SuspendLayout();
@@ -147,24 +147,6 @@
             this.label2.Size = new System.Drawing.Size(63, 13);
             this.label2.TabIndex = 7;
             this.label2.Text = "ATK Switch";
-            // 
-            // lblSupportedServer
-            // 
-            this.lblSupportedServer.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.lblSupportedServer.AutoSize = true;
-            this.lblSupportedServer.Location = new System.Drawing.Point(39, 625);
-            this.lblSupportedServer.Name = "lblSupportedServer";
-            this.lblSupportedServer.Size = new System.Drawing.Size(150, 13);
-            this.lblSupportedServer.TabIndex = 5;
-            this.lblSupportedServer.Text = "Updating Supported Servers...";
-            // 
-            // pbSupportedServer
-            // 
-            this.pbSupportedServer.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.pbSupportedServer.Location = new System.Drawing.Point(42, 641);
-            this.pbSupportedServer.Name = "pbSupportedServer";
-            this.pbSupportedServer.Size = new System.Drawing.Size(789, 10);
-            this.pbSupportedServer.TabIndex = 4;
             // 
             // btnLogout
             // 
@@ -651,6 +633,24 @@
             this.pictureBox79.TabIndex = 20;
             this.pictureBox79.TabStop = false;
             // 
+            // pbSupportedServer
+            // 
+            this.pbSupportedServer.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.pbSupportedServer.Location = new System.Drawing.Point(42, 641);
+            this.pbSupportedServer.Name = "pbSupportedServer";
+            this.pbSupportedServer.Size = new System.Drawing.Size(789, 10);
+            this.pbSupportedServer.TabIndex = 4;
+            // 
+            // lblSupportedServer
+            // 
+            this.lblSupportedServer.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.lblSupportedServer.AutoSize = true;
+            this.lblSupportedServer.Location = new System.Drawing.Point(39, 625);
+            this.lblSupportedServer.Name = "lblSupportedServer";
+            this.lblSupportedServer.Size = new System.Drawing.Size(150, 13);
+            this.lblSupportedServer.TabIndex = 5;
+            this.lblSupportedServer.Text = "Updating Supported Servers...";
+            // 
             // frm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -702,8 +702,6 @@
         private System.Windows.Forms.Label characterName;
         private System.Windows.Forms.ComboBox processCombobox;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label lblSupportedServer;
-        private System.Windows.Forms.ProgressBar pbSupportedServer;
         private System.Windows.Forms.Button btnLogout;
         private System.Windows.Forms.Button btnRefresh;
         private System.Windows.Forms.TabPage tabPageMacroSwitch;
@@ -754,6 +752,8 @@
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.TabPage tabLogs;
         private System.Windows.Forms.PictureBox pictureBox79;
+        private System.Windows.Forms.ProgressBar pbSupportedServer;
+        private System.Windows.Forms.Label lblSupportedServer;
     }
 }
 

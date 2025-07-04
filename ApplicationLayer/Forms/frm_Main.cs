@@ -222,7 +222,6 @@ namespace RagnarokHotKeyInWinforms
 
                 //lblUserName.Text = $"Welcome back, {storedCreds.Name}";
                 //progressBar1.Value++;
-                refreshProcessList();
             }
             catch (Exception ex)
             {

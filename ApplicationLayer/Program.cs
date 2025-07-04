@@ -136,6 +136,7 @@ namespace RagnarokHotKeyInWinforms
                     services.AddTransient<AutoBuffStuffsForm>();
                     services.AddTransient<AutoBuffSkillsForm>();
                     services.AddTransient<MacroSongsForm>();
+                    services.AddTransient<MacroSwitchForm>();
                     services.AddSingleton<SubjectService>(); // Since Subject manages observer list, singleton is ideal
                     #endregion
 

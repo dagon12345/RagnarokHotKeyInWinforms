@@ -114,6 +114,12 @@
     <Compile Include="ChildForms\MacroSongsForm.Designer.cs">
       <DependentUpon>MacroSongsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ChildForms\MacroSwitchForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ChildForms\MacroSwitchForm.Designer.cs">
+      <DependentUpon>MacroSwitchForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ChildForms\SkillSpammerForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -252,6 +258,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ChildForms\MacroSongsForm.resx">
       <DependentUpon>MacroSongsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ChildForms\MacroSwitchForm.resx">
+      <DependentUpon>MacroSwitchForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ChildForms\SkillSpammerForm.resx">
       <DependentUpon>SkillSpammerForm.cs</DependentUpon>

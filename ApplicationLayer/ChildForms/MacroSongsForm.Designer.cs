@@ -1257,7 +1257,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoSize = true;
-            this.ClientSize = new System.Drawing.Size(800, 416);
+            this.ClientSize = new System.Drawing.Size(876, 416);
             this.Controls.Add(this.panelMacro4);
             this.Controls.Add(this.panelMacro3);
             this.Controls.Add(this.panelMacro1);

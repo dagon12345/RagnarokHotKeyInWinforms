@@ -35,14 +35,12 @@ namespace RagnarokHotKeyInWinforms
         private int progressIncrement; // Increment value for each tick
         private int targetProgress; // Target progress value
         List<ClientDto> clients = new List<ClientDto>(); // list of clients with address initiated
-        private ThreadUtility ThreadUtility;
-
         private readonly IServiceProvider _serviceProvider;
         private readonly IStoredCredentialService _storedCredentialService;
         private readonly IUserSettingService _userSettingService;
         private readonly IBaseTableService _baseTableService;
         private readonly SubjectService _subjectService;
-        private string _userEmail;
+        private string _userEmail; // Get the users email then distribute it on each form.
         public frm_Main(string userEmail, IServiceProvider serviceProvider, IStoredCredentialService storedCredentialService,
             IBaseTableService baseTableService, IUserSettingService userSettingService, SubjectService subjectService)
         {
@@ -73,152 +71,7 @@ namespace RagnarokHotKeyInWinforms
 
         }
 
-        #region MacroSwitch (Triggered with Start() method)
-        private async Task DisplayMacroSwitch()
-        {
-            // Retrieve macro from database with the column MacroSwitch
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<MacroSwitch>(userToggleState.MacroSwitch);
-            UpdatePanelDataMacroSwitch(jsonObject);
-            ConfigureMacroChain();
-        }
-        private void UpdatePanelDataMacroSwitch(MacroSwitch jsonObject)
-        {
-            //Three limit of macro switch groupboxes. Loop through Id maximum 3
-            for (int id = 1; id <= 3; id++)
-            {
-                try
-                {
-                    GroupBox group = (GroupBox)this.Controls.Find("chainGroup" + id, true)[0];
-                    ChainConfigSwitch chainConfig = new ChainConfigSwitch(jsonObject.chainConfigs[id - 1]);
-
-                    List<string> names = new List<string>(chainConfig.macroEntries.Keys);
-                    foreach (string cbName in names)
-                    {
-                        Control[] controls = group.Controls.Find(cbName, true); // Keys
-                        if (controls.Length > 0)
-                        {
-                            TextBox textBox = (TextBox)controls[0];
-                            textBox.Text = chainConfig.macroEntries[cbName].key.ToString();
-                        }
-
-                        Control[] d = group.Controls.Find($"{cbName}delay", true); // Delays
-                        if (d.Length > 0)
-                        {
-                            NumericUpDown delayInput = (NumericUpDown)d[0];
-                            delayInput.Value = chainConfig.macroEntries[cbName].delay;
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                };
-            }
-        }
-
-        private void ConfigureMacroChain()
-        {
-            //public static int TOTAL_MACRO_LANES = 3; Set this to 3 for limit.
-            for (int i = 1; i <= 3; i++)
-            {
-                initializeChain(i);
-            }
-
-        }
-
-        private async void onTextChangeMacroSwitch(object sender, EventArgs e)
-        {
-            // Retrieve macro from database with the column MacroSwitch
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<MacroSwitch>(userToggleState.MacroSwitch);
-
-            TextBox textBox = (TextBox)sender;
-            Key key = (Key)Enum.Parse(typeof(Key), textBox.Text.ToString());
-
-            int chainID = Int16.Parse(textBox.Parent.Name.Split(new[] { "chainGroup" }, StringSplitOptions.None)[1]);
-            GroupBox group = (GroupBox)this.Controls.Find("chainGroup" + chainID, true)[0];
-            //Done: ChainConfigSwitch
-            ChainConfigSwitch chainConfig = jsonObject.chainConfigs.Find(config => config.Id == chainID); //search inside our column
-
-
-            var matches = group.Controls.Find($"{textBox.Name}delay", true);
-            if (matches.Length > 0 && matches[0] is NumericUpDown delayInput)
-            {
-                //Done: MacroKeySwitch
-                chainConfig.macroEntries[textBox.Name] = new MacroKeySwitch(key, decimal.ToInt16(delayInput.Value));
-            }
-            else
-            {
-                Console.WriteLine($"Delay input not found: {textBox.Name}delay");
-
-
-            }
-            //The trigger key depends on the first key on textbox
-            bool isFirstInput = Regex.IsMatch(textBox.Name, $"in9mac{chainID}");
-            if (isFirstInput) { chainConfig.trigger = key; }
-
-            var updatedJson = JsonSerializer.Serialize(jsonObject);
-            userToggleState.MacroSwitch = updatedJson;
-            //Persist changes add to the object array in database
-            await _userSettingService.SaveChangesAsync(userToggleState);
-
-        }
-        private async void DelayMacroSwitch(object sender, EventArgs e)
-        {
-            // Retrieve macro from database with the column MacroSwitch
-            var userToggleState = await ReturnToggleKey();
-            var jsonObject = JsonSerializer.Deserialize<MacroSwitch>(userToggleState.MacroSwitch);
-
-            NumericUpDown delayInput = (NumericUpDown)sender;
-            int chainID = Int16.Parse(delayInput.Parent.Name.Split(new[] { "chainGroup" }, StringSplitOptions.None)[1]);
-            ChainConfigSwitch chainConfig = jsonObject.chainConfigs.Find(config => config.Id == chainID);
-
-            String cbName = delayInput.Name.Split(new[] { "delay" }, StringSplitOptions.None)[0];
-            // chainConfig.macroEntries[cbName].delay = decimal.ToInt16(delayInput.Value);
-
-            if (chainConfig.macroEntries.ContainsKey(cbName))
-            {
-                chainConfig.macroEntries[cbName].delay = decimal.ToInt16(delayInput.Value);
-            }
-            else
-            {
-                Console.WriteLine($"Key '{cbName}' not found in macroEntries.");
-            }
-
-
-            // Update JSON and persist changes
-            var updatedJson = JsonSerializer.Serialize(jsonObject);
-            userToggleState.MacroSwitch = updatedJson;
-            await _userSettingService.SaveChangesAsync(userToggleState);
-
-        }
-
-        private void initializeChain(int id)
-        {
-            try
-            {
-                GroupBox p = (GroupBox)this.Controls.Find("chainGroup" + id, true)[0];
-                foreach (Control c in p.Controls)
-                {
-                    if (c is TextBox)
-                    {
-                        TextBox textBox = (TextBox)c;
-                        textBox.KeyDown += new System.Windows.Forms.KeyEventHandler(FormUtilities.OnKeyDown);
-                        textBox.KeyPress += new KeyPressEventHandler(FormUtilities.OnKeyPress);
-                        textBox.TextChanged += new EventHandler(this.onTextChangeMacroSwitch);
-                    }
-
-                    if (c is NumericUpDown)
-                    {
-                        NumericUpDown numeric = (NumericUpDown)c;
-                        numeric.ValueChanged += new EventHandler(this.DelayMacroSwitch);
-                    }
-                }
-            }
-            catch { }
-        }
-        #endregion
+ 
 
         #region Public methods
         public void Update(ISubjectService subject)
@@ -246,14 +99,6 @@ namespace RagnarokHotKeyInWinforms
         }
         #endregion
         #region Private Methods
-        //Get the reference code of the user
-        private async Task<UserSettings> ReturnToggleKey()
-        {
-            var getBaseTable = await _baseTableService.SearchUser(_userEmail);
-            var toggleStateValue = await _userSettingService.SelectUserPreference(getBaseTable.ReferenceCode);
-            return toggleStateValue;
-        }
-
         private void RefreshLogList()
         {
             logListBox.BeginUpdate();
@@ -270,8 +115,6 @@ namespace RagnarokHotKeyInWinforms
         }
         private void Form1_Load(object sender, EventArgs e)
         {
-     
-
             #region Mdi Container design
             DesignerService.ApplyDarkBlueTheme(this);
             logListBox.ForeColor = Color.Black;
@@ -305,6 +148,7 @@ namespace RagnarokHotKeyInWinforms
                 var autoBuffStuffsForm = Program.ServiceProvider.GetRequiredService<AutoBuffStuffsForm>();
                 var autoBuffSkillsForm = Program.ServiceProvider.GetRequiredService<AutoBuffSkillsForm>();
                 var macroSongForm = Program.ServiceProvider.GetRequiredService<MacroSongsForm>();
+                var macroSwitchForm = Program.ServiceProvider.GetRequiredService<MacroSwitchForm>();
 
                 // Manually position the forms Location(left, right)Height(width, height)
                 //Status recovery
@@ -341,18 +185,23 @@ namespace RagnarokHotKeyInWinforms
                 tabAutoBuffStuff.Controls.Add(autoBuffStuffsForm);
                 autoBuffStuffsForm.Show();
 
-                //Autobuff skills form
+                //autoBuffSkillsForm form
                 autoBuffSkillsForm.TopLevel = false;
                 autoBuffSkillsForm.email = _userEmail;
                 tabAutoBuffSkill.Controls.Add(autoBuffSkillsForm);
                 autoBuffSkillsForm.Show();
 
-                //Autobuff skills form
+                //macroSongForm form
                 macroSongForm.TopLevel = false;
                 macroSongForm.email = _userEmail;
                 tabPageMacroSongs.Controls.Add(macroSongForm);
                 macroSongForm.Show();
 
+                //MacroSwitch form
+                macroSwitchForm.TopLevel = false;
+                macroSwitchForm.email = _userEmail;
+                tabPageMacroSwitch.Controls.Add(macroSwitchForm);
+                macroSwitchForm.Show();
 
                 //Toggle which is last
                 toggleForm.MdiParent = this;
@@ -377,16 +226,6 @@ namespace RagnarokHotKeyInWinforms
 
                 //lblUserName.Text = $"Welcome back, {storedCreds.Name}";
                 //progressBar1.Value++;
-
-                //await Retrieve(); progressBar1.Value++;
-                //await RetrieveAutopot(); progressBar1.Value++;
-                //await SkillTimerRetrieve(); progressBar1.Value++;
-                //await RetrieveStatusEffect(); progressBar1.Value++;
-                //await AhkRetrieval(); progressBar1.Value++;
-                //await RetrieveStuffAutobuffForm(); progressBar1.Value++;
-                //await updateUi(); progressBar1.Value++;
-                //await DisplayMacroSwitch(); progressBar1.Value++;
-                //await DisplayAttackDefendMode(); progressBar1.Value++;
                 refreshProcessList();
             }
             catch (Exception ex)

@@ -364,5 +364,3 @@ FodyWeavers.xsd
 
 
 # === Sensitive application secrets ===
-Domain/Constants/GoogleConstants.cs
-ApplicationLayer/appsettings.json

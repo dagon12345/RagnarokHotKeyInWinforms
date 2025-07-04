@@ -18,6 +18,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Diagnostics;
+using System.Security.Principal;
 using System.Windows.Forms;
 
 namespace RagnarokHotKeyInWinforms
@@ -36,6 +38,29 @@ namespace RagnarokHotKeyInWinforms
         [STAThread]
         static void Main()
         {
+            try
+            {
+                if (!IsRunAsAdmin())
+                {
+                    var proc = new ProcessStartInfo
+                    {
+                        UseShellExecute = true,
+                        WorkingDirectory = Environment.CurrentDirectory,
+                        FileName = Application.ExecutablePath,
+                        Verb = "runas"
+                    };
+                    Process.Start(proc);
+                    Environment.Exit(0);
+                }
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.Message);
+                return;
+            }
+
+
             bool alreadyRunning = false;
             using (var mutex = new System.Threading.Mutex(true, "MyUniqueAppNameMutex", out alreadyRunning))
             {
@@ -103,6 +128,12 @@ namespace RagnarokHotKeyInWinforms
             
 
 
+        }
+        static bool IsRunAsAdmin()
+        {
+            var id = WindowsIdentity.GetCurrent();
+            var principal = new WindowsPrincipal(id);
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
         static IHostBuilder CreateHostBuilder(string connectionString)
         {

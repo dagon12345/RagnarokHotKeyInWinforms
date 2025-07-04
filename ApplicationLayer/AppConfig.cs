@@ -17,22 +17,20 @@ namespace RagnarokHotKeyInWinforms
         public static SshSettings SshSettings { get; private set; }
         public static DatabaseSettings DatabaseSettings { get; private set; }
 
-        public static void Load(string projectRoot = null)
+        public static void Load(string path = null)
         {
-            if (string.IsNullOrEmpty(projectRoot))
+            if (string.IsNullOrEmpty(path))
             {
-                // Go up three levels to reach the project root from bin/Debug
-                //var projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, @"..\..\.."));
-                //path = Path.Combine(projectRoot, "ApplicationLayer" ,"appsettings.json");
+                var basePath = AppDomain.CurrentDomain.BaseDirectory;
+                path = Path.Combine(basePath, "appsettings.json"); // If file is in bin\Debug
 
-                projectRoot = Path.GetFullPath(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "appsettings.json"));
-               // path = Path.Combine(projectRoot, "ApplicationLayer", "appsettings.json");
+
             }
 
-            if (!File.Exists(projectRoot))
-                throw new FileNotFoundException("Config file not found at: " + projectRoot);
+            if (!File.Exists(path))
+                throw new FileNotFoundException("Config file not found at: " + path);
 
-            var json = File.ReadAllText(projectRoot);
+            var json = File.ReadAllText(path);
             dynamic parsed = JsonConvert.DeserializeObject(json);
 
             SshSettings = JsonConvert.DeserializeObject<SshSettings>(parsed.Ssh.ToString());

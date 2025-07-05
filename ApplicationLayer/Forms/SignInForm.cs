@@ -292,7 +292,7 @@ namespace ApplicationLayer.Forms
             this.Hide();
             var userCredentialsService = Program.ServiceProvider.GetRequiredService<IStoredCredentialService>();
             var subjectService = Program.ServiceProvider.GetRequiredService<SubjectService>();
-            var mainMenuForm = new frm_Main(email, Program.ServiceProvider, userCredentialsService, subjectService);
+            var mainMenuForm = new frm_Main(email, userCredentialsService, subjectService);
             mainMenuForm.ShowDialog();
         }
 

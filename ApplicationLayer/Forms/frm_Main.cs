@@ -32,19 +32,13 @@ namespace RagnarokHotKeyInWinforms
         private int progressIncrement; // Increment value for each tick
         private int targetProgress; // Target progress value
         List<ClientDto> clients = new List<ClientDto>(); // list of clients with address initiated
-        private readonly IServiceProvider _serviceProvider;
         private readonly IStoredCredentialService _storedCredentialService;
         private readonly SubjectService _subjectService;
         private string _userEmail; // Get the users email then distribute it on each form.
-        public frm_Main(string userEmail, IServiceProvider serviceProvider, 
-            IStoredCredentialService storedCredentialService, SubjectService subjectService)
+        public frm_Main(string userEmail, IStoredCredentialService storedCredentialService, SubjectService subjectService)
         {
 
             InitializeComponent();
-
-            #region Child Forms
-            _serviceProvider = serviceProvider;
-            #endregion
 
             #region Logger Configuration
             LogStore.Entries.ListChanged += (s, e) => RefreshLogList();

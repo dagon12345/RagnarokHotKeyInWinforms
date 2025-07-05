@@ -114,12 +114,21 @@ namespace RagnarokHotKeyInWinforms
             #region Mdi Container design
             DesignerService.ApplyDarkBlueTheme(this);
 
+
             #region Greeting text
             lblUsername.Font = new Font("Segoe UI", 12, FontStyle.Bold);
             lblUsername.ReadOnly = true;
             lblUsername.BorderStyle = BorderStyle.None;
             lblUsername.BackColor = Color.FromArgb(23, 32, 42); // Deep navy
+
+
+            var returnStoredCreds = await _storedCredentialService.SearchUser(_userEmail);
+            lblUsername.Text = $"Welcome back, {returnStoredCreds.Name} !";
+
+
             #endregion
+
+
             logListBox.ForeColor = Color.Black;
             processCombobox.ForeColor = Color.Black;
             this.IsMdiContainer = true;
@@ -216,12 +225,6 @@ namespace RagnarokHotKeyInWinforms
                 StartUpdate();
                 refreshProcessList();
 
-                //var storedCreds = await _storedCredentialService.SearchUser(_userEmail);
-
-                var returnStoredCreds = await _storedCredentialService.SearchUser(_userEmail);
-
-                 lblUsername.Text = $"Welcome back, {returnStoredCreds.Name}";
-                //progressBar1.Value++;
             }
             catch (Exception ex)
             {

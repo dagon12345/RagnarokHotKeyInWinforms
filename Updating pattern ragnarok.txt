@@ -16,7 +16,7 @@ Updating form online
 > go to your folder of app DEBUG then add to archive the update installer and archive it to .ZIP
 
 6th step
->Upload the file to your GitHub release
+>Upload the file to your GitHub release(remove the latest data then replace it by the new one we've zipped)
 
 7th step
 > push the changes

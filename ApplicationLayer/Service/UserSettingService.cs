@@ -41,9 +41,23 @@ namespace ApplicationLayer.Service
         {
             try
             {
-                //This File is located into directory bin/Debug/Profile/Default.json
-                string json = File.ReadAllText(AppConfig.ProfileFolder + RagnarokConstants.DefaultJson);
-                dynamic jsonData = JsonConvert.DeserializeObject<dynamic>(json);
+                //This File is located into directory bin/Debug0/Default.json
+                string securePath = Path.Combine(AppConfig.SecurePath, RagnarokConstants.DefaultJson);
+
+                // 🔄 Fallback if file doesn't exist in secure folder
+                if (!File.Exists(securePath))
+                {
+                    //where our supported_server.json stored
+                    string fallbackPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, RagnarokConstants.DefaultJson);
+                    if (!File.Exists(fallbackPath))
+                        throw new FileNotFoundException("Fallback Default.json not found at: " + fallbackPath);
+
+                    Directory.CreateDirectory(AppConfig.SecurePath);
+                    File.Copy(fallbackPath, securePath);
+                }
+
+                string localServerRaw = File.ReadAllText(securePath);
+                dynamic jsonData = JsonConvert.DeserializeObject<dynamic>(localServerRaw);
 
                 var userSettings = await _userSettingRepository.FindUserReferenceCode(referenceCode);
                 //If none is search then create a new user setting

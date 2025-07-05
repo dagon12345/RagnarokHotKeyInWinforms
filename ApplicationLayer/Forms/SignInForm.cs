@@ -174,8 +174,9 @@ namespace ApplicationLayer.Forms
             //Search again because once we updated we got lost track of the user data due to settings.
             var searchUserAgain = await _storedCredentialService.SearchUser(userInfo.Email);
             await CreateUserSettingAsync(searchUserAgain.UserEmail);
+
             //Open Form
-            OpenMainMenuForm(searchUser.UserEmail);
+            OpenMainMenuForm(searchUserAgain.UserEmail);
 
             //NOTE: If the user cannot sign in then delete the folder inside the directory C:\Users\(NameOfPc)\AppData\Roaming
         }

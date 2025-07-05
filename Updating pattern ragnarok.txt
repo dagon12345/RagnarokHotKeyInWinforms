@@ -3,18 +3,12 @@ Updating form online
 1st step.
 > Change the form or the codes.
 
-2nd step.
-> change the version inside our constants GlobalConstants.Version incrementally.
-> Change the version.txt  in the DropBox
->Installer version ( 1.6.0) accepts only 3 digits
-
-
-3rd Step.
+2nd Step.
 >Change the version of the installer inside solution to avoid conflict in updating.
 make sure it has the same version of 
 -GlobalConstants.Version ( 1.6.0),
 -Installer version ( 1.6.0) accepts only 3 digits
--version.txt in the DropBox
+-version.txt (in the DropBox 1.6.0)
 -App Assembly inside application properties (1.6.0);
 
 4th step
@@ -22,9 +16,11 @@ make sure it has the same version of
 
 5th step 
 > Zip the .msi
+>Location 
+C:\Users\LancePC\source\repos\RagnarokHotKeyInWinforms\FerocityInstaller\Debug
 
 6th step
->Upload the file to your DropBox
+>Upload the file to your DropBox(drag and drop)
 
 7th step
-> push the changes
+> push the changes(When the user opened the app it will update automatically)

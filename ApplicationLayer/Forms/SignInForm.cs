@@ -72,9 +72,8 @@ namespace ApplicationLayer.Forms
                         Process process = new Process();
                         process.StartInfo.FileName = "msiexec";
                         process.StartInfo.Arguments = String.Format("/i FerocityInstaller.msi");
-
-                        Application.Exit();
                         process.Start();
+                        Environment.Exit(0);
                     }
                     catch
                     {

@@ -86,7 +86,7 @@
             this.pictureBox79 = new System.Windows.Forms.PictureBox();
             this.pbSupportedServer = new System.Windows.Forms.ProgressBar();
             this.lblSupportedServer = new System.Windows.Forms.Label();
-            this.lblUsername = new System.Windows.Forms.Label();
+            this.lblUsername = new System.Windows.Forms.TextBox();
             this.tabAutoBuffStuff.SuspendLayout();
             this.tabPageSpammerAndAttack.SuspendLayout();
             this.tabMain.SuspendLayout();
@@ -654,12 +654,10 @@
             // 
             // lblUsername
             // 
-            this.lblUsername.AutoSize = true;
             this.lblUsername.Location = new System.Drawing.Point(364, 4);
             this.lblUsername.Name = "lblUsername";
-            this.lblUsername.Size = new System.Drawing.Size(55, 13);
-            this.lblUsername.TabIndex = 22;
-            this.lblUsername.Text = "Welcome:";
+            this.lblUsername.Size = new System.Drawing.Size(401, 20);
+            this.lblUsername.TabIndex = 23;
             // 
             // frm_Main
             // 
@@ -765,7 +763,7 @@
         private System.Windows.Forms.PictureBox pictureBox79;
         private System.Windows.Forms.ProgressBar pbSupportedServer;
         private System.Windows.Forms.Label lblSupportedServer;
-        private System.Windows.Forms.Label lblUsername;
+        private System.Windows.Forms.TextBox lblUsername;
     }
 }
 

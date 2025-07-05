@@ -15,9 +15,11 @@ using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
 using Microsoft.IdentityModel.Tokens;
 using RagnarokHotKeyInWinforms;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Button = System.Windows.Forms.Button;
@@ -38,6 +40,7 @@ namespace ApplicationLayer.Forms
         {
             InitializeComponent();
             InitializeCustomComponents();
+            Updater();
             _getUserInfo = getUserInfo;
             _signIn = signIn;
             _storedCredentialService = storedCredentialService;
@@ -45,6 +48,64 @@ namespace ApplicationLayer.Forms
             _passwordRecoveryService = passwordRecoveryService;
             _userSettingService = userSettingService;
             _baseTableService = baseTableService;
+        }
+        private void Updater()
+        {
+            #region Updater
+            string currentVersion = GlobalConstants.Version;
+            // 🌐 GitHub URLs
+            string versionUrl = GlobalConstants.VersionUrl;
+            string msiUrl = GlobalConstants.MsiUrl;
+
+            string msiPath = @".\FerocityInstaller.msi";
+            string extractPath = @".\Extracted";
+
+            try
+            {
+                using (WebClient client = new WebClient())
+                {
+                    string latestVersion = client.DownloadString(versionUrl).Trim();
+
+                    if (latestVersion != currentVersion)
+                    {
+                        DialogResult result = MessageBox.Show(
+                            $"A new version ({latestVersion}) is available. Do you want to update?",
+                            "Ferocity Update",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Information
+                        );
+
+                        if (result == DialogResult.Yes)
+                        {
+                            if (File.Exists(msiPath))
+                            {
+                                File.Delete(msiPath);
+                            }
+
+                            client.DownloadFile(msiUrl, msiPath);
+                            Directory.CreateDirectory(extractPath);
+
+                            Process msiexecProcess = new Process();
+                            msiexecProcess.StartInfo.FileName = "msiexec.exe";
+                            msiexecProcess.StartInfo.Arguments = String.Format("/i FerocityInstaller.msi");
+                            msiexecProcess.StartInfo.UseShellExecute = false;
+                            msiexecProcess.StartInfo.CreateNoWindow = true;
+                            Application.Exit();
+                            msiexecProcess.Start();
+                            msiexecProcess.WaitForExit();
+
+                            Console.WriteLine("MSI extracted successfully.");
+                            return;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Update check failed: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            #endregion
         }
 
         private void InitializeCustomComponents()

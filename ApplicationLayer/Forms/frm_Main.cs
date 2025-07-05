@@ -113,6 +113,7 @@ namespace RagnarokHotKeyInWinforms
         {
             #region Mdi Container design
             DesignerService.ApplyDarkBlueTheme(this);
+            lblUsername.Font = new Font("Segoe UI", 12, FontStyle.Bold);
             logListBox.ForeColor = Color.Black;
             processCombobox.ForeColor = Color.Black;
             this.IsMdiContainer = true;

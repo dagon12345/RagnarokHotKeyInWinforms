@@ -61,6 +61,7 @@
             this.btnSignIn.Size = new System.Drawing.Size(120, 44);
             this.btnSignIn.TabIndex = 3;
             this.btnSignIn.Text = "Sign in";
+            this.btnSignIn.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             this.btnSignIn.UseVisualStyleBackColor = true;
             this.btnSignIn.Click += new System.EventHandler(this.btnSignIn_Click);
             // 

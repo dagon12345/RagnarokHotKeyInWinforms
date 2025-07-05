@@ -15,6 +15,7 @@ using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
 using Microsoft.IdentityModel.Tokens;
 using RagnarokHotKeyInWinforms;
 using System;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -75,6 +76,8 @@ namespace ApplicationLayer.Forms
         {
             //Centralize color
             DesignerService.ApplyDarkBlueTheme(this);
+            lblHeader.Font = new Font("Onyx", 20, FontStyle.Regular);
+            lblHeader.Location = new System.Drawing.Point(180, 4);
 
         }
         private async void btnSignIn_Click(object sender, EventArgs e)

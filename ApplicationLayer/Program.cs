@@ -44,7 +44,7 @@ namespace RagnarokHotKeyInWinforms
         {
             #region Updater
             string currentVersion = GlobalConstants.Version;
-            string versionUrl = GlobalConstants.Version;
+            string versionUrl = GlobalConstants.VersionUrl;
             // 🌐 GitHub URLs
             string msiUrl = GlobalConstants.MsiUrl;
 

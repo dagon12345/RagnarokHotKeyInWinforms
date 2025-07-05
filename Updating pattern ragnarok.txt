@@ -5,6 +5,8 @@ Updating form online
 
 2nd step.
 > change the version inside our constants GlobalConstants.Version incrementally.
+> Change the version.txt 
+>Installer version ( 1.6.0) accepts only 3 digits
 
 
 3th Step.
@@ -12,6 +14,7 @@ Updating form online
 make sure it has the same version of 
 -GlobalConstants.Version ( 1.6.0),
 -Installer version ( 1.6.0) accepts only 3 digits
+-version.txt
 
 4th step
 > Build the 2 solution of the project.

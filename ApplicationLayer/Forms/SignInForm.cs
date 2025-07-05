@@ -19,6 +19,7 @@ using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -57,9 +58,9 @@ namespace ApplicationLayer.Forms
             string currentVersion = GlobalConstants.Version;
             // 🌐 GitHub URLs
             string versionUrl = GlobalConstants.VersionUrl;
-            string msiUrl = GlobalConstants.MsiUrl;
+            string zipUrl = GlobalConstants.ZipUrl;
 
-            string msiPath = @".\FerocityInstaller.msi";
+            string zipPath = @".\FerocityInstaller.zip";
             string extractPath = @".\Extracted";
 
             try
@@ -79,25 +80,19 @@ namespace ApplicationLayer.Forms
 
                         if (result == DialogResult.Yes)
                         {
-                            if (File.Exists(msiPath))
+                            if (File.Exists(zipPath))
                             {
-                                File.Delete(msiPath);
+                                File.Delete(zipPath);
                             }
 
-                            client.DownloadFile(msiUrl, msiPath);
-                            Directory.CreateDirectory(extractPath);
+                            client.DownloadFile(zipUrl, zipPath);
+                            ZipFile.ExtractToDirectory(zipPath, extractPath);
 
                             Process msiexecProcess = new Process();
-                            msiexecProcess.StartInfo.FileName = "msiexec.exe";
+                            msiexecProcess.StartInfo.FileName = "msiexec";
                             msiexecProcess.StartInfo.Arguments = String.Format("/i FerocityInstaller.msi");
-                            msiexecProcess.StartInfo.UseShellExecute = false;
-                            msiexecProcess.StartInfo.CreateNoWindow = true;
                             Application.Exit();
                             msiexecProcess.Start();
-                            msiexecProcess.WaitForExit();
-
-                            Console.WriteLine("MSI extracted successfully.");
-                            return;
                         }
                     }
                 }

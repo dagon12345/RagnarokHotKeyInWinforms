@@ -61,7 +61,7 @@ namespace ApplicationLayer.Forms
             string zipUrl = GlobalConstants.ZipUrl;
 
             string zipPath = @".\FerocityInstaller.zip";
-            string extractPath = @".\Extracted";
+            string extractPath = @".\";
 
             try
             {
@@ -80,12 +80,12 @@ namespace ApplicationLayer.Forms
 
                         if (result == DialogResult.Yes)
                         {
-                            if (File.Exists(zipPath))
+                            if (File.Exists(@".\FerocityInstaller.msi"))
                             {
-                                File.Delete(zipPath);
+                                File.Delete(@".\FerocityInstaller.msi");
                             }
 
-                            client.DownloadFile(zipUrl, zipPath);
+                            client.DownloadFile(zipUrl, @"FerocityInstaller.zip");
                             ZipFile.ExtractToDirectory(zipPath, extractPath);
 
                             Process msiexecProcess = new Process();

@@ -6,6 +6,7 @@ using ApplicationLayer.Service;
 using ApplicationLayer.Service.RagnarokService;
 using ApplicationLayer.Utilities;
 using ApplicationLayer.Validator;
+using Domain.Constants;
 using Domain.Security;
 using FluentValidation;
 using Infrastructure;
@@ -42,18 +43,17 @@ namespace RagnarokHotKeyInWinforms
         static void Main()
         {
             #region Updater
-            string currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-           
-
+            //NOTE: This will differ in app the application itself will compare even if it's the same constant. When updated the installed app can detect
+            string currentVersion = GlobalConstants.Version;
+            string versionUrl = GlobalConstants.Version;
             // 🌐 GitHub URLs
-            string versionUrl = "https://raw.githubusercontent.com/dagon12345/RagnarokHotKeyInWinforms/master/version.txt";
-            string msiUrl = "https://github.com/dagon12345/RagnarokHotKeyInWinforms/releases/download/v1.0.0/FerocityInstaller.msi";
+            string msiUrl = GlobalConstants.MsiUrl;
 
             try
             {
                 using (WebClient client = new WebClient())
                 {
-                    string latestVersion = client.DownloadString(versionUrl).Trim();
+                    string latestVersion = versionUrl.Trim();
 
                     if (latestVersion != currentVersion)
                     {

@@ -63,7 +63,7 @@ namespace RagnarokHotKeyInWinforms
             #region Passed DataTypes
             _userEmail = userEmail;
             #endregion
-            this.Text = AppConfig.Name + " - " + Assembly.GetExecutingAssembly().GetName().Version.ToString(); // get the latest version
+            this.Text = AppConfig.Name + " - " + GlobalConstants.Version; // get the latest version
 
         }
 

@@ -4,19 +4,16 @@ Updating form online
 > Change the form or the codes.
 
 2nd step.
->Right click your app the select "Properties" and change the assembly version.
+> change the version inside our constants GlobalConstants.Version incrementally.
 
-3rd step.
->Change the code version inside must be the same version.text on what you have changed on
 
-4th Step.
+3th Step.
 >Change the version of the installer inside solution to avoid conflict in updating.
-make sure it has the same version of (assembly version, version.text)
--assembly version,
--version.text
--Installer version
+make sure it has the same version of 
+-GlobalConstants.Version ( 1.6.0),
+-Installer version ( 1.6.0) accepts only 3 digits
 
-5th step
+4th step
 > Build the 2 solution of the project.
 
 6th step

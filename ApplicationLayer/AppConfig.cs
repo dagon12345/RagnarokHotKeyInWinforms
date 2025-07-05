@@ -1,4 +1,5 @@
-﻿using Domain.Model.SettingModels;
+﻿using Domain.Constants;
+using Domain.Model.SettingModels;
 using Infrastructure.Helpers;
 using Newtonsoft.Json;
 using System;
@@ -19,7 +20,7 @@ namespace RagnarokHotKeyInWinforms
             public static string SecurePath => Path.Combine(
              Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
              Name, "secure");
-            public static string GameAddressPath => Path.Combine(SecurePath, "supported_server.json");
+            public static string GameAddressPath => Path.Combine(SecurePath, RagnarokConstants.SupportedServerJson);
 
             public static SshSettings SshSettings { get; private set; }
             public static DatabaseSettings DatabaseSettings { get; private set; }
@@ -61,7 +62,7 @@ namespace RagnarokHotKeyInWinforms
                 // Load or create gameaddress.json
                 if (!File.Exists(GameAddressPath))
                 {
-                    var fallback = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "supported_servers.json");
+                    var fallback = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, RagnarokConstants.SupportedServerJson);
                     if (File.Exists(fallback))
                     {
                         File.Copy(fallback, GameAddressPath);

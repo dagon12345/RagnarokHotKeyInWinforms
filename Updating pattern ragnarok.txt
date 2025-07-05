@@ -1,0 +1,22 @@
+Updating form online
+
+1st step.
+> Change the form or the codes.
+
+2nd step.
+>Right click your app the select "Properties" and change the assembly version.
+
+3rd step.
+>Change the code version inside must be the same version.text on what you have changed on step 2.
+
+4th step
+> Build the 2 solution of the project.
+
+5th step
+> go to your folder of app DEBUG then add to archive the update installer and archive it to .ZIP
+
+6th step
+>Upload the file to your GitHub release
+
+7th step
+> push the changes

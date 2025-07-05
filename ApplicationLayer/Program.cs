@@ -44,15 +44,14 @@ namespace RagnarokHotKeyInWinforms
         [STAThread]
         static void Main()
         {
-            AppConfig.LoadConfig();// for supported_server address
             #region Updater
             // 🔍 Get current version from assembly
-            string currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+           string currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
 
             // 🌐 GitHub URLs
             string versionUrl = "https://raw.githubusercontent.com/dagon12345/RagnarokHotKeyInWinforms/refs/heads/master/version.txt";
-            string zipUrl = "https://github.com/dagon12345/RagnarokHotKeyInWinforms/releases/tag/v1.0.0/FerocityInstaller.zip";
+            string zipUrl = "https://github.com/dagon12345/RagnarokHotKeyInWinforms/releases/download/v1.0.0.0/FerocityInstaller.zip";
 
             try
             {
@@ -101,7 +100,7 @@ namespace RagnarokHotKeyInWinforms
                 MessageBox.Show("Update check failed: " + ex.Message);
             }
             #endregion
-
+            AppConfig.LoadConfig();// for supported_server address
             bool alreadyRunning = false;
             using (var mutex = new System.Threading.Mutex(true, "MyUniqueAppNameMutex", out alreadyRunning))
             {

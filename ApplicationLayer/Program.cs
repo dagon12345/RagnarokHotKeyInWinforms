@@ -44,9 +44,12 @@ namespace RagnarokHotKeyInWinforms
         {
             #region Updater
             string currentVersion = GlobalConstants.Version;
-            string versionUrl = GlobalConstants.VersionUrl;
             // 🌐 GitHub URLs
+            string versionUrl = GlobalConstants.VersionUrl;
             string msiUrl = GlobalConstants.MsiUrl;
+
+            string msiPath = @".\FerocityInstaller.msi";
+            string extractPath = @".\Extracted";
 
             try
             {
@@ -65,17 +68,24 @@ namespace RagnarokHotKeyInWinforms
 
                         if (result == DialogResult.Yes)
                         {
-                            if (File.Exists(@".\FerocityInstaller.msi")) { File.Delete(@".\FerocityInstaller.msi"); }
-                            string msiPath = @".\FerocityInstaller.msi";
-                            string extractPath = @".\";
+                            if (File.Exists(msiPath))
+                            {
+                                File.Delete(msiPath);
+                            }
+
                             client.DownloadFile(msiUrl, msiPath);
                             Directory.CreateDirectory(extractPath);
-                            //Start the process
-                            Process process = new Process();
-                            process.StartInfo.FileName = "msiexec";
-                            process.StartInfo.Arguments = String.Format("/i FerocityInstaller.msi");
-                            process.Start();
-                            Application.Exit(); // Gracefully exit current app
+
+                            Process msiexecProcess = new Process();
+                            msiexecProcess.StartInfo.FileName = "msiexec.exe";
+                            msiexecProcess.StartInfo.Arguments = String.Format("/i FerocityInstaller.msi");
+                            msiexecProcess.StartInfo.UseShellExecute = false;
+                            msiexecProcess.StartInfo.CreateNoWindow = true;
+                            msiexecProcess.Start();
+                            msiexecProcess.WaitForExit();
+
+                            Console.WriteLine("MSI extracted successfully.");
+                            return;
                         }
                     }
                 }

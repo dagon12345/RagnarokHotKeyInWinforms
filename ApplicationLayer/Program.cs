@@ -21,7 +21,6 @@ using RagnarokHotKeyInWinforms.RagnarokHotKeyInWinforms;
 using System;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
 using System.Net;
 using System.Reflection;
 using System.Windows.Forms;
@@ -47,7 +46,7 @@ namespace RagnarokHotKeyInWinforms
             string currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
             // 🌐 GitHub URLs
             string versionUrl = "https://raw.githubusercontent.com/dagon12345/RagnarokHotKeyInWinforms/refs/heads/master/version.txt";
-            string zipUrl = "https://github.com/dagon12345/RagnarokHotKeyInWinforms/releases/download/v1.0.0.0/FerocityInstaller.zip";
+            string msiUrl = "https://github.com/dagon12345/RagnarokHotKeyInWinforms/releases/download/v1.0.0.0/FerocityInstaller.msi";
 
             try
             {
@@ -66,28 +65,40 @@ namespace RagnarokHotKeyInWinforms
 
                         if (result == DialogResult.Yes)
                         {
-                            string tempZip = Path.Combine(Path.GetTempPath(), "update.zip");
-                            string extractPath = Path.Combine(Path.GetTempPath(), "update");
+                            string tempMsi = Path.Combine(Path.GetTempPath(), "FerocityInstaller.msi");
 
                             // 🧼 Clean previous temp
-                            if (Directory.Exists(extractPath)) Directory.Delete(extractPath, true);
-                            if (File.Exists(tempZip)) File.Delete(tempZip);
+                            if (File.Exists(tempMsi)) File.Delete(tempMsi);
 
-                            // 📥 Download and extract
-                            client.DownloadFile(zipUrl, tempZip);
-                            ZipFile.ExtractToDirectory(tempZip, extractPath);
+                            // 📥 Download MSI directly
+                            client.DownloadFile(msiUrl, tempMsi);
 
-                            // 🔍 Find MSI
-                            string msiPath = Directory.GetFiles(extractPath, "*.msi")[0];
-
-                            // 🛠️ Install with elevation
-                            var installProcess = Process.Start(new ProcessStartInfo("msiexec.exe", $"/i \"{msiPath}\" /passive")
+                            // 🛠️ Install with elevation and progress
+                            var installProcess = Process.Start(new ProcessStartInfo("msiexec.exe", $"/i \"{tempMsi}\" /passive")
                             {
                                 Verb = "runas",
-                                 UseShellExecute = false
+                                UseShellExecute = false
                             });
 
                             installProcess.WaitForExit(); // Wait for installation to complete
+
+                            string shortcutPath = Path.Combine(
+                                 Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
+                                 "FerocityHotkey.lnk"
+                             );
+
+                            if (File.Exists(shortcutPath))
+                            {
+                                var shell = new IWshRuntimeLibrary.WshShell();
+                                var shortcut = (IWshRuntimeLibrary.IWshShortcut)shell.CreateShortcut(shortcutPath);
+                                string exePath = shortcut.TargetPath;
+
+                                if (File.Exists(exePath))
+                                {
+                                    Process.Start(exePath);
+                                }
+                            }
+
 
                             return; // Exit current app
                         }

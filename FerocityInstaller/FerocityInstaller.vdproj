@@ -11356,7 +11356,7 @@
             }
             "{3C67513D-01DD-4637-8A68-80971EB9504F}:_5B009BF4DA054D5A953F68B53289FFC5"
             {
-            "DefaultLocation" = "8:[ProgramFilesFolder][Manufacturer]\\[ProductName]"
+            "DefaultLocation" = "8:[ProgramFiles64Folder][Manufacturer]\\[ProductName]"
             "Name" = "8:#1925"
             "AlwaysCreate" = "11:TRUE"
             "Condition" = "8:"
@@ -11394,7 +11394,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:FerocityInstaller"
         "ProductCode" = "8:{ED8B6CA6-43A8-42E3-980D-29BE27AB359C}"
-        "PackageCode" = "8:{BE3F4599-25BA-4F70-801D-98FFEE548FA6}"
+        "PackageCode" = "8:{3122E9DE-A497-44F7-9494-FFCDA0B31F35}"
         "UpgradeCode" = "8:{70245C61-88A6-4EC0-BA3E-E89D764BCAAF}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -11415,7 +11415,7 @@
         "ARPIconIndex" = "3:0"
         "SearchPath" = "8:"
         "UseSystemSearchPath" = "11:TRUE"
-        "TargetPlatform" = "3:0"
+        "TargetPlatform" = "3:1"
         "PreBuildEvent" = "8:"
         "PostBuildEvent" = "8:"
         "RunPostBuildEvent" = "3:0"

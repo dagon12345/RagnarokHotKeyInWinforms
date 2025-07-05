@@ -240,18 +240,28 @@ namespace RagnarokHotKeyInWinforms
             //Check the json file named supported_server.json
             try
             {
-                //Load the local servers address.
                 clients.AddRange(LocalServerManager.GetLocalClients());
-                //If tech is successful load the resource file locally now API needed
-                //path where the supported_server.json was saved \bin\Debug\Resources
-                string localFilePath = Path.Combine(AppConfig.LocalResourcePath, RagnarokConstants.SupportedServerJson);
-                string localServerRaw = File.ReadAllText(localFilePath);
+
+                string securePath = Path.Combine(AppConfig.SecurePath, RagnarokConstants.SupportedServerJson);
+
+                // 🔄 Fallback if file doesn't exist in secure folder
+                if (!File.Exists(securePath))
+                {
+                    //where our supported_server.json stored
+                    string fallbackPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, RagnarokConstants.SupportedServerJson);
+                    if (!File.Exists(fallbackPath))
+                        throw new FileNotFoundException("Fallback supported_servers.json not found at: " + fallbackPath);
+
+                    Directory.CreateDirectory(AppConfig.SecurePath);
+                    File.Copy(fallbackPath, securePath);
+                }
+
+                string localServerRaw = File.ReadAllText(securePath);
                 clients.AddRange(JsonSerializer.Deserialize<List<ClientDto>>(localServerRaw));
             }
             catch (Exception ex)
             {
-
-                throw ex;
+                MessageBox.Show("Failed to load supported servers: " + ex.Message);
             }
             // Prepare for the progress bar
             if (clients.Count > 0)

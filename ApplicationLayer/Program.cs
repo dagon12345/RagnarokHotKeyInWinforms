@@ -44,6 +44,7 @@ namespace RagnarokHotKeyInWinforms
         [STAThread]
         static void Main()
         {
+            AppConfig.LoadConfig();// for supported_server address
             #region Updater
             // 🔍 Get current version from assembly
             string currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();

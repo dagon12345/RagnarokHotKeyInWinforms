@@ -63,6 +63,7 @@
     <Compile Include="Model\DataModels\StoredCredential.cs" />
     <Compile Include="Model\DataModels\UserSettings.cs" />
     <Compile Include="Model\SettingModels\DatabaseSettings.cs" />
+    <Compile Include="Model\SettingModels\GameAddressConfig.cs" />
     <Compile Include="Model\SettingModels\SshSettings.cs" />
     <Compile Include="Model\UserInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

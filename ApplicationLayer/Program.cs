@@ -66,20 +66,16 @@ namespace RagnarokHotKeyInWinforms
 
                         if (result == DialogResult.Yes)
                         {
-                            string tempMsi = Path.Combine(Path.GetTempPath(), "FerocityInstaller.msi");
-
-                            // 🧼 Clean previous temp
-                            if (File.Exists(tempMsi)) File.Delete(tempMsi);
-
-                            // 📥 Download MSI directly
-                            client.DownloadFile(msiUrl, tempMsi);
-
-                            // 🛠️ Install with elevation and progress
+                            if (File.Exists(@".\FerocityInstaller.msi")) { File.Delete(@".\FerocityInstaller.msi"); }
+                            string msiPath = @".\FerocityInstaller.msi";
+                            string extractPath = @".\";
+                            client.DownloadFile(msiUrl, msiPath);
+                            Directory.CreateDirectory(extractPath);
+                            //Start the process
                             Process process = new Process();
                             process.StartInfo.FileName = "msiexec";
-                            process.StartInfo.Arguments = $"/i \"{tempMsi}\" /passive";
+                            process.StartInfo.Arguments = String.Format("/i FerocityInstaller.msi");
                             process.Start();
-
                             Application.Exit(); // Gracefully exit current app
                         }
                     }

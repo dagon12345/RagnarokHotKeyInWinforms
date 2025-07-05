@@ -46,7 +46,8 @@ namespace RagnarokHotKeyInWinforms
         {
             #region Updater
             // 🔍 Get current version from assembly
-           string currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            string currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+          // string currentVersion = "1.0.0.0";
 
 
             // 🌐 GitHub URLs
@@ -85,10 +86,13 @@ namespace RagnarokHotKeyInWinforms
                             string msiPath = Directory.GetFiles(extractPath, "*.msi")[0];
 
                             // 🛠️ Install with elevation
-                            Process.Start(new ProcessStartInfo("msiexec.exe", $"/i \"{msiPath}\" /quiet")
+                            var installProcess = Process.Start(new ProcessStartInfo("msiexec.exe", $"/i \"{msiPath}\" /passive")
                             {
-                                Verb = "runas"
+                                Verb = "runas",
+                                 UseShellExecute = false
                             });
+
+                            installProcess.WaitForExit(); // Wait for installation to complete
 
                             return; // Exit current app
                         }

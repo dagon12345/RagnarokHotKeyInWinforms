@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
-using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -324,8 +323,6 @@ namespace RagnarokHotKeyInWinforms
             Client client = new Client(this.processCombobox.SelectedItem.ToString());
             ClientSingleton.Instance(client);
             characterName.Text = client.ReadCharacterName();
-            //If message code was changed then get the character name
-            //subject.Notify(new Utilities.Message(Utilities.MessageCode.PROCESS_CHANGED, null));
         }
         private void frm_Main_FormClosing(object sender, FormClosingEventArgs e)
         {

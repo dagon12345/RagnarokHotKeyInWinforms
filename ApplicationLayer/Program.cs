@@ -42,8 +42,8 @@ namespace RagnarokHotKeyInWinforms
         static void Main()
         {
             #region Updater
-           // string currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-            string currentVersion = "1.0.0.0";
+            string currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+           
 
             // 🌐 GitHub URLs
             string versionUrl = "https://raw.githubusercontent.com/dagon12345/RagnarokHotKeyInWinforms/master/version.txt";

@@ -56,7 +56,7 @@ namespace ApplicationLayer.Forms
         {
             #region Updater
             string currentVersion = GlobalConstants.Version;
-            // 🌐 GitHub URLs
+            // 🌐 DropBox URLs
             string versionUrl = GlobalConstants.VersionUrl;
             string zipUrl = GlobalConstants.ZipUrl;
 
@@ -91,7 +91,7 @@ namespace ApplicationLayer.Forms
                             Process msiexecProcess = new Process();
                             msiexecProcess.StartInfo.FileName = "msiexec";
                             msiexecProcess.StartInfo.Arguments = String.Format("/i FerocityInstaller.msi");
-                            Application.Exit();
+                            this.Close();
                             msiexecProcess.Start();
                         }
                     }

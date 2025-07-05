@@ -5,7 +5,7 @@ Updating form online
 
 2nd step.
 > change the version inside our constants GlobalConstants.Version incrementally.
-> Change the version.txt 
+> Change the version.txt  in the DropBox
 >Installer version ( 1.6.0) accepts only 3 digits
 
 
@@ -14,7 +14,7 @@ Updating form online
 make sure it has the same version of 
 -GlobalConstants.Version ( 1.6.0),
 -Installer version ( 1.6.0) accepts only 3 digits
--version.txt
+-version.txt in the DropBox
 
 4th step
 > Build the 2 solution of the project.
@@ -23,7 +23,7 @@ make sure it has the same version of
 > Zip the .msi
 
 6th step
->Upload the file to your GitHub release(remove the latest data then replace it by the new one we've zipped)
+>Upload the file to your DropBox
 
 7th step
 > push the changes

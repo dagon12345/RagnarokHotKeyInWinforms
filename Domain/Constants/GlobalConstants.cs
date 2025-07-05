@@ -4,8 +4,8 @@
     {
         public const int MaxRetries = 3;
         //Change the version if there are changes along side with the installer.
-        public const string Version = "1.15.0";
-        public const string ZipUrl = "https://github.com/dagon12345/RagnarokHotKeyInWinforms/releases/download/v1.0.0/FerocityInstaller.zip";
-        public const string VersionUrl = "https://raw.githubusercontent.com/dagon12345/RagnarokHotKeyInWinforms/refs/heads/master/version.txt";
+        public const string Version = "1.16.0";
+        public const string ZipUrl = "https://www.dropbox.com/scl/fi/ozm2p3ltzbsb1pc8ci32h/FerocityInstaller.zip?rlkey=gyddjf7s17s36w950logs6w04&st=kjccxur9&dl=1";
+        public const string VersionUrl = "https://www.dropbox.com/scl/fi/1scpw8x87fmrf7ipqaerw/version.txt?rlkey=05rsq1xlipikyh6q7qtzpavpd&st=0xpj28ye&dl=1";
     }
 }

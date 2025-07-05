@@ -230,11 +230,8 @@ namespace ApplicationLayer.Forms
         {
             this.Hide();
             var userCredentialsService = Program.ServiceProvider.GetRequiredService<IStoredCredentialService>();
-            var userSetting = Program.ServiceProvider.GetRequiredService<IUserSettingService>();
-            var basetTable = Program.ServiceProvider.GetRequiredService<IBaseTableService>();
             var subjectService = Program.ServiceProvider.GetRequiredService<SubjectService>();
-            var mainMenuForm = new frm_Main(email, Program.ServiceProvider, userCredentialsService, basetTable,
-                userSetting, subjectService);
+            var mainMenuForm = new frm_Main(email, Program.ServiceProvider, userCredentialsService, subjectService);
             mainMenuForm.ShowDialog();
         }
 

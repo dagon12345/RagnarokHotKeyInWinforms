@@ -9,7 +9,7 @@ Updating form online
 >Installer version ( 1.6.0) accepts only 3 digits
 
 
-3th Step.
+3rd Step.
 >Change the version of the installer inside solution to avoid conflict in updating.
 make sure it has the same version of 
 -GlobalConstants.Version ( 1.6.0),
@@ -19,8 +19,8 @@ make sure it has the same version of
 4th step
 > Build the 2 solution of the project.
 
-6th step
+5th step
 >Upload the file to your GitHub release(remove the latest data then replace it by the new one we've zipped)
 
-7th step
+6th step
 > push the changes

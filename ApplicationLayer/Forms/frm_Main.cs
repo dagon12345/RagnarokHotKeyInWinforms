@@ -34,12 +34,10 @@ namespace RagnarokHotKeyInWinforms
         List<ClientDto> clients = new List<ClientDto>(); // list of clients with address initiated
         private readonly IServiceProvider _serviceProvider;
         private readonly IStoredCredentialService _storedCredentialService;
-        private readonly IUserSettingService _userSettingService;
-        private readonly IBaseTableService _baseTableService;
         private readonly SubjectService _subjectService;
         private string _userEmail; // Get the users email then distribute it on each form.
-        public frm_Main(string userEmail, IServiceProvider serviceProvider, IStoredCredentialService storedCredentialService,
-            IBaseTableService baseTableService, IUserSettingService userSettingService, SubjectService subjectService)
+        public frm_Main(string userEmail, IServiceProvider serviceProvider, 
+            IStoredCredentialService storedCredentialService, SubjectService subjectService)
         {
 
             InitializeComponent();
@@ -55,8 +53,6 @@ namespace RagnarokHotKeyInWinforms
 
             #region Interfaces
             _storedCredentialService = storedCredentialService;
-            _userSettingService = userSettingService;
-            _baseTableService = baseTableService;
             _subjectService = subjectService;
             #endregion
 

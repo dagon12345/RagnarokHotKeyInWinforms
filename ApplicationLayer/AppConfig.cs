@@ -14,7 +14,6 @@ namespace RagnarokHotKeyInWinforms
         public class AppConfig
         {
             public static string Name = "RagnarokTool";
-            public static string Version = "v1.0.0";
             public static string ProfileFolder = "Profile\\"; //bin/debug/profile
 
             public static string SecurePath => Path.Combine(

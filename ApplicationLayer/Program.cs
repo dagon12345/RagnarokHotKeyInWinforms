@@ -43,7 +43,6 @@ namespace RagnarokHotKeyInWinforms
         static void Main()
         {
             #region Updater
-            //NOTE: This will differ in app the application itself will compare even if it's the same constant. When updated the installed app can detect
             string currentVersion = GlobalConstants.Version;
             string versionUrl = GlobalConstants.Version;
             // 🌐 GitHub URLs
@@ -53,7 +52,7 @@ namespace RagnarokHotKeyInWinforms
             {
                 using (WebClient client = new WebClient())
                 {
-                    string latestVersion = versionUrl.Trim();
+                    string latestVersion = client.DownloadString(versionUrl).Trim();
 
                     if (latestVersion != currentVersion)
                     {

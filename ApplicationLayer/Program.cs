@@ -42,10 +42,11 @@ namespace RagnarokHotKeyInWinforms
         static void Main()
         {
             #region Updater
-            // 🔍 Get current version from assembly
-            string currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+           // string currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+            string currentVersion = "1.0.0.0";
+
             // 🌐 GitHub URLs
-            string versionUrl = "https://raw.githubusercontent.com/dagon12345/RagnarokHotKeyInWinforms/refs/heads/master/version.txt";
+            string versionUrl = "https://raw.githubusercontent.com/dagon12345/RagnarokHotKeyInWinforms/master/version.txt";
             string msiUrl = "https://github.com/dagon12345/RagnarokHotKeyInWinforms/releases/download/v1.0.0.0/FerocityInstaller.msi";
 
             try
@@ -74,41 +75,21 @@ namespace RagnarokHotKeyInWinforms
                             client.DownloadFile(msiUrl, tempMsi);
 
                             // 🛠️ Install with elevation and progress
-                            var installProcess = Process.Start(new ProcessStartInfo("msiexec.exe", $"/i \"{tempMsi}\" /passive")
-                            {
-                                Verb = "runas",
-                                UseShellExecute = false
-                            });
+                            Process process = new Process();
+                            process.StartInfo.FileName = "msiexec";
+                            process.StartInfo.Arguments = $"/i \"{tempMsi}\" /passive";
+                            process.Start();
 
-                            installProcess.WaitForExit(); // Wait for installation to complete
-
-                            string shortcutPath = Path.Combine(
-                                 Environment.GetFolderPath(Environment.SpecialFolder.Desktop),
-                                 "FerocityHotkey.lnk"
-                             );
-
-                            if (File.Exists(shortcutPath))
-                            {
-                                var shell = new IWshRuntimeLibrary.WshShell();
-                                var shortcut = (IWshRuntimeLibrary.IWshShortcut)shell.CreateShortcut(shortcutPath);
-                                string exePath = shortcut.TargetPath;
-
-                                if (File.Exists(exePath))
-                                {
-                                    Process.Start(exePath);
-                                }
-                            }
-
-
-                            return; // Exit current app
+                            Application.Exit(); // Gracefully exit current app
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Update check failed: " + ex.Message);
+                MessageBox.Show("Update check failed: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+
             #endregion
             AppConfig.LoadConfig();// for supported_server address
             bool alreadyRunning = false;

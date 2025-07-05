@@ -14,6 +14,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
 using Microsoft.IdentityModel.Tokens;
 using RagnarokHotKeyInWinforms;
+using RagnarokHotKeyInWinforms.RagnarokHotKeyInWinforms;
 using System;
 using System.Diagnostics;
 using System.Drawing;
@@ -39,6 +40,7 @@ namespace ApplicationLayer.Forms
             PasswordRecoveryService passwordRecoveryService, IUserSettingService userSettingService, IBaseTableService baseTableService)
         {
             InitializeComponent();
+            this.Text = AppConfig.Name + " - " + GlobalConstants.Version; // get the latest version
             InitializeCustomComponents();
             Updater();
             _getUserInfo = getUserInfo;

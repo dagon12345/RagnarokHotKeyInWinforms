@@ -105,11 +105,11 @@ namespace RagnarokHotKeyInWinforms
 
 
             #region Greeting text
-            lblUsername.Font = new Font("Segoe UI", 12, FontStyle.Bold);
+            lblUsername.Font = new Font("Segoe UI", 10, FontStyle.Bold);
             lblUsername.ReadOnly = true;
             lblUsername.BorderStyle = BorderStyle.None;
             lblUsername.BackColor = Color.FromArgb(23, 32, 42); // Deep navy
-
+            lblUsername.TextAlign = HorizontalAlignment.Center;
 
             var returnStoredCreds = await _storedCredentialService.SearchUser(_userEmail);
             lblUsername.Text = $"Welcome back, {returnStoredCreds.Name} !";

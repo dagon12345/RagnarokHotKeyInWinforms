@@ -656,7 +656,7 @@
             // 
             this.lblUsername.Location = new System.Drawing.Point(364, 4);
             this.lblUsername.Name = "lblUsername";
-            this.lblUsername.Size = new System.Drawing.Size(401, 20);
+            this.lblUsername.Size = new System.Drawing.Size(284, 20);
             this.lblUsername.TabIndex = 23;
             // 
             // frm_Main

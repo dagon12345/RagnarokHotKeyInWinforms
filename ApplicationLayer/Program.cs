@@ -21,6 +21,10 @@ using Microsoft.Extensions.Logging;
 using RagnarokHotKeyInWinforms.RagnarokHotKeyInWinforms;
 using System;
 using System.Diagnostics;
+using System.IO;
+using System.IO.Compression;
+using System.Net;
+using System.Reflection;
 using System.Security.Principal;
 using System.Windows.Forms;
 
@@ -40,8 +44,61 @@ namespace RagnarokHotKeyInWinforms
         [STAThread]
         static void Main()
         {
-            if (!ElevationHelper.EnsureElevated())
-                return;
+            #region Updater
+            // 🔍 Get current version from assembly
+            string currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
+
+            // 🌐 GitHub URLs
+            string versionUrl = "https://raw.githubusercontent.com/{your-username}/{your-repo}/main/version.txt";
+            string zipUrl = "https://github.com/dagon12345/RagnarokHotKeyInWinforms/releases/tag/v1.0.0/FerocityInstaller_v1.0.0.zip";
+
+            try
+            {
+                using (WebClient client = new WebClient())
+                {
+                    string latestVersion = client.DownloadString(versionUrl).Trim();
+
+                    if (latestVersion != currentVersion)
+                    {
+                        DialogResult result = MessageBox.Show(
+                            $"A new version ({latestVersion}) is available. Do you want to update?",
+                            "Ferocity Update",
+                            MessageBoxButtons.YesNo,
+                            MessageBoxIcon.Information
+                        );
+
+                        if (result == DialogResult.Yes)
+                        {
+                            string tempZip = Path.Combine(Path.GetTempPath(), "update.zip");
+                            string extractPath = Path.Combine(Path.GetTempPath(), "update");
+
+                            // 🧼 Clean previous temp
+                            if (Directory.Exists(extractPath)) Directory.Delete(extractPath, true);
+                            if (File.Exists(tempZip)) File.Delete(tempZip);
+
+                            // 📥 Download and extract
+                            client.DownloadFile(zipUrl, tempZip);
+                            ZipFile.ExtractToDirectory(tempZip, extractPath);
+
+                            // 🔍 Find MSI
+                            string msiPath = Directory.GetFiles(extractPath, "*.msi")[0];
+
+                            // 🛠️ Install with elevation
+                            Process.Start(new ProcessStartInfo("msiexec.exe", $"/i \"{msiPath}\" /quiet")
+                            {
+                                Verb = "runas"
+                            });
+
+                            return; // Exit current app
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Update check failed: " + ex.Message);
+            }
+            #endregion
 
             bool alreadyRunning = false;
             using (var mutex = new System.Threading.Mutex(true, "MyUniqueAppNameMutex", out alreadyRunning))
@@ -99,7 +156,10 @@ namespace RagnarokHotKeyInWinforms
                     var userSetting = ServiceProvider.GetRequiredService<IUserSettingService>();
                     var baseTable = ServiceProvider.GetRequiredService<IBaseTableService>();
 
-            
+                    //Elevation request
+                    //if (!ElevationHelper.EnsureElevated())
+                    //    return;
+
                     // Run the form
                     var signIn = new SignInForm(getUserInfo, userSignIn, userCredentials, loginService, password, userSetting, baseTable);
                     FormManager.SignInInstance = signIn;
@@ -111,12 +171,6 @@ namespace RagnarokHotKeyInWinforms
             
 
 
-        }
-        static bool IsRunAsAdmin()
-        {
-            var id = WindowsIdentity.GetCurrent();
-            var principal = new WindowsPrincipal(id);
-            return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
         static IHostBuilder CreateHostBuilder(string connectionString)
         {

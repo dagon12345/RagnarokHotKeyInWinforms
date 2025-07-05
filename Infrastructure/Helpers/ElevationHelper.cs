@@ -10,7 +10,13 @@ namespace Infrastructure.Helpers
     {
         public static bool EnsureElevated()
         {
-            if (IsRunAsAdmin()) return true;
+            if (IsRunAsAdmin())
+            {
+                MessageBox.Show("Running as Administrator");
+                return true;
+            }
+
+            MessageBox.Show("Still running as standard user");
 
             try
             {
@@ -22,7 +28,7 @@ namespace Infrastructure.Helpers
                     Verb = "runas"
                 };
                 Process.Start(proc);
-                return false;
+                return false; // Exit current instance
             }
             catch (Win32Exception ex) when (ex.NativeErrorCode == 1223)
             {
@@ -31,11 +37,15 @@ namespace Infrastructure.Helpers
             }
         }
 
+
+
         private static bool IsRunAsAdmin()
         {
             var id = WindowsIdentity.GetCurrent();
             var principal = new WindowsPrincipal(id);
             return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
+
+
     }
 }

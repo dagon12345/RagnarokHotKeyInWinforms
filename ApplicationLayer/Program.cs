@@ -48,8 +48,9 @@ namespace RagnarokHotKeyInWinforms
             // 🔍 Get current version from assembly
             string currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
 
+
             // 🌐 GitHub URLs
-            string versionUrl = "https://raw.githubusercontent.com/{your-username}/{your-repo}/main/version.txt";
+            string versionUrl = "https://raw.githubusercontent.com/dagon12345/RagnarokHotKeyInWinforms/refs/heads/master/version.txt";
             string zipUrl = "https://github.com/dagon12345/RagnarokHotKeyInWinforms/releases/tag/v1.0.0/FerocityInstaller_v1.0.0.zip";
 
             try

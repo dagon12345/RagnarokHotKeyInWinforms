@@ -86,6 +86,7 @@
             this.pictureBox79 = new System.Windows.Forms.PictureBox();
             this.pbSupportedServer = new System.Windows.Forms.ProgressBar();
             this.lblSupportedServer = new System.Windows.Forms.Label();
+            this.lblUsername = new System.Windows.Forms.Label();
             this.tabAutoBuffStuff.SuspendLayout();
             this.tabPageSpammerAndAttack.SuspendLayout();
             this.tabMain.SuspendLayout();
@@ -626,9 +627,9 @@
             // pictureBox79
             // 
             this.pictureBox79.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox79.Image")));
-            this.pictureBox79.Location = new System.Drawing.Point(364, 4);
+            this.pictureBox79.Location = new System.Drawing.Point(364, 30);
             this.pictureBox79.Name = "pictureBox79";
-            this.pictureBox79.Size = new System.Drawing.Size(294, 294);
+            this.pictureBox79.Size = new System.Drawing.Size(258, 259);
             this.pictureBox79.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.pictureBox79.TabIndex = 20;
             this.pictureBox79.TabStop = false;
@@ -651,11 +652,21 @@
             this.lblSupportedServer.TabIndex = 5;
             this.lblSupportedServer.Text = "Updating Supported Servers...";
             // 
+            // lblUsername
+            // 
+            this.lblUsername.AutoSize = true;
+            this.lblUsername.Location = new System.Drawing.Point(364, 4);
+            this.lblUsername.Name = "lblUsername";
+            this.lblUsername.Size = new System.Drawing.Size(55, 13);
+            this.lblUsername.TabIndex = 22;
+            this.lblUsername.Text = "Welcome:";
+            // 
             // frm_Main
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(874, 660);
+            this.Controls.Add(this.lblUsername);
             this.Controls.Add(this.pictureBox79);
             this.Controls.Add(this.panelStatus);
             this.Controls.Add(this.panel16);
@@ -754,6 +765,7 @@
         private System.Windows.Forms.PictureBox pictureBox79;
         private System.Windows.Forms.ProgressBar pbSupportedServer;
         private System.Windows.Forms.Label lblSupportedServer;
+        private System.Windows.Forms.Label lblUsername;
     }
 }
 

@@ -10,7 +10,6 @@ using Domain.Security;
 using FluentValidation;
 using Infrastructure;
 using Infrastructure.Factory;
-using Infrastructure.Helpers;
 using Infrastructure.Repositories.Interface;
 using Infrastructure.Repositories.Service;
 using Infrastructure.Service;
@@ -25,7 +24,6 @@ using System.IO;
 using System.IO.Compression;
 using System.Net;
 using System.Reflection;
-using System.Security.Principal;
 using System.Windows.Forms;
 
 namespace RagnarokHotKeyInWinforms
@@ -47,9 +45,6 @@ namespace RagnarokHotKeyInWinforms
             #region Updater
             // 🔍 Get current version from assembly
             string currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString();
-          // string currentVersion = "1.0.0.0";
-
-
             // 🌐 GitHub URLs
             string versionUrl = "https://raw.githubusercontent.com/dagon12345/RagnarokHotKeyInWinforms/refs/heads/master/version.txt";
             string zipUrl = "https://github.com/dagon12345/RagnarokHotKeyInWinforms/releases/download/v1.0.0.0/FerocityInstaller.zip";

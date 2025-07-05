@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
+using System.Reflection;
 using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -62,8 +63,7 @@ namespace RagnarokHotKeyInWinforms
             #region Passed DataTypes
             _userEmail = userEmail;
             #endregion
-            this.Text = AppConfig.Name + " - " + AppConfig.Version; // Window title
-
+            this.Text = AppConfig.Name + " - " + Assembly.GetExecutingAssembly().GetName().Version.ToString(); // get the latest version
 
         }
 
@@ -109,7 +109,7 @@ namespace RagnarokHotKeyInWinforms
             if (logListBox.Items.Count > 0)
                 logListBox.SelectedIndex = 0;
         }
-        private void Form1_Load(object sender, EventArgs e)
+        private async void Form1_Load(object sender, EventArgs e)
         {
             #region Mdi Container design
             DesignerService.ApplyDarkBlueTheme(this);
@@ -208,19 +208,12 @@ namespace RagnarokHotKeyInWinforms
 
                 StartUpdate();
                 refreshProcessList();
-                //progressBar1.Value++;
 
                 //var storedCreds = await _storedCredentialService.SearchUser(_userEmail);
-                //progressBar1.Value++;
 
-                //var getBaseTable = await _baseTableService.SearchUser(_userEmail);
-                //progressBar1.Value++;
+                var returnStoredCreds = await _storedCredentialService.SearchUser(_userEmail);
 
-                ////If the user is new to the app automatically created a setting to the user.
-                //await _userSettingService.UpsertUser(getBaseTable.ReferenceCode, storedCreds.Name);
-                //progressBar1.Value++;
-
-                //lblUserName.Text = $"Welcome back, {storedCreds.Name}";
+                 lblUsername.Text = $"Welcome back, {returnStoredCreds.Name}";
                 //progressBar1.Value++;
             }
             catch (Exception ex)

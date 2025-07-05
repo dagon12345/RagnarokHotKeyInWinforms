@@ -113,8 +113,8 @@ namespace ApplicationLayer.Forms
         {
             //Centralize color
             DesignerService.ApplyDarkBlueTheme(this);
-            lblHeader.Font = new Font("Onyx", 20, FontStyle.Regular);
-            lblHeader.Location = new System.Drawing.Point(180, 4);
+            lblHeader.Font = new Font("Century Gothic", 20, FontStyle.Bold);
+            lblHeader.Location = new System.Drawing.Point(150, 4);
 
         }
         private async void btnSignIn_Click(object sender, EventArgs e)

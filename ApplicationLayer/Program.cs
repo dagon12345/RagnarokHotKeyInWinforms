@@ -47,7 +47,7 @@ namespace RagnarokHotKeyInWinforms
 
             // 🌐 GitHub URLs
             string versionUrl = "https://raw.githubusercontent.com/dagon12345/RagnarokHotKeyInWinforms/master/version.txt";
-            string msiUrl = "https://github.com/dagon12345/RagnarokHotKeyInWinforms/releases/download/v1.0.0.0/FerocityInstaller.msi";
+            string msiUrl = "https://github.com/dagon12345/RagnarokHotKeyInWinforms/releases/download/v1.0.0/FerocityInstaller.msi";
 
             try
             {

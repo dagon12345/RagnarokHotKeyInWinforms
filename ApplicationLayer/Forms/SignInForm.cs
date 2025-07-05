@@ -5,13 +5,11 @@ using ApplicationLayer.Service;
 using ApplicationLayer.Service.RagnarokService;
 using ApplicationLayer.Validator;
 using Domain.Constants;
-using Domain.Model;
 using Domain.Model.DataModels;
 using Domain.Security;
 using FluentResults;
 using Infrastructure.Helpers;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
 using Microsoft.IdentityModel.Tokens;
 using RagnarokHotKeyInWinforms;
 using RagnarokHotKeyInWinforms.RagnarokHotKeyInWinforms;
@@ -55,53 +53,35 @@ namespace ApplicationLayer.Forms
         private void Updater()
         {
             #region Updater
-            string currentVersion = GlobalConstants.Version;
-            // 🌐 DropBox URLs
-            string versionUrl = GlobalConstants.VersionUrl;
-            string zipUrl = GlobalConstants.ZipUrl;
 
-            string zipPath = @".\FerocityInstaller.zip";
-            string extractPath = @".\";
+            WebClient webClient = new WebClient();
+            var client = new WebClient();
 
-            try
+            if (!webClient.DownloadString(GlobalConstants.VersionUrl).Contains(GlobalConstants.Version))
             {
-                using (WebClient client = new WebClient())
+                if (MessageBox.Show("New update available! Do you want to install it?", "Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                 {
-                    string latestVersion = client.DownloadString(versionUrl).Trim();
-
-                    if (latestVersion != currentVersion)
+                    try
                     {
-                        DialogResult result = MessageBox.Show(
-                            $"A new version ({latestVersion}) is available. Do you want to update?",
-                            "Ferocity Update",
-                            MessageBoxButtons.YesNo,
-                            MessageBoxIcon.Information
-                        );
+                        if (File.Exists(@".\FerocityInstaller.msi")) { File.Delete(@".\FerocityInstaller.msi"); }
+                        client.DownloadFile(GlobalConstants.ZipUrl, @"FerocityInstaller.zip");
+                        string zipPath = @".\FerocityInstaller.zip";
+                        string extractPath = @".\";
+                        ZipFile.ExtractToDirectory(zipPath, extractPath);
 
-                        if (result == DialogResult.Yes)
-                        {
-                            if (File.Exists(@".\FerocityInstaller.msi"))
-                            {
-                                File.Delete(@".\FerocityInstaller.msi");
-                            }
+                        Process process = new Process();
+                        process.StartInfo.FileName = "msiexec";
+                        process.StartInfo.Arguments = String.Format("/i FerocityInstaller.msi");
 
-                            client.DownloadFile(zipUrl, @"FerocityInstaller.zip");
-                            ZipFile.ExtractToDirectory(zipPath, extractPath);
+                        Application.Exit();
+                        process.Start();
+                    }
+                    catch
+                    {
 
-                            Process msiexecProcess = new Process();
-                            msiexecProcess.StartInfo.FileName = "msiexec";
-                            msiexecProcess.StartInfo.Arguments = String.Format("/i FerocityInstaller.msi");
-                            this.Close();
-                            msiexecProcess.Start();
-                        }
                     }
                 }
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Update check failed: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
             #endregion
         }
 
@@ -116,7 +96,7 @@ namespace ApplicationLayer.Forms
             txtPassword.UseSystemPasswordChar = true;
             foreach (Control ctrl in this.Controls)
             {
-                if(ctrl is Button btn)
+                if (ctrl is Button btn)
                 {
                     btn.Width = 100;
                     btn.Height = 35;
@@ -187,7 +167,7 @@ namespace ApplicationLayer.Forms
             var userInfo = await _getUserInfo.GetUserInfo(credential.Token.AccessToken);
             //Search through stored credential database
             var searchUser = await _storedCredentialService.SearchUser(userInfo.Email);
-            var accessToken = credential.Token.AccessToken; 
+            var accessToken = credential.Token.AccessToken;
             //Add new registered user if null
             if (searchUser == null)
             {
@@ -207,7 +187,7 @@ namespace ApplicationLayer.Forms
 
             }
             //If the search user is not null buts its value salt and password has was null then we open the register form for password creating.
-            else if(searchUser.Salt.IsNullOrEmpty() && searchUser.PasswordHash.IsNullOrEmpty())
+            else if (searchUser.Salt.IsNullOrEmpty() && searchUser.PasswordHash.IsNullOrEmpty())
             {
                 await OpenRegisterFormCreatePasswordAsync(searchUser);
                 return;
@@ -249,7 +229,7 @@ namespace ApplicationLayer.Forms
             {
                 Result result = new Result();
 
-               // registerForm.ShowDialog();
+                // registerForm.ShowDialog();
                 signInRegistrationForm.txtName.Text = user.Name;
                 signInRegistrationForm.txtName.ReadOnly = true;
                 signInRegistrationForm.txtEmail.Text = user.UserEmail;
@@ -257,7 +237,7 @@ namespace ApplicationLayer.Forms
 
                 if (signInRegistrationForm.ShowDialog() == DialogResult.OK)
                 {
-                   
+
                     var salt = SecurityHelper.GenerateSalt();
                     var hash = SecurityHelper.HashPassword(signInRegistrationForm.txtPassword.Text, salt);
 
@@ -336,7 +316,7 @@ namespace ApplicationLayer.Forms
             }
 
             var login = await _loginService.Login(dto.Email, dto.Password);
-            if(login)
+            if (login)
             {
                 var searchUser = await _storedCredentialService.SearchUser(dto.Email);
                 //Update the stored credential for new lastlogin.
@@ -371,7 +351,7 @@ namespace ApplicationLayer.Forms
 
             var user = await _passwordRecoveryService.SendResetLink(dto.Email);
             await OpenConfirmationAsync(user);
-           
+
         }
         private async Task OpenConfirmationAsync(StoredCredential credential)
         {
@@ -386,12 +366,12 @@ namespace ApplicationLayer.Forms
 
                     if (retrievedUser != null)
                     {
-                        using(var resetPassword = new ResetPasswordForm())
+                        using (var resetPassword = new ResetPasswordForm())
                         {
-                            if(resetPassword.ShowDialog() == DialogResult.OK)
+                            if (resetPassword.ShowDialog() == DialogResult.OK)
                             {
                                 var reset = await _passwordRecoveryService.ResetPassword(retrievedUser.UserEmail, resetPassword.txtConfirmPassword.Text);
-                                if(reset.IsSuccess)
+                                if (reset.IsSuccess)
                                 {
                                     MessageBox.Show(result.Successes.FirstOrDefault()?.Message ?? "Password resetted successfully", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                                 }

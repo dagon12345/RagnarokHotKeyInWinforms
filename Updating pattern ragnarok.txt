@@ -15,6 +15,7 @@ make sure it has the same version of
 -GlobalConstants.Version ( 1.6.0),
 -Installer version ( 1.6.0) accepts only 3 digits
 -version.txt in the DropBox
+-App Assembly inside application properties (1.6.0);
 
 4th step
 > Build the 2 solution of the project.
